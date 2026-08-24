@@ -1,4 +1,4 @@
-/* volponi.tech — ChatGPT Ads: Guia Completo */
+/* volponi.tech — ChatGPT Ads 2026 */
 
 /* EQUIPE */
 Criadora e autora: Lorenza Volponi — AI Strategist · Builder · Educator
@@ -7,12 +7,12 @@ Projeto: https://openai-ads.volponi.tech
 
 /* SOBRE */
 Guia educacional independente em português brasileiro sobre
-ChatGPT Ads, GPT Ads e publicidade com inteligência artificial.
+publicidade no ChatGPT e publicidade com inteligência artificial.
 Não afiliado à OpenAI.
 
 /* CONTEÚDO */
-Escrito e revisado por Lorenza Volponi.
-Publicado em novembro de 2025. Atualizado em agosto de 2026.
+Publicado e auditado em 24 de agosto de 2026.
+Fatos de produto são separados de hipóteses e estimativas.
 Feedback e correções: via volponi.tech
 
 /* TECNOLOGIA */
