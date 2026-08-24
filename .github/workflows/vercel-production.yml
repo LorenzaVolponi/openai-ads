@@ -29,6 +29,7 @@ jobs:
       VERCEL_PROJECT_NAME: openai-ads
       VERCEL_DEPLOY_COOLDOWN_SECONDS: "60"
       RECOVERY_DEPLOYMENT_URL: https://openai-oudhiuk1j-adm-wuazecoms-projects.vercel.app
+      PRODUCTION_DOMAIN: openai-ads.volponi.tech
 
     steps:
       - name: Checkout repository
@@ -88,13 +89,23 @@ jobs:
           fi
           echo "Confirmed current production deployment: $RECOVERY_DEPLOYMENT_URL"
 
-      - name: Verify promoted deployment
+      - name: Attach production domain
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel alias set "$RECOVERY_DEPLOYMENT_URL" "$PRODUCTION_DOMAIN" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+
+      - name: Verify production deployment and page
         if: github.event_name == 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
           vercel inspect "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
-          vercel httpstat / --deployment "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+          vercel curl / --deployment "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" > /tmp/openai-ads-home.html
+          test -s /tmp/openai-ads-home.html
+          grep -qi "ChatGPT Ads" /tmp/openai-ads-home.html
+          echo "Production page health check passed."
 
       - name: Pull Vercel production configuration
         if: github.event_name != 'pull_request'
