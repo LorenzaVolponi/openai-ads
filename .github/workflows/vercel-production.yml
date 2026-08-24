@@ -1,0 +1,86 @@
+name: Vercel Production Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy with Vercel CLI
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_DEPLOY_COOLDOWN_SECONDS: "60"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate Vercel secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::$name is not configured in GitHub Actions secrets."
+              exit 1
+            fi
+          done
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest --no-audit --no-fund
+
+      - name: Cooldown before Vercel API calls
+        shell: bash
+        run: |
+          echo "Cooling down for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s before contacting Vercel..."
+          sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+
+      - name: Pull Vercel production configuration
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Build production artifact locally
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Cooldown before production deploy
+        shell: bash
+        run: |
+          echo "Cooling down for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s before deploy..."
+          sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+
+      - name: Deploy prebuilt artifact to production
+        id: deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOYMENT_URL="$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")"
+          echo "url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
+          echo "Production deployment: $DEPLOYMENT_URL"
+
+      - name: Post-deploy cooldown
+        if: always()
+        shell: bash
+        run: |
+          echo "Keeping the production deploy lane quiet for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s..."
+          sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+
+      - name: Publish deployment URL
+        if: steps.deploy.outputs.url != ''
+        run: echo "Vercel production URL -> ${{ steps.deploy.outputs.url }}"
