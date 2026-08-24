@@ -20,8 +20,8 @@ jobs:
     timeout-minutes: 45
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_SCOPE: brainzilian-gmailcoms-projects
+      VERCEL_PROJECT_NAME: openai-ads
       VERCEL_DEPLOY_COOLDOWN_SECONDS: "60"
 
     steps:
@@ -33,16 +33,14 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Validate Vercel secrets
+      - name: Validate Vercel token
         shell: bash
         run: |
           set -euo pipefail
-          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
-            if [ -z "${!name:-}" ]; then
-              echo "::error::$name is not configured in GitHub Actions secrets."
-              exit 1
-            fi
-          done
+          if [ -z "${VERCEL_TOKEN:-}" ]; then
+            echo "::error::VERCEL_TOKEN is not configured in GitHub Actions secrets."
+            exit 1
+          fi
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest --no-audit --no-fund
@@ -53,11 +51,28 @@ jobs:
           echo "Cooling down for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s before contacting Vercel..."
           sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
 
+      - name: Ensure Vercel project exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          if vercel project inspect "$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" >/dev/null 2>&1; then
+            echo "Vercel project '$VERCEL_PROJECT_NAME' already exists."
+          else
+            echo "Creating Vercel project '$VERCEL_PROJECT_NAME'..."
+            vercel project add "$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+          fi
+
+      - name: Link repository to Vercel project
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel link --yes --project="$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+
       - name: Pull Vercel production configuration
-        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+        run: vercel pull --yes --environment=production --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Build production artifact locally
-        run: vercel build --prod --token="$VERCEL_TOKEN"
+        run: vercel build --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Cooldown before production deploy
         shell: bash
@@ -70,7 +85,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          DEPLOYMENT_URL="$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")"
+          DEPLOYMENT_URL="$(vercel deploy --prebuilt --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN")"
           echo "url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
           echo "Production deployment: $DEPLOYMENT_URL"
 
