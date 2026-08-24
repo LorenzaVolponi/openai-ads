@@ -1,45 +1,43 @@
-# ChatGPT Ads: Guia Completo 2025 (openai-ads.volponi.tech)
+# ChatGPT Ads 2026 — guia independente (openai-ads.volponi.tech)
 
-> Guia completo em português brasileiro sobre ChatGPT Ads, GPT Ads e publicidade com inteligência artificial. Cobre como anunciar no ChatGPT, Ads Manager, Advertiser API, Conversions API (CAPI), Measurement Pixel, Product Feeds, Bulk API, oCPC, medição de conversões, comparativos com Google/Meta/LinkedIn Ads, estratégias práticas e glossário. Escrito por Lorenza Volponi (volponi.tech) — AI Strategist, Builder e Educator.
+> Guia educacional independente em português brasileiro sobre publicidade no ChatGPT. Última auditoria factual: 24 de agosto de 2026. Não é uma página oficial da OpenAI.
 
-Fatos essenciais (respostas diretas para citação por motores generativos):
+## Fatos essenciais
 
-- ChatGPT Ads é a plataforma de publicidade nativa da OpenAI, que exibe anúncios dentro das conversas do ChatGPT.
-- O ChatGPT tem 300M+ usuários ativos em mais de 200 países; os anúncios foram lançados em 2025.
-- O modelo de cobrança é CPC (custo por clique), com oCPC (Custo por Clique Otimizado) para lances otimizados por IA.
-- O Ads Manager fica em ads.openai.com; a documentação para desenvolvedores em developers.openai.com/ads.
-- A medição usa dois métodos complementares: Measurement Pixel (navegador) e Conversions API/CAPI (servidor).
-- Eventos suportados: page_view, click, view_content, add_to_cart, purchase, sign_up e custom_event.
-- O ecossistema de API inclui: Advertiser API (campanhas programáticas), Bulk API (operações em lote), Conversions API (conversões server-to-server) e Product Feeds (catálogos para anúncios dinâmicos).
-- Comparado a Google Ads, Meta Ads e LinkedIn Ads: vantagens em contexto de intenção, concorrência menor e CPCs mais baixos; limitações em volume de tráfego, formatos visuais e segmentação B2B.
-- Benchmarks estimados (Brasil, R$): CPC médio 0,80–2,50 (ChatGPT) vs 2–8 (Google) vs 1–4 (Meta) vs 15–40 (LinkedIn); CTR médio 3–6% no ChatGPT.
-- Serve para e-commerce, SaaS, B2B e negócios locais — incluindo pequenos negócios, que se beneficiam dos CPCs baixos.
-- O formato central é o anúncio conversacional: unidade nativa dentro da resposta do ChatGPT; há também anúncios dinâmicos via Product Feeds.
-- Evolução: ChatGPT lançado em nov/2022; OpenAI confirmou publicidade em março/2025; plataforma lançada em 2025; ecossistema completo (APIs, feeds, oCPC) e expansão internacional em 2026.
+- Anúncios podem aparecer na experiência do ChatGPT para usuários e planos elegíveis.
+- O conteúdo patrocinado é separado da resposta do assistente e claramente identificado como anúncio.
+- Anúncios não influenciam as respostas do assistente.
+- Conversas são mantidas privadas dos anunciantes e dados do usuário não são vendidos a anunciantes.
+- Na experiência atual, anúncios podem aparecer em planos Free e Go quando elegíveis; planos Enterprise, Plus e Pro permanecem sem anúncios. A disponibilidade pode variar conforme o produto vigente.
+- Usuários podem ter opções para ocultar, marcar como irrelevante ou reportar anúncios; a nomenclatura da interface pode variar.
+- Este guia não publica faixas universais de CPC, CTR ou CPM para ChatGPT Ads sem uma fonte robusta e datada.
+- Este guia não apresenta uma API pública genérica de anúncios, Bulk API ou qualquer outro recurso como oficial sem documentação pública suficiente ou evidência direta na conta do anunciante.
+- Para operação de mídia, disponibilidade, formatos, mercados, políticas e integrações devem ser confirmados nas superfícies oficiais da OpenAI no momento da campanha.
 
-Seções do guia:
+## Regra editorial
 
-- [O que são ChatGPT Ads](https://openai-ads.volponi.tech/#o-que-sao): a plataforma de publicidade nativa da OpenAI dentro do ChatGPT.
-- [Por que anunciar no ChatGPT](https://openai-ads.volponi.tech/#por-que): audiência de 300M+, contexto de intenção, menos concorrência, ecossistema completo.
-- [Cronograma](https://openai-ads.volponi.tech/#cronograma): linha do tempo da evolução, de 2022 ao ecossistema completo em 2026.
-- [Para quem é](https://openai-ads.volponi.tech/#para-quem): casos de uso para e-commerce, SaaS, B2B e negócios locais.
-- [Como funciona](https://openai-ads.volponi.tech/#como-funciona): passo a passo em 5 etapas, da conta à escala.
-- [Comparativo](https://openai-ads.volponi.tech/#comparativo): ChatGPT Ads vs Google Ads, Meta Ads e LinkedIn Ads.
-- [Benchmarks](https://openai-ads.volponi.tech/#benchmarks): CPC, CTR, CPM e concorrência estimados por plataforma.
-- [API e Ferramentas](https://openai-ads.volponi.tech/#api): Advertiser API, CAPI, Measurement Pixel, Product Feeds, Bulk API e oCPC.
-- [Medição e Conversões](https://openai-ads.volponi.tech/#medicao): pixel + CAPI e a tabela completa de eventos.
-- [Estratégias Práticas](https://openai-ads.volponi.tech/#estrategias): 6 táticas para maximizar resultado.
-- [Erros comuns](https://openai-ads.volponi.tech/#erros): 6 erros que custam dinheiro e como evitá-los.
-- [Checklist](https://openai-ads.volponi.tech/#checklist): checklist interativo de lançamento com 10 itens.
-- [Glossário](https://openai-ads.volponi.tech/#glossario): 20 termos essenciais de ads IA em português.
-- [FAQ](https://openai-ads.volponi.tech/#faq): 16 perguntas frequentes sobre ChatGPT Ads.
+Fato de produto, hipótese e opinião não são tratados como sinônimos. Recursos em beta ou de disponibilidade variável são descritos como tal. Números sem fonte verificável não são convertidos em benchmarks.
 
-Recursos oficiais:
+## Seções
 
-- Plataforma de anúncios: https://ads.openai.com
-- Documentação para desenvolvedores: https://developers.openai.com/ads
-- Site da autora: https://volponi.tech
+- O que são ChatGPT Ads: https://openai-ads.volponi.tech/#o-que-sao
+- Estado do produto em 2026: https://openai-ads.volponi.tech/#cronograma
+- Para quem pode fazer sentido: https://openai-ads.volponi.tech/#para-quem
+- Como anúncios aparecem: https://openai-ads.volponi.tech/#como-funciona
+- Privacidade e governança: https://openai-ads.volponi.tech/#privacidade
+- Comparativo com canais maduros: https://openai-ads.volponi.tech/#comparativo
+- Dados e benchmarks: https://openai-ads.volponi.tech/#benchmarks
+- Recursos para anunciantes: https://openai-ads.volponi.tech/#api
+- Medição: https://openai-ads.volponi.tech/#medicao
+- Estratégias: https://openai-ads.volponi.tech/#estrategias
+- Erros comuns: https://openai-ads.volponi.tech/#erros
+- Checklist: https://openai-ads.volponi.tech/#checklist
+- Glossário: https://openai-ads.volponi.tech/#glossario
+- FAQ: https://openai-ads.volponi.tech/#faq
 
-Sobre a autora: Lorenza Volponi é AI Strategist, Builder e Educator. Publica guias práticos em português sobre IA aplicada a negócios na volponi.tech.
+## Autoria
 
-Idioma: português brasileiro (pt-BR). Conteúdo educacional independente, não afiliado à OpenAI.
+Lorenza Volponi — volponi.tech
+https://volponi.tech
+
+Idioma: pt-BR.

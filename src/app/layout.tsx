@@ -16,9 +16,9 @@ const SITE_URL = "https://openai-ads.volponi.tech";
 const SITE_NAME = "volponi.tech";
 const AUTHOR = "Lorenza Volponi";
 const TITLE =
-  "ChatGPT Ads: Guia Completo 2025 — Como Anunciar no ChatGPT | GPT Ads, Ads IA e Publicidade com IA";
+  "ChatGPT Ads 2026 — Guia Independente sobre Publicidade no ChatGPT | volponi.tech";
 const DESCRIPTION =
-  "Guia completo sobre ChatGPT Ads e GPT Ads. Aprenda como anunciar no ChatGPT, usar a Advertiser API da OpenAI, medir conversões com Pixel e CAPI, Product Feeds e oCPC. Tudo sobre ads IA, publicidade no ChatGPT e marketing com inteligência artificial. Por Lorenza Volponi — volponi.tech.";
+  "Guia independente e atualizado em 2026 sobre publicidade no ChatGPT: como os anúncios são apresentados, privacidade, planos com anúncios, fundamentos de campanha, mensuração e boas práticas. Por Lorenza Volponi — volponi.tech.";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -34,41 +34,19 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   keywords: [
     "chatgpt ads",
-    "gpt ads",
-    "ads ia",
-    "anunciar no chatgpt",
+    "openai ads",
     "publicidade no chatgpt",
     "anúncios no chatgpt",
     "chatgpt advertising",
-    "chatgpt anúncios",
-    "como anunciar no chatgpt",
-    "OpenAI Ads",
-    "chatgpt ads como funciona",
-    "chatgpt ads guia",
-    "gpt ads como anunciar",
+    "chatgpt ads 2026",
     "ads com inteligência artificial",
     "publicidade com IA",
-    "anúncios em IA",
     "marketing com IA generativa",
-    "chatgpt marketing digital",
-    "Ads Manager OpenAI",
-    "OpenAI Ads API",
-    "Advertiser API OpenAI",
-    "Conversions API OpenAI",
-    "Measurement Pixel OpenAI",
-    "product feeds chatgpt",
-    "oCPC chatgpt",
-    "campanhas chatgpt",
-    "tráfego pago chatgpt",
+    "chatgpt para negócios",
+    "privacidade chatgpt ads",
+    "mensuração chatgpt ads",
     "Lorenza Volponi",
     "volponi tech",
-    "chatgpt ads brasil",
-    "gpt ads brasil",
-    "ads com IA generativa",
-    "plataforma de ads IA",
-    "como criar chatgpt ads",
-    "chatgpt para negócios",
-    "anúncios inteligentes IA",
   ],
   authors: [{ name: AUTHOR, url: "https://volponi.tech" }],
   creator: AUTHOR,
@@ -91,33 +69,31 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     type: "article",
     locale: "pt_BR",
-    publishedTime: "2025-11-20T09:00:00-03:00",
-    modifiedTime: "2026-08-25T09:00:00-03:00",
-    section: "Marketing Digital",
+    publishedTime: "2026-08-24T09:00:00-03:00",
+    modifiedTime: "2026-08-24T17:55:00-03:00",
+    section: "Marketing e Inteligência Artificial",
     authors: [AUTHOR],
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "ChatGPT Ads: Guia Completo 2025 — volponi.tech",
+        alt: "ChatGPT Ads 2026 — guia independente da volponi.tech",
       },
     ],
     tags: [
       "chatgpt ads",
-      "gpt ads",
-      "ads ia",
-      "anunciar no chatgpt",
+      "openai ads",
       "publicidade no chatgpt",
-      "OpenAI Ads",
+      "publicidade com IA",
       "marketing com IA",
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ChatGPT Ads: Guia Completo 2025 — Como Anunciar no ChatGPT",
+    title: "ChatGPT Ads 2026 — Guia Independente",
     description:
-      "Tudo sobre ChatGPT Ads, GPT Ads e ads IA: Ads Manager, Advertiser API, Pixel, CAPI, Product Feeds e oCPC. Por Lorenza Volponi — volponi.tech.",
+      "Publicidade no ChatGPT em 2026: fundamentos, privacidade, mensuração e boas práticas, sem confundir hipótese com recurso oficial.",
     images: ["/og.png"],
   },
   robots: {
@@ -133,7 +109,7 @@ export const metadata: Metadata = {
   },
   category: "marketing digital",
   other: {
-    "ai-content-declaration": "human-written educational guide about ChatGPT Ads",
+    "content-status": "independent educational guide; verify product availability in official OpenAI surfaces",
   },
 };
 
