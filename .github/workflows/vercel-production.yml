@@ -38,21 +38,6 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Mark deployment pending
-        if: github.event_name != 'pull_request'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl --fail-with-body -sS \
-            -X POST \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -d "{\"state\":\"pending\",\"context\":\"deployment/vercel-cli\",\"description\":\"GitHub Actions is building production\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}"
-
       - name: Validate Vercel token
         shell: bash
         run: |
@@ -68,8 +53,11 @@ jobs:
       - name: Cooldown before Vercel API calls
         shell: bash
         run: |
-          echo "Cooling down for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s before contacting Vercel..."
-          sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            sleep 10
+          else
+            sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+          fi
 
       - name: Verify existing Vercel project
         shell: bash
@@ -84,19 +72,29 @@ jobs:
           set -euo pipefail
           vercel link --yes --project="$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
+      - name: Find reusable READY deployments
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "READY deployments for ${VERCEL_SCOPE}/${VERCEL_PROJECT_NAME}:"
+          vercel list "$VERCEL_PROJECT_NAME" --status READY --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+
       - name: Pull Vercel production configuration
+        if: github.event_name != 'pull_request'
         run: vercel pull --yes --environment=production --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Build production artifact inside GitHub Actions
+        if: github.event_name != 'pull_request'
         run: vercel build --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Cooldown before production deploy
+        if: github.event_name != 'pull_request'
         shell: bash
-        run: |
-          echo "Cooling down for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s before deploy..."
-          sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+        run: sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
 
       - name: Deploy prebuilt artifact to production
+        if: github.event_name != 'pull_request'
         id: deploy
         shell: bash
         run: |
@@ -136,12 +134,10 @@ jobs:
             -d "{\"state\":\"failure\",\"context\":\"deployment/vercel-cli\",\"description\":\"Vercel CLI production deploy failed\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}" || true
 
       - name: Post-deploy cooldown
-        if: always()
+        if: github.event_name != 'pull_request' && always()
         shell: bash
-        run: |
-          echo "Keeping the production deploy lane quiet for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s..."
-          sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+        run: sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
 
       - name: Publish deployment URL
-        if: steps.deploy.outputs.url != ''
+        if: github.event_name != 'pull_request' && steps.deploy.outputs.url != ''
         run: echo "Vercel production URL -> ${{ steps.deploy.outputs.url }}"
