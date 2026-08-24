@@ -1,0 +1,34 @@
+{
+  "name": "ChatGPT Ads — Guia Completo | volponi.tech",
+  "short_name": "ChatGPT Ads",
+  "description": "Guia completo em português sobre ChatGPT Ads, GPT Ads e publicidade com IA: como anunciar no ChatGPT, API, medição e estratégias. Por Lorenza Volponi — volponi.tech.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fcfaf6",
+  "theme_color": "#b45309",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["education", "business", "marketing"],
+  "icons": [
+    {
+      "src": "/mark-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/mark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/fox-black.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-signal: var(--signal);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Tema claro legível — volponi.tech / ChatGPT Ads
+   Identidade: raposa âmbar (#F8A528) sobre preto; página branca quente,
+   gold escuro (oklch 0.58) para texto/ação com contraste AA. */
+:root {
+  --radius: 0.625rem;
+  /* Branco quente */
+  --background: oklch(0.985 0.005 85);
+  /* Quase-preto quente */
+  --foreground: oklch(0.19 0.012 75);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.19 0.012 75);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.19 0.012 75);
+  /* Gold escuro — legível sobre branco (contraste ~5:1) */
+  --primary: oklch(0.58 0.13 65);
+  /* Branco quente */
+  --primary-foreground: oklch(0.99 0.005 85);
+  --secondary: oklch(0.955 0.008 85);
+  --secondary-foreground: oklch(0.19 0.012 75);
+  --muted: oklch(0.955 0.008 85);
+  /* Cinza quente médio — legível (contraste ~5:1) */
+  --muted-foreground: oklch(0.46 0.015 75);
+  /* Tint dourado claro */
+  --accent: oklch(0.94 0.035 85);
+  --accent-foreground: oklch(0.25 0.05 70);
+  --destructive: oklch(0.577 0.245 27.325);
+  /* Borda visível porém sutil */
+  --border: oklch(0.25 0.02 75 / 14%);
+  --input: oklch(0.25 0.02 75 / 18%);
+  --ring: oklch(0.58 0.13 65);
+  /* Âmbar vivo da raposa — acento da marca */
+  --signal: oklch(0.82 0.16 78);
+  --chart-1: oklch(0.82 0.16 78);
+  --chart-2: oklch(0.7 0.14 70);
+  --chart-3: oklch(0.696 0.17 162.48);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.19 0.012 75);
+  --sidebar-primary: oklch(0.58 0.13 65);
+  --sidebar-primary-foreground: oklch(0.99 0.005 85);
+  --sidebar-accent: oklch(0.94 0.035 85);
+  --sidebar-accent-foreground: oklch(0.25 0.05 70);
+  --sidebar-border: oklch(0.25 0.02 75 / 14%);
+  --sidebar-ring: oklch(0.58 0.13 65);
+}
+
+/* Variante escura (identidade da marca: raposa âmbar sobre preto) */
+.dark {
+  --background: oklch(0.07 0.005 285);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.12 0.005 285);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.12 0.005 285);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.82 0.16 78);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.16 0.005 285);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.16 0.005 285);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.18 0.02 75);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.82 0.16 78);
+  --signal: oklch(0.82 0.16 78);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+::selection {
+  background: oklch(0.88 0.09 85);
+  color: oklch(0.25 0.05 70);
+}
+
+/* Scrollbar customizada (clara, quente) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(0.965 0.005 85);
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.82 0.05 80);
+  border-radius: 9999px;
+  border: 2px solid oklch(0.965 0.005 85);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.68 0.1 72);
+}
+
+/* Scrollbar horizontal das tabs em mobile */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Marquee de keywords (SEO/GEO) */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Orbs flutuantes — deriva lenta e orgânica (padrão Awwwards) */
+@keyframes float-a {
+  0%, 100% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  50% {
+    transform: translate(-48%, 2.5%) scale(1.06);
+  }
+}
+@keyframes float-b {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-28px, 34px) scale(1.08);
+  }
+}
+@keyframes float-c {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(26px, -30px) scale(1.05);
+  }
+}
+.animate-float-a {
+  animation: float-a 18s ease-in-out infinite;
+}
+.animate-float-b {
+  animation: float-b 14s ease-in-out infinite;
+}
+.animate-float-c {
+  animation: float-c 22s ease-in-out infinite;
+}
+
+/* UX mobile (iOS Safari / Android Chrome) */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-float-a,
+  .animate-float-b,
+  .animate-float-c {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
