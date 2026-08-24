@@ -96,16 +96,30 @@ jobs:
           set -euo pipefail
           vercel alias set "$RECOVERY_DEPLOYMENT_URL" "$PRODUCTION_DOMAIN" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
-      - name: Verify production deployment and page
+      - name: Inspect production domain DNS
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel domains inspect "$PRODUCTION_DOMAIN" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+
+      - name: Verify protected production deployment content
         if: github.event_name == 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
           vercel inspect "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
-          vercel --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" curl / --deployment "$RECOVERY_DEPLOYMENT_URL" > /tmp/openai-ads-home.html
+          vercel curl / --deployment "$RECOVERY_DEPLOYMENT_URL" > /tmp/openai-ads-home.html
           test -s /tmp/openai-ads-home.html
           grep -qi "ChatGPT Ads" /tmp/openai-ads-home.html
           echo "Production page health check passed."
+
+      - name: Test public production domain DNS
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          getent ahosts "$PRODUCTION_DOMAIN" | head -n 5
 
       - name: Pull Vercel production configuration
         if: github.event_name != 'pull_request'
