@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 45
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_SCOPE: brainzilian-gmailcoms-projects
+      VERCEL_SCOPE: adm-wuazecoms-projects
       VERCEL_PROJECT_NAME: openai-ads
       VERCEL_DEPLOY_COOLDOWN_SECONDS: "60"
 
@@ -51,16 +51,12 @@ jobs:
           echo "Cooling down for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s before contacting Vercel..."
           sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
 
-      - name: Ensure Vercel project exists
+      - name: Verify existing Vercel project
         shell: bash
         run: |
           set -euo pipefail
-          if vercel project inspect "$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" >/dev/null 2>&1; then
-            echo "Vercel project '$VERCEL_PROJECT_NAME' already exists."
-          else
-            echo "Creating Vercel project '$VERCEL_PROJECT_NAME'..."
-            vercel project add "$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
-          fi
+          vercel project inspect "$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" >/dev/null
+          echo "Using existing Vercel project: ${VERCEL_SCOPE}/${VERCEL_PROJECT_NAME}"
 
       - name: Link repository to Vercel project
         shell: bash
@@ -71,7 +67,7 @@ jobs:
       - name: Pull Vercel production configuration
         run: vercel pull --yes --environment=production --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
-      - name: Build production artifact locally
+      - name: Build production artifact inside GitHub Actions
         run: vercel build --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Cooldown before production deploy
