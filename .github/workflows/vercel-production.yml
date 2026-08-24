@@ -102,7 +102,7 @@ jobs:
         run: |
           set -euo pipefail
           vercel inspect "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
-          vercel curl / --deployment "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" > /tmp/openai-ads-home.html
+          vercel --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" curl / --deployment "$RECOVERY_DEPLOYMENT_URL" > /tmp/openai-ads-home.html
           test -s /tmp/openai-ads-home.html
           grep -qi "ChatGPT Ads" /tmp/openai-ads-home.html
           echo "Production page health check passed."
