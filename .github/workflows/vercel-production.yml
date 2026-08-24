@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -16,6 +19,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name != 'pull_request' || github.head_ref == 'ops/run-production-now'
     name: Build and deploy with Vercel CLI
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -35,6 +39,7 @@ jobs:
           node-version: "20"
 
       - name: Mark deployment pending
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -101,7 +106,7 @@ jobs:
           echo "Production deployment: $DEPLOYMENT_URL"
 
       - name: Mark deployment success
-        if: success() && steps.deploy.outputs.url != ''
+        if: github.event_name != 'pull_request' && success() && steps.deploy.outputs.url != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
@@ -117,7 +122,7 @@ jobs:
             -d "{\"state\":\"success\",\"context\":\"deployment/vercel-cli\",\"description\":\"Production deployed by GitHub Actions\",\"target_url\":\"${DEPLOYMENT_URL}\"}"
 
       - name: Mark deployment failure
-        if: failure()
+        if: github.event_name != 'pull_request' && failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
