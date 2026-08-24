@@ -28,6 +28,7 @@ jobs:
       VERCEL_SCOPE: adm-wuazecoms-projects
       VERCEL_PROJECT_NAME: openai-ads
       VERCEL_DEPLOY_COOLDOWN_SECONDS: "60"
+      RECOVERY_DEPLOYMENT_URL: https://openai-oudhiuk1j-adm-wuazecoms-projects.vercel.app
 
     steps:
       - name: Checkout repository
@@ -72,13 +73,20 @@ jobs:
           set -euo pipefail
           vercel link --yes --project="$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
-      - name: Find reusable READY deployments
+      - name: Promote existing READY deployment
         if: github.event_name == 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
-          echo "READY deployments for ${VERCEL_SCOPE}/${VERCEL_PROJECT_NAME}:"
-          vercel list "$VERCEL_PROJECT_NAME" --status READY --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+          vercel promote "$RECOVERY_DEPLOYMENT_URL" --yes --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+
+      - name: Verify promoted deployment
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel inspect "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+          vercel httpstat / --deployment "$RECOVERY_DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Pull Vercel production configuration
         if: github.event_name != 'pull_request'
