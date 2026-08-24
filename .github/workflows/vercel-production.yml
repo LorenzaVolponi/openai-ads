@@ -12,7 +12,9 @@ permissions:
 
 concurrency:
   group: vercel-production-deploy
-  cancel-in-progress: false
+  # Only the newest production commit is worth deploying. This prevents a burst
+  # of rapid merges from draining the Vercel Hobby daily deployment quota.
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -28,12 +30,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
+          package-manager-cache: false
 
       - name: Mark deployment pending
         env:
@@ -96,8 +99,28 @@ jobs:
         id: deploy
         shell: bash
         run: |
-          set -euo pipefail
-          DEPLOYMENT_URL="$(vercel deploy --prebuilt --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN")"
+          set -uo pipefail
+          set +e
+          DEPLOY_OUTPUT="$(vercel deploy --prebuilt --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" 2>&1)"
+          DEPLOY_EXIT=$?
+          set -e
+
+          printf '%s\n' "$DEPLOY_OUTPUT"
+
+          if [ "$DEPLOY_EXIT" -ne 0 ]; then
+            if printf '%s\n' "$DEPLOY_OUTPUT" | grep -q 'api-deployments-free-per-day'; then
+              echo "quota_limited=true" >> "$GITHUB_OUTPUT"
+              echo "::error::Vercel Hobby daily API deployment quota is exhausted. The production artifact built successfully, but Vercel rejected creation of a new deployment."
+            fi
+            exit "$DEPLOY_EXIT"
+          fi
+
+          DEPLOYMENT_URL="$(printf '%s\n' "$DEPLOY_OUTPUT" | grep -Eo 'https://[^[:space:]]+\.vercel\.app' | tail -n 1)"
+          if [ -z "$DEPLOYMENT_URL" ]; then
+            echo "::error::Vercel reported success but no deployment URL was found."
+            exit 1
+          fi
+
           echo "url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
           echo "Production deployment: $DEPLOYMENT_URL"
 
@@ -121,22 +144,21 @@ jobs:
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUOTA_LIMITED: ${{ steps.deploy.outputs.quota_limited }}
         shell: bash
         run: |
+          set -euo pipefail
+          DESCRIPTION="Vercel CLI production deploy failed"
+          if [ "${QUOTA_LIMITED:-}" = "true" ]; then
+            DESCRIPTION="Vercel Hobby daily deploy quota exhausted"
+          fi
           curl -sS \
             -X POST \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -d "{\"state\":\"failure\",\"context\":\"deployment/vercel-cli\",\"description\":\"Vercel CLI production deploy failed\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}" || true
-
-      - name: Post-deploy cooldown
-        if: always()
-        shell: bash
-        run: |
-          echo "Keeping the production deploy lane quiet for ${VERCEL_DEPLOY_COOLDOWN_SECONDS}s..."
-          sleep "${VERCEL_DEPLOY_COOLDOWN_SECONDS}"
+            -d "{\"state\":\"failure\",\"context\":\"deployment/vercel-cli\",\"description\":\"${DESCRIPTION}\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}" || true
 
       - name: Publish deployment URL
         if: steps.deploy.outputs.url != ''
