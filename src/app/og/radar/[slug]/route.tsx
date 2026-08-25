@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { radarEntries } from "@/lib/radar-data";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export async function GET(
   _request: Request,
