@@ -2,9 +2,10 @@ name: Vercel Quota Recovery
 
 on:
   schedule:
-    # The quota error was observed around 16:46 UTC. Running after 17:30 UTC
-    # gives the rolling 24-hour window time to clear without hammering Vercel.
-    - cron: "30 17 * * *"
+    # The latest quota refusal occurred at 17:37 UTC on 25/08/2026 and Vercel
+    # explicitly asked to try again in 24 hours. 18:45 UTC gives the rolling
+    # window more than 25 hours to clear instead of retrying on the boundary.
+    - cron: "45 18 * * *"
   workflow_dispatch:
     inputs:
       force:
