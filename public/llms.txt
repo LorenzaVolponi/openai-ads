@@ -7,12 +7,14 @@ Idioma: pt-BR
 Tipo: observatório editorial independente / referência técnica
 Autora: Lorenza Volponi
 Editora: volponi.tech
+Perfil da autora / imprensa: https://openai-ads.volponi.tech/imprensa
 Site da autora: https://volponi.tech
 GitHub: https://github.com/LorenzaVolponi
 LinkedIn: https://www.linkedin.com/in/lorenzavolponi
-Sala de imprensa: https://openai-ads.volponi.tech/imprensa
+Press kit JSON: https://openai-ads.volponi.tech/press-kit.json
 Radar de mudanças: https://openai-ads.volponi.tech/radar
 RSS do Radar: https://openai-ads.volponi.tech/feed.xml
+News sitemap: https://openai-ads.volponi.tech/news-sitemap.xml
 Dataset JSON: https://openai-ads.volponi.tech/data/chatgpt-ads-markets.json
 Dataset CSV: https://openai-ads.volponi.tech/data/chatgpt-ads-markets.csv
 
@@ -63,6 +65,7 @@ Registros permanentes atuais:
 - Observatório completo: https://openai-ads.volponi.tech/
 - Radar / histórico de mudanças: https://openai-ads.volponi.tech/radar
 - Sala de imprensa / Media Source Room: https://openai-ads.volponi.tech/imprensa
+- Press kit estruturado: https://openai-ads.volponi.tech/press-kit.json
 - ChatGPT Ads no Brasil: https://openai-ads.volponi.tech/chatgpt-ads-brasil
 - Preços, CPC, CPM, oCPC e leilão: https://openai-ads.volponi.tech/chatgpt-ads-precos
 - Métricas, CTR, CPC, CPM, CVR, CPA e ROAS: https://openai-ads.volponi.tech/chatgpt-ads-metricas
@@ -92,10 +95,13 @@ O dataset é uma curadoria editorial independente, datada. Para decisão operaci
 
 CTR, CPC e CPM não provam retorno isoladamente. Atribuição não é causalidade. Para decisões relevantes, reconciliar plataforma, analytics, CRM/receita e, quando possível, incrementalidade.
 
-## Descoberta e distribuição
+## Descoberta, crawlers e distribuição
 
-- O domínio permite OAI-SearchBot, ChatGPT-User e outros crawlers relevantes no robots.txt.
-- O site mantém sitemap.xml e feed RSS do Radar.
+- O domínio permite explicitamente OAI-SearchBot para descoberta/citação em ChatGPT Search.
+- O domínio permite explicitamente OAI-AdsBot para compatibilidade com validação e avaliação de relevância de landing pages de ChatGPT Ads.
+- Permitir OAI-AdsBot é uma medida de ads-readiness; este observatório NÃO apresenta isso como sinal de ranking orgânico.
+- O health check de produção testa acesso HTTP real da home com User-Agent OAI-SearchBot e OAI-AdsBot, além do robots.txt.
+- O site mantém sitemap.xml, news-sitemap.xml e feed RSS do Radar.
 - O domínio oferece um deeplink para a ferramenta oficial Google Preferred Sources sem carregar o script do Google automaticamente.
 - Após deploy de produção validado, o pipeline notifica IndexNow com URLs públicas do próprio site. Nenhum dado de visitante é incluído no envio.
 - Feeds, JSON, datasets e arquivos de contexto continuam crawláveis, mas recebem `noindex` para não competir com as páginas HTML nos resultados tradicionais.
@@ -113,6 +119,7 @@ Este site não solicita cadastro, e-mail ou login e não foi desenhado como funi
 - OpenAI Help Center — Ads in ChatGPT: https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt
 - OpenAI Help Center — Ads basics: https://help.openai.com/pt-br/articles/20001207
 - OpenAI Help Center — Create campaigns: https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads
+- OpenAI Help Center — OpenAI web crawlers for advertisers: https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers
 - OpenAI Help Center — Ads Manager availability: https://help.openai.com/en/articles/20001245-ads-manager-availability
 - OpenAI Help Center — Ads Manager Beta FAQ: https://help.openai.com/en/articles/20001220
 - OpenAI — ChatGPT Ads expands across Europe: https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/
