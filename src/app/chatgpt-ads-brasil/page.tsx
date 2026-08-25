@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 export default function ChatGPTAdsBrasilPage() {
   return (
     <TopicArticle
+      canonical={URL}
       eyebrow="ChatGPT Ads Brasil · atualização 25/08/2026"
       title="ChatGPT Ads no Brasil: o estado atual, sem extrapolar o que a fonte diz."
       description="O Brasil já aparece como mercado disponível no Ads Manager. Isso abre uma frente real para anunciantes — mas disponibilidade, inventário, autosserviço, planos elegíveis e performance continuam sendo coisas diferentes."
