@@ -82,6 +82,16 @@ jobs:
           vercel project inspect "$VERCEL_PROJECT_NAME" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN" >/dev/null
           echo "Using existing Vercel project: ${VERCEL_SCOPE}/${VERCEL_PROJECT_NAME}"
 
+      - name: Enable Vercel Web Analytics
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel project web-analytics "$VERCEL_PROJECT_NAME" \
+            --scope="$VERCEL_SCOPE" \
+            --token="$VERCEL_TOKEN" \
+            --format json > /tmp/vercel-web-analytics.json
+          cat /tmp/vercel-web-analytics.json
+
       - name: Link repository to Vercel project
         shell: bash
         run: |
