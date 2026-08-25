@@ -41,6 +41,12 @@ jobs:
       - name: Validate source watcher syntax
         run: node --check scripts/watch-official-sources.mjs
 
+      - name: Validate SEO health checker syntax
+        run: node --check scripts/seo-health-check.mjs
+
+      - name: Validate SEO insights syntax
+        run: node --check scripts/seo-authority-insights.mjs
+
       - name: Type-check
         run: npm run typecheck
 
