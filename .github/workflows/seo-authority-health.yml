@@ -1,9 +1,13 @@
 name: SEO Authority Health
 
 on:
+  workflow_run:
+    workflows:
+      - Vercel Production Deploy
+    types:
+      - completed
   schedule:
-    # Runs after the normal source-watch/recovery window so it inspects the
-    # canonical production state rather than a deployment in flight.
+    # Daily backstop after the normal source-watch/recovery window.
     - cron: "15 19 * * *"
   workflow_dispatch:
 
@@ -17,6 +21,7 @@ concurrency:
 
 jobs:
   health:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     name: Verify canonical SEO/GEO invariants
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -24,6 +29,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          ref: main
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -58,7 +65,7 @@ jobs:
 
           - Production: https://openai-ads.volponi.tech
           - Workflow run: ${RUN_URL}
-          - Checked commit: ${GITHUB_SHA}
+          - Checked main: $(git rev-parse HEAD)
           - Detected at: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
           ### Latest check output
