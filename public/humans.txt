@@ -1,22 +1,38 @@
-/* volponi.tech — Publicidade no ChatGPT em 2026 */
+/* volponi.tech — ChatGPT Ads no Brasil 2026 */
 
 /* AUTORIA */
-Criadora e autora: Lorenza Volponi
+Criadora, autora e responsável editorial: Lorenza Volponi
+Editora: volponi.tech
 Site da autora: https://volponi.tech
+GitHub: https://github.com/LorenzaVolponi
+LinkedIn: https://www.linkedin.com/in/lorenzavolponi
 Projeto: https://openai-ads.volponi.tech
 Última auditoria material: 25 de agosto de 2026
 
 /* INDEPENDÊNCIA */
-Projeto editorial independente.
+Observatório editorial independente.
 Não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.
 OpenAI, ChatGPT, GPT e marcas relacionadas pertencem aos seus respectivos titulares.
-A identidade visual deste projeto é volponi.tech.
+A identidade visual e a autoria deste projeto são volponi.tech / Lorenza Volponi.
 
 /* SOBRE */
-Guia educacional e informativo em português brasileiro sobre publicidade no ChatGPT,
-privacidade, mensuração, governança, políticas e publicidade com inteligência artificial.
-O conteúdo não constitui aconselhamento jurídico, financeiro ou comercial e deve ser
-validado em fontes oficiais antes de decisões operacionais.
+Referência técnica em português brasileiro sobre ChatGPT Ads no Brasil em 2026,
+com dados oficiais, disponibilidade, preços e modelos de compra, métricas, Ads Manager,
+privacidade, políticas e limites de interpretação. Dados sensíveis ao tempo são datados e
+auditados contra fontes primárias.
+
+/* PRIVACIDADE DO PROJETO */
+Sem formulário próprio de captura, sem login, sem pixel publicitário e sem plataforma própria
+de analytics na implementação auditada em 25/08/2026. A Raposa IA funciona localmente no
+navegador contra conteúdo embarcado. Infraestrutura pode tratar dados técnicos necessários
+à entrega e segurança, conforme política de privacidade.
+
+/* ROTAS DE AUTORIDADE */
+Brasil: https://openai-ads.volponi.tech/chatgpt-ads-brasil
+Preços: https://openai-ads.volponi.tech/chatgpt-ads-precos
+Métricas: https://openai-ads.volponi.tech/chatgpt-ads-metricas
+Ads Manager: https://openai-ads.volponi.tech/ads-manager-chatgpt
+Privacidade de Ads: https://openai-ads.volponi.tech/chatgpt-ads-privacidade
 
 /* TRANSPARÊNCIA */
 Metodologia: https://openai-ads.volponi.tech/metodologia
@@ -24,6 +40,8 @@ Privacidade e LGPD: https://openai-ads.volponi.tech/privacidade
 Termos e isenção: https://openai-ads.volponi.tech/termos
 AI discovery: https://openai-ads.volponi.tech/llms.txt
 AI discovery expandido: https://openai-ads.volponi.tech/llms-full.txt
+Knowledge graph: https://openai-ads.volponi.tech/knowledge.json
+Citação: https://openai-ads.volponi.tech/citation.json
 
 /* TECNOLOGIA */
 Next.js · TypeScript · Tailwind CSS · shadcn/ui · Framer Motion

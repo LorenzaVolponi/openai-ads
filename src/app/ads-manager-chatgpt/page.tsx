@@ -1,0 +1,87 @@
+import type { Metadata } from "next";
+
+import { TopicArticle } from "@/components/topic-article";
+import { SOURCES } from "@/lib/authority-data";
+
+const URL = "https://openai-ads.volponi.tech/ads-manager-chatgpt";
+
+export const metadata: Metadata = {
+  title: "OpenAI Ads Manager 2026: países, campanhas, métricas e recursos | Lorenza Volponi",
+  description:
+    "Guia do OpenAI Ads Manager Beta em 2026: países disponíveis, campanhas, grupos de anúncios, métricas, CSV, permissões, billing e limites do beta.",
+  alternates: { canonical: URL },
+  openGraph: {
+    title: "OpenAI Ads Manager 2026 — o que já existe de verdade",
+    description: "Países disponíveis, recursos, métricas e limites do Ads Manager Beta.",
+    url: URL,
+    type: "article",
+  },
+};
+
+export default function AdsManagerChatGPTPage() {
+  return (
+    <TopicArticle
+      canonical={URL}
+      eyebrow="Ads Manager Beta · atualização 25/08/2026"
+      title="OpenAI Ads Manager: já é uma plataforma operável — e ainda é beta."
+      description="A ferramenta já cria, lança, mede e gerencia campanhas. O que exige cuidado é transformar uma plataforma em evolução numa lista de recursos permanentes sem data e sem verificação."
+      summary="Na auditoria de 25 de agosto de 2026, o Ads Manager está disponível em nove países, incluindo o Brasil. Ele permite criar e gerenciar campanhas, acompanhar impressões, cliques e gasto, usar tabelas, gráficos e CSV, além de administrar membros, permissões, chaves de API, faturamento e change logs."
+      facts={[
+        { label: "Países disponíveis", value: "9", note: "Austrália, Brasil, Canadá, Japão, Coreia, México, Nova Zelândia, Reino Unido e EUA." },
+        { label: "Status", value: "Beta", note: "Recursos e disponibilidade continuam evoluindo." },
+        { label: "Objetivos", value: "3", note: "CPM, CPC e oCPC na documentação atual." },
+        { label: "Relatórios", value: "Tabela + gráfico + CSV", note: "Performance pode ser vista e exportada para análise externa." },
+        { label: "Conta", value: "Permissões + API keys", note: "Configurações incluem membros, permissões, chaves, billing e change logs." },
+        { label: "Brasil", value: "Disponível", note: "Consta na lista oficial auditada em 25/08/2026." },
+      ]}
+      sections={[
+        {
+          title: "O que o Ads Manager Beta faz hoje",
+          paragraphs: [
+            "A visão oficial descreve um fluxo de ponta a ponta: criar e gerenciar campanhas individualmente ou em escala, acompanhar desempenho, ajustar configurações da conta e administrar elementos operacionais em uma única superfície.",
+            "Na camada de reporting, a plataforma oferece tabelas, gráficos e exportação CSV. Isso permite tirar o dado do dashboard e reconciliar com analytics, CRM, data warehouse ou planilhas sem depender apenas da visualização nativa.",
+          ],
+          bullets: [
+            "Criar e gerenciar campanhas e grupos de anúncios.",
+            "Criar anúncios e usar fluxos em massa quando disponíveis.",
+            "Monitorar impressões, cliques, gasto e métricas derivadas.",
+            "Exportar dados em CSV.",
+            "Gerenciar membros, permissões, chaves de API, billing e logs de alteração.",
+          ],
+        },
+        {
+          title: "Onde está disponível",
+          paragraphs: [
+            "Na versão auditada em 25 de agosto de 2026, a página de disponibilidade lista nove países como disponíveis: Austrália, Brasil, Canadá, Japão, Coreia do Sul, México, Nova Zelândia, Reino Unido e Estados Unidos.",
+            "A mesma página mostra diversos países europeus com status de ‘em breve’. Isso reforça uma distinção importante: uma expansão de inventário ou presença de anúncios no mercado não significa necessariamente autosserviço imediato no Ads Manager para toda empresa localizada naquele país.",
+          ],
+        },
+        {
+          title: "Por que o status beta importa",
+          paragraphs: [
+            "Beta não significa improvisado; significa mutável. Sistemas de veiculação, inventário, formatos, compra, gestão e mensuração podem ser ajustados enquanto a plataforma aprende com uso real.",
+            "Para operação profissional, documente a versão usada na campanha, tire screenshots de configurações relevantes, registre fontes e mantenha um changelog próprio. Assim, uma mudança futura não apaga o contexto de por que uma decisão foi tomada.",
+          ],
+        },
+        {
+          title: "A camada de API existe, mas precisa de escopo",
+          paragraphs: [
+            "A visão geral do Ads Manager cita chaves de API nas configurações da conta e a coleção oficial já documenta integrações de mensuração e fluxos específicos. Isso não deve ser traduzido automaticamente como ‘API pública genérica para tudo’.",
+            "Antes de automatizar criação, reporting ou mensuração, confirme o endpoint e o escopo oficialmente disponíveis para sua conta. A melhor prática é programar contra documentação concreta, não contra suposição de paridade com Google ou Meta Ads.",
+          ],
+        },
+      ]}
+      sources={[
+        SOURCES.availability,
+        { label: "Visão geral do Ads Manager Beta", url: "https://help.openai.com/pt-br/articles/20001206", publisher: "OpenAI Help Center" },
+        SOURCES.campaignSetup,
+      ]}
+      related={[
+        { label: "ChatGPT Ads no Brasil", href: "/chatgpt-ads-brasil" },
+        { label: "Preços e leilão", href: "/chatgpt-ads-precos" },
+        { label: "Métricas", href: "/chatgpt-ads-metricas" },
+        { label: "Privacidade", href: "/chatgpt-ads-privacidade" },
+      ]}
+    />
+  );
+}

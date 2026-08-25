@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import { SiteComplianceStrip, SiteWatermark } from "@/components/site-compliance";
 import "./globals.css";
 
@@ -16,12 +17,11 @@ const geistMono = Geist_Mono({
 const SITE_URL = "https://openai-ads.volponi.tech";
 const SITE_NAME = "volponi.tech";
 const AUTHOR = "Lorenza Volponi";
-const TITLE =
-  "Publicidade no ChatGPT em 2026 — Guia Independente | Lorenza Volponi";
+const TITLE = "ChatGPT Ads no Brasil 2026: preços, métricas e Ads Manager | Lorenza Volponi";
 const DESCRIPTION =
-  "Guia editorial independente e auditado sobre publicidade no ChatGPT em 2026: disponibilidade, privacidade, planos com anúncios, políticas, mensuração e boas práticas. Por Lorenza Volponi — volponi.tech. Sem afiliação com a OpenAI.";
+  "Observatório editorial independente sobre ChatGPT Ads no Brasil em 2026: dados oficiais, preços CPC/CPM/oCPC, métricas, Ads Manager, privacidade, disponibilidade e fontes primárias auditadas por Lorenza Volponi.";
 
-const structuredData = {
+const globalStructuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -29,7 +29,7 @@ const structuredData = {
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
       name: SITE_NAME,
-      alternateName: "Publicidade no ChatGPT em 2026 — guia independente",
+      alternateName: "ChatGPT Ads no Brasil 2026 — Observatório independente",
       description: DESCRIPTION,
       inLanguage: "pt-BR",
       publisher: { "@id": `${SITE_URL}/#author` },
@@ -42,7 +42,22 @@ const structuredData = {
       name: AUTHOR,
       url: "https://volponi.tech",
       image: `${SITE_URL}/fox-black.png`,
-      description: "Autora e responsável editorial pelo guia independente publicado em volponi.tech.",
+      description:
+        "AI systems strategist, builder e autora do observatório independente sobre ChatGPT Ads publicado por volponi.tech.",
+      sameAs: [
+        "https://volponi.tech",
+        "https://github.com/LorenzaVolponi",
+        "https://www.linkedin.com/in/lorenzavolponi",
+      ],
+      knowsAbout: [
+        "Generative Engine Optimization",
+        "Search Engine Optimization",
+        "Artificial Intelligence",
+        "AI systems",
+        "ChatGPT Ads",
+        "digital strategy",
+        "software development",
+      ],
     },
   ],
 };
@@ -51,27 +66,31 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#b45309",
+  themeColor: "#18181b",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
-  applicationName: "volponi.tech — guia editorial independente",
+  applicationName: "volponi.tech — ChatGPT Ads Intelligence",
   keywords: [
+    "chatgpt ads brasil",
     "chatgpt ads",
     "openai ads",
+    "openai ads manager",
     "publicidade no chatgpt",
     "anúncios no chatgpt",
-    "chatgpt advertising",
     "chatgpt ads 2026",
-    "ads com inteligência artificial",
+    "chatgpt ads preços",
+    "chatgpt ads métricas",
+    "cpc chatgpt ads",
+    "cpm chatgpt ads",
+    "ocpc chatgpt ads",
+    "ads manager brasil",
     "publicidade com IA",
-    "marketing com IA generativa",
-    "chatgpt para negócios",
-    "privacidade chatgpt ads",
-    "mensuração chatgpt ads",
+    "generative engine optimization",
+    "geo ai",
     "Lorenza Volponi",
     "volponi tech",
   ],
@@ -98,22 +117,26 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
-    type: "website",
+    type: "article",
     locale: "pt_BR",
+    publishedTime: "2026-08-24T09:00:00-03:00",
+    modifiedTime: "2026-08-25T09:34:00-03:00",
+    section: "Inteligência Artificial e Publicidade",
+    authors: [AUTHOR],
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Publicidade no ChatGPT em 2026 — guia independente por Lorenza Volponi",
+        alt: "ChatGPT Ads no Brasil 2026 — dados, preços, métricas e Ads Manager por Lorenza Volponi",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Publicidade no ChatGPT em 2026 — Guia Independente",
+    title: "ChatGPT Ads no Brasil 2026 — dados, preços e métricas",
     description:
-      "Guia auditado por Lorenza Volponi sobre anúncios no ChatGPT, privacidade, disponibilidade e mensuração. Projeto independente, sem afiliação com a OpenAI.",
+      "Observatório independente por Lorenza Volponi: dados oficiais, CPC/CPM/oCPC, Ads Manager, privacidade e fontes primárias.",
     images: ["/og.png"],
   },
   robots: {
@@ -127,12 +150,15 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  category: "marketing digital",
+  category: "marketing digital e inteligência artificial",
   other: {
     author: AUTHOR,
-    "content-status": "independent editorial guide; facts reviewed against primary sources",
+    "dc.creator": AUTHOR,
+    "dc.title": TITLE,
+    "dcterms.modified": "2026-08-25",
+    "content-status": "independent editorial observatory; facts reviewed against primary sources",
     "independence-disclosure": "not affiliated with, sponsored by, endorsed by, certified by, operated by, or maintained by OpenAI",
-    "ai-discovery": "llms.txt, llms-full.txt and knowledge.json available; preserve authorship and independence",
+    "ai-discovery": "llms.txt, llms-full.txt and knowledge.json available; preserve Lorenza Volponi authorship and independence",
     "last-reviewed": "2026-08-25",
   },
 };
@@ -144,13 +170,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+            __html: JSON.stringify(globalStructuredData).replace(/</g, "\\u003c"),
           }}
         />
         <SiteWatermark />

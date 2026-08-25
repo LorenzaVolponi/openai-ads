@@ -1,16 +1,7 @@
 import { AUDITED_KNOWLEDGE } from "@/lib/assistant/knowledge";
-import {
-  apiTools,
-  audienceTabs,
-  benchmarks,
-  checklistItems,
-  comparisonTabs,
-  faqs,
-  glossary,
-  mistakes,
-  strategies,
-  timeline,
-} from "@/lib/content";
+import { evidenceLedger, metricFormulas, productFacts } from "@/lib/authority-data";
+import { strategies } from "@/lib/content";
+import { editorialFaqs, editorialTimeline } from "@/lib/editorial-content";
 
 export type ChatTurn = { role: "user" | "assistant"; text: string };
 
@@ -65,99 +56,71 @@ const entries: Entry[] = [
     section: item.section,
     keywords: tokenize(`${item.title} ${item.text} ${item.tags}`),
   })),
-  ...faqs.map((item) => ({
+  ...editorialFaqs.map((item) => ({
     title: item.q,
     text: item.a,
     href: "#faq",
     section: "FAQ",
     keywords: tokenize(`${item.q} ${item.a}`),
   })),
-  ...glossary.map((item) => ({
-    title: item.term,
-    text: `${item.term}: ${item.desc}`,
-    href: "#glossario",
-    section: "Glossário",
-    keywords: tokenize(`${item.term} ${item.desc}`),
-  })),
-  ...timeline.map((item) => ({
+  ...editorialTimeline.map((item) => ({
     title: `${item.date} — ${item.title}`,
     text: item.desc,
     href: "#cronograma",
-    section: "Estado em 2026",
+    section: "Linha do tempo",
     keywords: tokenize(`${item.date} ${item.title} ${item.desc}`),
   })),
-  ...apiTools.map((item) => ({
+  ...productFacts.map((item) => ({
     title: item.title,
-    text: `${item.desc} ${item.detail}`,
-    href: "#api",
-    section: "Recursos",
-    keywords: tokenize(`${item.title} ${item.desc} ${item.detail}`),
+    text: item.text,
+    href: "#produto-real",
+    section: "Produto real",
+    keywords: tokenize(`${item.eyebrow} ${item.title} ${item.text}`),
+  })),
+  ...metricFormulas.map((item) => ({
+    title: `${item.metric} — ${item.formula}`,
+    text: `${item.reads} ${item.warning}`,
+    href: "#metricas",
+    section: "Métricas",
+    keywords: tokenize(`${item.metric} ${item.formula} ${item.reads} ${item.warning}`),
+  })),
+  ...evidenceLedger.map((item) => ({
+    title: item.title,
+    text: item.text,
+    href: "#evidencia",
+    section: "Evidência",
+    keywords: tokenize(`${item.status} ${item.title} ${item.text}`),
   })),
   ...strategies.map((item) => ({
     title: item.title,
     text: item.desc,
     href: "#estrategias",
-    section: "Estratégias",
+    section: "Estratégia",
     keywords: tokenize(`${item.title} ${item.desc}`),
   })),
-  ...mistakes.map((item) => ({
-    title: item.title,
-    text: item.desc,
-    href: "#erros",
-    section: "Erros comuns",
-    keywords: tokenize(`${item.title} ${item.desc}`),
-  })),
-  ...comparisonTabs.map((tab) => ({
-    title: `ChatGPT Ads vs ${tab.label}`,
-    text: tab.rows.map((row) => `${row.feature}: ${row.note}`).join("\n"),
-    href: "#comparativo",
-    section: "Comparativo",
-    keywords: tokenize(`${tab.label} ${tab.rows.map((row) => `${row.feature} ${row.note}`).join(" ")}`),
-  })),
-  ...audienceTabs.map((tab) => ({
-    title: `ChatGPT Ads para ${tab.label}`,
-    text: tab.cards.map((card) => `${card.title}: ${card.desc}`).join("\n"),
-    href: "#para-quem",
-    section: "Para quem",
-    keywords: tokenize(`${tab.label} ${tab.cards.map((card) => `${card.title} ${card.desc}`).join(" ")}`),
-  })),
-  {
-    title: "Benchmarks e custos",
-    text: benchmarks.map((row) => `${row.metric}: ${row.chatgpt}`).join("\n"),
-    href: "#benchmarks",
-    section: "Dados e custos",
-    keywords: tokenize("benchmark custo cpc ctr cpm preço valor barato caro dados custo por clique"),
-  },
-  {
-    title: "Checklist antes de anunciar",
-    text: checklistItems.map((item, index) => `${index + 1}. ${item.title}: ${item.desc}`).join("\n"),
-    href: "#checklist",
-    section: "Checklist",
-    keywords: tokenize("checklist começar anunciar campanha lançamento preparar segurança privacidade medição"),
-  },
 ];
 
 const STARTERS = [
-  "O que são ChatGPT Ads?",
-  "Este site é oficial da OpenAI?",
-  "Quais planos têm anúncios?",
-  "Anunciantes podem ler minhas conversas?",
   "Está disponível no Brasil?",
-  "Como medir resultados?",
+  "Quanto custa anunciar?",
+  "Como funciona o leilão?",
+  "Quais métricas o Ads Manager mostra?",
+  "900 milhões é alcance de anúncios?",
+  "Anunciantes podem ler minhas conversas?",
 ];
 
 export const STARTER_QUESTIONS = STARTERS;
 
 const greeting = (): AssistantAnswer => ({
   text:
-    "Oi! Eu sou a Raposa IA 🦊. Respondo somente com a versão auditada deste guia independente sobre publicidade no ChatGPT em 2026. Se o guia não sustentar uma afirmação, eu prefiro dizer que não sei em vez de inventar.",
+    "Oi! Eu sou a Raposa IA 🦊. Respondo somente com o conteúdo auditado deste observatório independente sobre ChatGPT Ads em 2026. Se a evidência não sustentar uma afirmação, eu prefiro dizer que não sei em vez de inventar.",
   sources: [],
   followUps: STARTERS.slice(0, 4),
 });
 
 const fallback = (): AssistantAnswer => ({
   text:
-    "Não encontrei uma resposta suficientemente sustentada no conteúdo auditado deste guia. 🦊 Como o produto muda rápido, não vou completar a lacuna com rumor. Para uma decisão operacional, confirme na superfície oficial da OpenAI.",
+    "Não encontrei uma resposta suficientemente sustentada no conteúdo auditado deste observatório. 🦊 Como o produto muda rápido, não vou completar a lacuna com rumor. Para uma decisão operacional, confirme na documentação oficial vigente.",
   sources: [],
   followUps: STARTERS.slice(0, 4),
 });
@@ -182,7 +145,7 @@ export function askAssistant(query: string, history: ChatTurn[] = []): Assistant
 
   if (/^(obrigad|valeu|perfeito|show|top)\b/.test(normalized)) {
     return {
-      text: "Por nada! 🦊 Se quiser, eu continuo pela versão auditada do guia.",
+      text: "Por nada! 🦊 Se quiser, eu continuo pela base auditada do observatório.",
       sources: [],
       followUps: STARTERS.slice(1, 5),
     };
