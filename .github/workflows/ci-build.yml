@@ -38,6 +38,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Validate source watcher syntax
+        run: node --check scripts/watch-official-sources.mjs
+
       - name: Type-check
         run: npm run typecheck
 

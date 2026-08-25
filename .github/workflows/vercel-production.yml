@@ -18,6 +18,9 @@ concurrency:
 
 jobs:
   deploy:
+    # A merge commit can intentionally include [skip deploy] while Vercel's
+    # daily API quota is known to be exhausted. workflow_dispatch always runs.
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip deploy]') }}
     name: Build and deploy with Vercel CLI
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -178,7 +181,10 @@ jobs:
               "https://${VERCEL_PRODUCTION_DOMAIN}/ads-manager-chatgpt",
               "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-privacidade",
               "https://${VERCEL_PRODUCTION_DOMAIN}/imprensa",
-              "https://${VERCEL_PRODUCTION_DOMAIN}/metodologia"
+              "https://${VERCEL_PRODUCTION_DOMAIN}/metodologia",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/feed.xml",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/feed.json",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/provenance.json"
             ]
           }
           JSON
