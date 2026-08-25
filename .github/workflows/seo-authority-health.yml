@@ -24,7 +24,7 @@ concurrency:
 jobs:
   health:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
-    name: Verify SEO/GEO, evidence and media-authority invariants
+    name: Verify SEO/GEO, evidence, media and crawler invariants
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -89,6 +89,15 @@ jobs:
           set -o pipefail
           node scripts/media-authority-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/media-authority-health.log
 
+      - name: Check OpenAI crawler access
+        id: crawlers
+        if: github.event_name != 'schedule' || steps.deployment.outputs.state == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/openai-crawler-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/openai-crawler-health.log
+
       - name: Note deferred scheduled check
         if: github.event_name == 'schedule' && steps.deployment.outputs.state != 'success'
         shell: bash
@@ -102,7 +111,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Open or refresh authority regression issue
-        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure' || steps.media.outcome == 'failure'
+        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure' || steps.media.outcome == 'failure' || steps.crawlers.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -113,12 +122,13 @@ jobs:
           SEO_LOG_TAIL="$(tail -n 50 /tmp/seo-health.log 2>/dev/null || true)"
           EVIDENCE_LOG_TAIL="$(tail -n 50 /tmp/evidence-health.log 2>/dev/null || true)"
           MEDIA_LOG_TAIL="$(tail -n 50 /tmp/media-authority-health.log 2>/dev/null || true)"
+          CRAWLER_LOG_TAIL="$(tail -n 50 /tmp/openai-crawler-health.log 2>/dev/null || true)"
           BODY_FILE="/tmp/seo-issue.md"
 
           cat > "$BODY_FILE" <<EOF
-          ## SEO / evidence / media authority regression
+          ## SEO / evidence / media / crawler authority regression
 
-          The automated production invariants found a canonical SEO/GEO, evidence-ledger, source-revision or media-authority regression.
+          The automated production invariants found a canonical SEO/GEO, evidence-ledger, source-revision, media-authority or OpenAI-crawler regression.
 
           - Production: https://openai-ads.volponi.tech
           - Workflow run: ${RUN_URL}
@@ -127,6 +137,7 @@ jobs:
           - SEO result: ${{ steps.seo.outcome }}
           - Evidence result: ${{ steps.evidence.outcome }}
           - Media authority result: ${{ steps.media.outcome }}
+          - OpenAI crawler result: ${{ steps.crawlers.outcome }}
 
           ### SEO check output
 
@@ -146,6 +157,12 @@ jobs:
           ${MEDIA_LOG_TAIL}
           \`\`\`
 
+          ### OpenAI crawler output
+
+          \`\`\`
+          ${CRAWLER_LOG_TAIL}
+          \`\`\`
+
           This issue is maintained automatically. It will be closed after all production checks are clean.
           EOF
 
@@ -158,7 +175,7 @@ jobs:
           fi
 
       - name: Close resolved authority regression issue
-        if: steps.seo.outcome == 'success' && steps.evidence.outcome == 'success' && steps.media.outcome == 'success'
+        if: steps.seo.outcome == 'success' && steps.evidence.outcome == 'success' && steps.media.outcome == 'success' && steps.crawlers.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -167,25 +184,27 @@ jobs:
           TITLE="SEO authority health regression"
           ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
           if [ -n "$ISSUE_NUMBER" ]; then
-            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --comment "Production SEO authority, evidence-ledger, source-revision and media-authority checks are green again. Closing automatically."
+            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --comment "Production SEO authority, evidence-ledger, source-revision, media-authority and OpenAI-crawler checks are green again. Closing automatically."
           fi
 
       - name: Publish authority health summary
-        if: always() && (steps.seo.outcome != 'skipped' || steps.evidence.outcome != 'skipped' || steps.media.outcome != 'skipped')
+        if: always() && (steps.seo.outcome != 'skipped' || steps.evidence.outcome != 'skipped' || steps.media.outcome != 'skipped' || steps.crawlers.outcome != 'skipped')
         shell: bash
         run: |
           {
-            echo "### SEO / evidence / media authority health"
+            echo "### SEO / evidence / media / crawler authority health"
             echo "- Production: https://openai-ads.volponi.tech"
             echo "- Expected source commit: $(git rev-parse HEAD)"
             echo "- SEO result: ${{ steps.seo.outcome }}"
             echo "- Evidence result: ${{ steps.evidence.outcome }}"
             echo "- Media authority result: ${{ steps.media.outcome }}"
+            echo "- OpenAI crawler result: ${{ steps.crawlers.outcome }}"
             echo "- SEO checks: canonicals, aliases, machine noindex, freshness headers, robots, sitemap, OG and entity aliases"
             echo "- Evidence checks: source Git revision, X-Source-Commit, SHA-256 record hashes, chain links, root hash, OpenAI primary-source hosts and proof caveats"
             echo "- Media checks: press ProfilePage, press kit, NewsArticle linkage, temporal news sitemap and multi-ratio article images"
+            echo "- Crawler checks: explicit robots allowance and real HTTP access for OAI-SearchBot and OAI-AdsBot"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail when authority invariants fail
-        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure' || steps.media.outcome == 'failure'
+        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure' || steps.media.outcome == 'failure' || steps.crawlers.outcome == 'failure'
         run: exit 1

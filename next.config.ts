@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const SITE_URL = "https://openai-ads.volponi.tech";
+
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -78,6 +80,8 @@ const nextConfig: NextConfig = {
       { source: "/provenance.json", headers: machineOnlyHeaders },
       { source: "/evidence.json", headers: machineOnlyHeaders },
       { source: "/press-kit.json", headers: machineOnlyHeaders },
+      { source: "/author.json", headers: machineOnlyHeaders },
+      { source: "/data-catalog.json", headers: machineOnlyHeaders },
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
       { source: "/oai-crawlers.txt", headers: machineOnlyHeaders },

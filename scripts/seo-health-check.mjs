@@ -37,6 +37,8 @@ const machineOnly = [
   "/knowledge.json",
   "/citation.json",
   "/provenance.json",
+  "/evidence.json",
+  "/press-kit.json",
   "/llms.txt",
   "/llms-full.txt",
   "/humans.txt",
@@ -49,6 +51,8 @@ const freshnessAssets = [
   "/feed.xml",
   "/feed.json",
   "/provenance.json",
+  "/evidence.json",
+  "/press-kit.json",
   "/data/chatgpt-ads-markets.json",
   "/data/chatgpt-ads-markets.csv",
 ];
@@ -260,6 +264,9 @@ async function checkDiscovery() {
     for (const term of ["chatgpt ads", "gpt ads", "ads gpt", "openai ads"]) {
       assert(aliasesFromKnowledge.includes(term), `knowledge.json maps alias: ${term}`);
     }
+    assert(data?.discovery?.openAICrawlers?.["OAI-SearchBot"]?.allowed === true, "knowledge.json declares OAI-SearchBot discovery policy");
+    assert(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.allowed === true, "knowledge.json declares OAI-AdsBot readiness policy");
+    assert(/not presented as an organic ranking signal/i.test(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.rankingCaveat || ""), "knowledge.json avoids overstating OAI-AdsBot as an SEO ranking signal");
   } catch (error) {
     fail("knowledge.json semantic check succeeds", error instanceof Error ? error.message : String(error));
   }
