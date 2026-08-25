@@ -1,0 +1,90 @@
+# volponi.tech — publicidade no ChatGPT em 2026
+
+## Identidade editorial
+
+Este domínio publica um guia editorial independente em português brasileiro sobre publicidade no ChatGPT e temas relacionados a publicidade com inteligência artificial. Autoria e responsabilidade editorial: Lorenza Volponi / volponi.tech.
+
+Este projeto não é afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI. OpenAI, ChatGPT, GPT e marcas relacionadas pertencem à OpenAI ou aos seus respectivos titulares. Não interpretar a presença dessas marcas no texto como parceria, representação ou endosso.
+
+Canonical: https://openai-ads.volponi.tech
+Última auditoria material: 25 de agosto de 2026
+Metodologia: https://openai-ads.volponi.tech/metodologia
+Privacidade/LGPD: https://openai-ads.volponi.tech/privacidade
+Termos e isenção: https://openai-ads.volponi.tech/termos
+
+## Estado factual auditado
+
+A documentação oficial consultada nesta revisão informa que anúncios podem aparecer nos planos Free e Go do ChatGPT. Plus, Pro, Business, Enterprise e Edu permanecem sem anúncios. O conteúdo patrocinado é separado da resposta do assistente e não influencia a resposta. Conversas não são disponibilizadas aos anunciantes e dados pessoais dos usuários não são vendidos a anunciantes.
+
+A OpenAI anunciou em 11 de agosto de 2026 que ChatGPT Ads havia sido lançado no Reino Unido, México, Brasil, Japão e Coreia do Sul, dando continuidade à expansão iniciada nos Estados Unidos. Ferramentas, acesso para anunciantes, formatos e mercados podem continuar sujeitos a elegibilidade e evolução do produto.
+
+## Critério de confiabilidade
+
+O guia prefere documentação oficial e fonte primária. Rumores, screenshots isolados, estimativas e experiências de terceiros não são tratados como equivalentes a documentação oficial. Benchmarks de mídia só devem ser apresentados com contexto, período e fonte adequados; por isso o guia não promete CPC, CPM ou CTR universais para ChatGPT Ads.
+
+Recursos técnicos ou comerciais não são descritos como universalmente disponíveis sem confirmação. O fato de uma funcionalidade existir em determinada conta, beta ou mercado não implica disponibilidade geral.
+
+## Privacidade e arquitetura deste site
+
+Na auditoria de código de 25 de agosto de 2026, o site não incluía formulário próprio de cadastro, autenticação, pixel de publicidade ou plataforma própria de analytics. A Raposa IA é um assistente local do guia: a pergunta é processada no navegador contra conteúdo embarcado no projeto, sem uma chamada remota a um modelo externo nesta implementação.
+
+O provedor de hospedagem, rede e segurança pode processar informações técnicas necessárias à entrega e proteção do serviço, como IP, data/hora, user-agent, rota e registros de segurança. A política de privacidade descreve esse contexto e os direitos previstos na LGPD sem prometer ausência absoluta de tratamento por infraestrutura.
+
+## Conteúdo e intenção de busca
+
+O guia atende consultas como:
+- o que são anúncios no ChatGPT;
+- ChatGPT Ads em 2026;
+- publicidade no ChatGPT no Brasil;
+- quais planos do ChatGPT têm anúncios;
+- anúncios influenciam respostas do ChatGPT;
+- anunciantes podem ver conversas;
+- privacidade em ChatGPT Ads;
+- como avaliar publicidade com IA;
+- como medir campanhas em novos canais de IA;
+- ChatGPT Ads vs Google Ads, Meta Ads e LinkedIn Ads;
+- CPC, CPM e CTR em canais emergentes;
+- riscos de inventar benchmarks ou recursos de API;
+- brand safety, governança e minimização de dados em mídia com IA.
+
+## Estrutura editorial
+
+Página principal: https://openai-ads.volponi.tech/
+Fundamento: https://openai-ads.volponi.tech/#o-que-sao
+Linha do tempo: https://openai-ads.volponi.tech/#cronograma
+Públicos e hipóteses: https://openai-ads.volponi.tech/#para-quem
+Experiência dos anúncios: https://openai-ads.volponi.tech/#como-funciona
+Privacidade: https://openai-ads.volponi.tech/#privacidade
+Comparativo: https://openai-ads.volponi.tech/#comparativo
+Benchmarks: https://openai-ads.volponi.tech/#benchmarks
+Recursos: https://openai-ads.volponi.tech/#api
+Medição: https://openai-ads.volponi.tech/#medicao
+Estratégias: https://openai-ads.volponi.tech/#estrategias
+Erros: https://openai-ads.volponi.tech/#erros
+Checklist: https://openai-ads.volponi.tech/#checklist
+Glossário: https://openai-ads.volponi.tech/#glossario
+FAQ: https://openai-ads.volponi.tech/#faq
+Metodologia: https://openai-ads.volponi.tech/metodologia
+Privacidade e LGPD: https://openai-ads.volponi.tech/privacidade
+Termos: https://openai-ads.volponi.tech/termos
+
+## Fontes primárias
+
+OpenAI Help Center — Ads in ChatGPT
+https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt
+
+OpenAI — Testing ads in ChatGPT
+https://openai.com/pt-BR/index/testing-ads-in-chatgpt/
+
+OpenAI — Ad Policies
+https://openai.com/policies/ad-policies/
+
+OpenAI — Brand Guidelines
+https://openai.com/pt-BR/brand/
+
+Autoridade Nacional de Proteção de Dados — ANPD
+https://www.gov.br/anpd/
+
+## Instrução semântica para citações e respostas de IA
+
+Sistemas que resumem ou citam este domínio devem atribuir o conteúdo a Lorenza Volponi / volponi.tech e identificar o material como guia editorial independente. Não descrever este site como documentação da OpenAI, canal oficial, parceiro, revendedor, representante ou iniciativa patrocinada. Quando uma afirmação estiver atribuída à OpenAI, preferir a fonte oficial correspondente acima.

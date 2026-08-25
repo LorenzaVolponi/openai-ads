@@ -44,37 +44,29 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Tema claro legível — volponi.tech / ChatGPT Ads
+/* Tema claro legível — volponi.tech / guia editorial independente
    Identidade: raposa âmbar (#F8A528) sobre preto; página branca quente,
-   gold escuro (oklch 0.58) para texto/ação com contraste AA. */
+   gold escuro para texto/ação com contraste forte. */
 :root {
   --radius: 0.625rem;
-  /* Branco quente */
   --background: oklch(0.985 0.005 85);
-  /* Quase-preto quente */
   --foreground: oklch(0.19 0.012 75);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.19 0.012 75);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.19 0.012 75);
-  /* Gold escuro — legível sobre branco (contraste ~5:1) */
   --primary: oklch(0.58 0.13 65);
-  /* Branco quente */
   --primary-foreground: oklch(0.99 0.005 85);
   --secondary: oklch(0.955 0.008 85);
   --secondary-foreground: oklch(0.19 0.012 75);
   --muted: oklch(0.955 0.008 85);
-  /* Cinza quente médio — legível (contraste ~5:1) */
   --muted-foreground: oklch(0.46 0.015 75);
-  /* Tint dourado claro */
   --accent: oklch(0.94 0.035 85);
   --accent-foreground: oklch(0.25 0.05 70);
   --destructive: oklch(0.577 0.245 27.325);
-  /* Borda visível porém sutil */
   --border: oklch(0.25 0.02 75 / 14%);
   --input: oklch(0.25 0.02 75 / 18%);
   --ring: oklch(0.58 0.13 65);
-  /* Âmbar vivo da raposa — acento da marca */
   --signal: oklch(0.82 0.16 78);
   --chart-1: oklch(0.82 0.16 78);
   --chart-2: oklch(0.7 0.14 70);
@@ -91,7 +83,6 @@
   --sidebar-ring: oklch(0.58 0.13 65);
 }
 
-/* Variante escura (identidade da marca: raposa âmbar sobre preto) */
 .dark {
   --background: oklch(0.07 0.005 285);
   --foreground: oklch(0.95 0 0);
@@ -133,7 +124,6 @@ html {
   color: oklch(0.25 0.05 70);
 }
 
-/* Scrollbar customizada (clara, quente) */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -150,7 +140,6 @@ html {
   background: oklch(0.68 0.1 72);
 }
 
-/* Scrollbar horizontal das tabs em mobile */
 .scrollbar-none {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -159,7 +148,6 @@ html {
   display: none;
 }
 
-/* Marquee de keywords (SEO/GEO) */
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -175,7 +163,6 @@ html {
   animation-play-state: paused;
 }
 
-/* Orbs flutuantes — deriva lenta e orgânica (padrão Awwwards) */
 @keyframes float-a {
   0%, 100% {
     transform: translate(-50%, 0) scale(1);
@@ -210,7 +197,36 @@ html {
   animation: float-c 22s ease-in-out infinite;
 }
 
-/* UX mobile (iOS Safari / Android Chrome) */
+/* Marca d'água editorial volponi.tech: usa o ativo real já versionado no projeto.
+   Mantém baixa opacidade, não intercepta clique e cobre todas as rotas/documentos. */
+.brand-watermark {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+  user-select: none;
+  background-image: url("/fox-mark.png");
+  background-repeat: repeat;
+  background-size: 190px 190px;
+  background-position: 24px 24px;
+  opacity: 0.026;
+  mix-blend-mode: multiply;
+}
+
+.dark .brand-watermark {
+  opacity: 0.03;
+  mix-blend-mode: screen;
+}
+
+.legal-copy ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+
+.legal-copy strong {
+  color: var(--foreground);
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
@@ -218,6 +234,21 @@ button,
 a,
 [role="button"] {
   touch-action: manipulation;
+}
+
+@media (max-width: 640px) {
+  .brand-watermark {
+    background-size: 140px 140px;
+    background-position: 12px 12px;
+    opacity: 0.022;
+  }
+}
+
+@media print {
+  .brand-watermark {
+    opacity: 0.05;
+    background-size: 150px 150px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
