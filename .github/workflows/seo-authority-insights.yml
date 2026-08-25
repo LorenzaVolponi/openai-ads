@@ -1,0 +1,67 @@
+name: SEO Authority Insights
+
+on:
+  schedule:
+    - cron: "30 12 * * 1"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Analytics lookback window in days"
+        required: false
+        default: "7"
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: seo-authority-insights
+  cancel-in-progress: true
+
+jobs:
+  insights:
+    name: Build aggregated authority report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: prj_M3T9oOgs7yMDQbyVStxZL29wxmVA
+      VERCEL_TEAM_SLUG: adm-wuazecoms-projects
+      INSIGHTS_DAYS: ${{ inputs.days || '7' }}
+      INSIGHTS_OUTPUT: /tmp/seo-authority-insights.md
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Build authority insights
+        run: node scripts/seo-authority-insights.mjs
+
+      - name: Publish weekly insights issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TITLE="SEO authority weekly insights"
+          ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
+          if [ -n "$ISSUE_NUMBER" ]; then
+            gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$INSIGHTS_OUTPUT"
+            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Weekly aggregate refreshed: $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
+            echo "Updated insights issue #${ISSUE_NUMBER}."
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file "$INSIGHTS_OUTPUT"
+          fi
+
+      - name: Job summary
+        shell: bash
+        run: cat "$INSIGHTS_OUTPUT" >> "$GITHUB_STEP_SUMMARY"
