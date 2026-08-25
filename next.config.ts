@@ -24,6 +24,13 @@ const machineOnlyHeaders = [
   { key: "Cache-Control", value: "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400" },
 ];
 
+const crawlerManifestHeaders = [
+  {
+    key: "Link",
+    value: "</oai-crawlers.json>; rel=\"alternate\"; type=\"application/json\", </oai-crawlers.txt>; rel=\"alternate\"; type=\"text/plain\"",
+  },
+];
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -63,6 +70,7 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      { source: "/oai-adsbot-searchbot", headers: crawlerManifestHeaders },
       { source: "/feed.xml", headers: machineOnlyHeaders },
       { source: "/feed.json", headers: machineOnlyHeaders },
       { source: "/knowledge.json", headers: machineOnlyHeaders },
