@@ -80,11 +80,13 @@ const anatomy = [
   { id: "destination", n: "6", title: "Destino", desc: "Leva para uma página coerente com a promessa.", question: "A landing continua exatamente a conversa iniciada pelo anúncio?" },
 ] as const;
 
+type AnatomyId = (typeof anatomy)[number]["id"];
+
 export function OfficialAdsLearning() {
   const [activeId, setActiveId] = useState<(typeof OFFICIAL_ASSETS)[number]["id"]>("experience");
   const [zoom, setZoom] = useState(1);
   const [deconstruct, setDeconstruct] = useState(false);
-  const [anatomyId, setAnatomyId] = useState(anatomy[0].id);
+  const [anatomyId, setAnatomyId] = useState<AnatomyId>("sponsored");
   const active = useMemo(() => OFFICIAL_ASSETS.find((item) => item.id === activeId) ?? OFFICIAL_ASSETS[0], [activeId]);
   const activeAnatomy = anatomy.find((item) => item.id === anatomyId) ?? anatomy[0];
 
