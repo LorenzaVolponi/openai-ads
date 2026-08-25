@@ -30,9 +30,6 @@ function greetingMessage(): Msg {
   };
 }
 
-// ------------------------------------------------------------
-// Efeito de digitação — revela o texto progressivamente
-// ------------------------------------------------------------
 function TypewriterText({
   text,
   onTick,
@@ -50,12 +47,10 @@ function TypewriterText({
   });
   const doneRef = useRef(shown >= text.length);
 
-  // Revela progressivamente (respeita prefers-reduced-motion via estado inicial)
   useEffect(() => {
     if (doneRef.current) return;
     const step = Math.max(2, Math.ceil(text.length / 90));
-    let id = 0;
-    id = window.setInterval(() => {
+    const id = window.setInterval(() => {
       setShown((prev) => {
         if (prev >= text.length) {
           window.clearInterval(id);
@@ -66,17 +61,14 @@ function TypewriterText({
       onTick?.();
     }, 24);
     return () => window.clearInterval(id);
-     
-  }, [text]);
+  }, [text, onTick]);
 
-  // Conclusão
   useEffect(() => {
     if (shown >= text.length && !doneRef.current) {
       doneRef.current = true;
       onDone?.();
     }
-     
-  }, [shown]);
+  }, [shown, text.length, onDone]);
 
   const complete = shown >= text.length;
   return (
@@ -95,12 +87,10 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
-  // Índice da mensagem sendo "digitada" (apenas a última da raposa)
   const [revealing, setRevealing] = useState(-1);
   const scrollRef = useRef<HTMLDivElement>(null);
   const dragControls = useDragControls();
 
-  // Scroll lock do body quando o sheet está aberto (mobile-first)
   useEffect(() => {
     if (open) {
       const prev = document.body.style.overflow;
@@ -111,7 +101,6 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
     }
   }, [open]);
 
-  // Autoscroll pra última mensagem
   const scrollToBottom = useCallback(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
@@ -121,13 +110,28 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
     scrollToBottom();
   }, [messages, thinking, scrollToBottom]);
 
-  const toggleOpen = useCallback(() => {
-    if (!open && messages.length === 0) {
+  const openAssistant = useCallback(() => {
+    if (messages.length === 0) {
       setMessages([greetingMessage()]);
       setRevealing(0);
     }
-    setOpen((v) => !v);
-  }, [open, messages.length]);
+    setHintDismissed(true);
+    setOpen(true);
+  }, [messages.length]);
+
+  useEffect(() => {
+    const handler = () => openAssistant();
+    window.addEventListener("volponi:assistant-open", handler);
+    return () => window.removeEventListener("volponi:assistant-open", handler);
+  }, [openAssistant]);
+
+  const toggleOpen = useCallback(() => {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    openAssistant();
+  }, [open, openAssistant]);
 
   const send = useCallback(
     (raw?: string) => {
@@ -141,7 +145,6 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
 
       window.setTimeout(
         () => {
-          // Contexto multi-turn: turnos ANTERIORES (sem a mensagem atual)
           const history = messages
             .slice(-6)
             .map(({ role, text }) => ({ role, text }));
@@ -171,8 +174,7 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
 
   return (
     <>
-      {/* Launcher — acima da safe area do iPhone */}
-      <div className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-4 z-50 sm:right-6">
+      <div className="fixed bottom-[calc(5.75rem+env(safe-area-inset-bottom))] right-4 z-50 lg:bottom-[calc(1.25rem+env(safe-area-inset-bottom))] lg:right-6">
         <AnimatePresence>
           {!open && !hintDismissed && (
             <motion.button
@@ -182,7 +184,7 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
               onClick={() => setHintDismissed(true)}
               aria-hidden="true"
               tabIndex={-1}
-              className="absolute -top-1 right-16 whitespace-nowrap rounded-full border border-border bg-card px-3.5 py-2 text-xs font-medium shadow-lg"
+              className="absolute -top-1 right-16 hidden whitespace-nowrap rounded-full border border-border bg-card px-3.5 py-2 text-xs font-medium shadow-lg sm:block"
             >
               Tire suas dúvidas com a Raposa IA
               <span className="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-primary" />
@@ -196,25 +198,24 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
           onClick={toggleOpen}
           aria-label={open ? "Fechar assistente Raposa IA" : "Abrir assistente Raposa IA — perguntas sobre o guia"}
           aria-expanded={open}
-          className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/30 transition-colors hover:bg-primary/90"
+          className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-black/15 transition-colors hover:bg-zinc-800"
         >
           {!open && (
             <span
-              className="absolute inset-0 animate-ping rounded-full bg-primary/25"
+              className="absolute inset-0 animate-ping rounded-full bg-zinc-950/15"
               aria-hidden="true"
               style={{ animationDuration: "2.5s" }}
             />
           )}
           {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
           {!open && (
-            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-card text-primary shadow-sm">
+            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-zinc-950 shadow-sm">
               <Sparkles className="h-3 w-3" />
             </span>
           )}
         </motion.button>
       </div>
 
-      {/* Painel — bottom-sheet no mobile (iOS/Android), card flutuante no desktop */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -229,20 +230,19 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
             dragElastic={{ top: 0, bottom: 0.6 }}
             onDragEnd={onDragEnd}
             role="dialog"
+            aria-modal="true"
             aria-label="Raposa IA — assistente do guia"
-            className="fixed inset-x-0 bottom-0 z-50 flex h-[min(78dvh,620px)] flex-col overflow-hidden rounded-t-3xl border border-border bg-card shadow-2xl sm:inset-x-auto sm:bottom-24 sm:right-6 sm:h-[min(560px,calc(100dvh-7.5rem))] sm:w-[400px] sm:rounded-2xl"
+            className="fixed inset-x-3 bottom-[calc(4.9rem+env(safe-area-inset-bottom))] z-50 flex h-[min(68dvh,620px)] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl lg:inset-x-auto lg:bottom-24 lg:right-6 lg:h-[min(560px,calc(100dvh-7.5rem))] lg:w-[400px] lg:rounded-2xl"
           >
-            {/* Drag handle (mobile) — arrasta pra baixo pra fechar */}
             <div
-              className="flex cursor-grab touch-none justify-center pb-1 pt-2 active:cursor-grabbing sm:hidden"
+              className="flex cursor-grab touch-none justify-center pb-1 pt-2 active:cursor-grabbing lg:hidden"
               onPointerDown={(e) => dragControls.start(e)}
               aria-hidden="true"
             >
               <GripHorizontal className="h-5 w-10 text-muted-foreground/50" />
             </div>
 
-            {/* Header */}
-            <div className="flex items-center gap-3 border-b border-border bg-gradient-to-r from-primary/10 to-transparent px-4 py-3">
+            <div className="flex items-center gap-3 border-b border-border bg-zinc-50 px-4 py-3">
               <img
                 src="/fox-black.png"
                 alt=""
@@ -259,13 +259,12 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
               <button
                 onClick={dismissSheet}
                 aria-label="Fechar assistente"
-                className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="min-h-10 min-w-10 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            {/* Mensagens */}
             <div
               ref={scrollRef}
               className="flex-1 space-y-3 overflow-y-auto overscroll-contain p-4"
@@ -294,7 +293,6 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                     )}
                   </div>
 
-                  {/* Fontes clicáveis (após a digitação terminar) */}
                   {m.role === "assistant" && m.sources && m.sources.length > 0 && i !== revealing && (
                     <div className="mt-1.5 flex flex-wrap gap-1.5">
                       {m.sources.map((s, j) => (
@@ -304,7 +302,7 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                             onNavigate(s.href);
                             dismissSheet();
                           }}
-                          className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary transition-colors hover:bg-primary/20"
+                          className="inline-flex min-h-9 items-center gap-1 rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-1 text-[11px] font-medium text-zinc-800 transition-colors hover:bg-zinc-100"
                         >
                           <BookOpen className="h-3 w-3" />
                           Ir para: {s.label}
@@ -313,14 +311,13 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                     </div>
                   )}
 
-                  {/* Sugestões (apenas na última resposta, após digitar) */}
                   {m.role === "assistant" && m.followUps && m.followUps.length > 0 && i === lastAssistantIdx && i !== revealing && !thinking && (
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {m.followUps.map((f) => (
                         <button
                           key={f}
                           onClick={() => send(f)}
-                          className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                          className="min-h-9 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-zinc-500 hover:text-zinc-950"
                         >
                           {f}
                         </button>
@@ -330,7 +327,6 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                 </div>
               ))}
 
-              {/* Pensando... */}
               {thinking && (
                 <div className="flex items-start">
                   <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-muted px-4 py-3">
@@ -346,9 +342,8 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
               )}
             </div>
 
-            {/* Input — 16px evita zoom automático no iOS */}
             <form
-              className="flex items-center gap-2 border-t border-border bg-card p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:pb-3"
+              className="flex items-center gap-2 border-t border-border bg-card p-3"
               onSubmit={(e) => {
                 e.preventDefault();
                 send();
@@ -359,7 +354,7 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pergunte sobre ChatGPT Ads..."
                 aria-label="Digite sua pergunta sobre o guia"
-                className="flex-1"
+                className="min-h-11 flex-1"
                 style={{ fontSize: "16px" }}
                 maxLength={200}
                 autoComplete="off"
@@ -370,7 +365,7 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                 size="icon"
                 disabled={!input.trim() || thinking}
                 aria-label="Enviar pergunta"
-                className="h-10 w-10 shrink-0 bg-primary text-primary-foreground hover:bg-primary/90"
+                className="h-11 w-11 shrink-0 bg-primary text-primary-foreground hover:bg-zinc-800"
               >
                 <Send className="h-4 w-4" />
               </Button>
