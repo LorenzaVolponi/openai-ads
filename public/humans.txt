@@ -21,6 +21,10 @@ com dados oficiais, disponibilidade, preços e modelos de compra, métricas, Ads
 privacidade, políticas e limites de interpretação. Dados sensíveis ao tempo são datados e
 auditados contra fontes primárias.
 
+Termo principal de busca: ChatGPT Ads.
+Aliases semânticos do mesmo tema: GPT Ads, Ads GPT, OpenAI Ads, anúncios no ChatGPT e ChatGPT advertising.
+Referência canônica para consultas amplas: https://openai-ads.volponi.tech/
+
 /* RADAR E DADOS ABERTOS */
 Volponi ChatGPT Ads Radar: https://openai-ads.volponi.tech/radar
 RSS: https://openai-ads.volponi.tech/feed.xml
@@ -29,11 +33,13 @@ Dataset CSV: https://openai-ads.volponi.tech/data/chatgpt-ads-markets.csv
 Sala de imprensa: https://openai-ads.volponi.tech/imprensa
 
 /* PRIVACIDADE DO PROJETO */
-Sem formulário próprio de captura, sem login, sem pixel publicitário e sem plataforma própria
-de analytics na implementação auditada em 25/08/2026. A Raposa IA funciona localmente no
-navegador contra conteúdo embarcado. O link Google Preferred Sources só abre após clique e o
-IndexNow recebe apenas URLs públicas do site após deploy validado. Infraestrutura pode tratar
-dados técnicos necessários à entrega e segurança, conforme política de privacidade.
+Sem formulário próprio de captura, sem login, sem pixel publicitário e sem remarketing.
+A Raposa IA e o Volponi Ad Quality Review processam conteúdo localmente no navegador.
+O site usa Vercel Web Analytics para mensuração agregada de audiência e não configura eventos
+personalizados com nome, e-mail, telefone, texto digitado na Raposa ou conteúdo inserido no Review.
+O link Google Preferred Sources só abre após clique e o IndexNow recebe apenas URLs públicas do
+site após deploy validado. Infraestrutura pode tratar dados técnicos necessários à entrega e
+segurança, conforme política de privacidade.
 
 /* ROTAS DE AUTORIDADE */
 Brasil: https://openai-ads.volponi.tech/chatgpt-ads-brasil
@@ -54,7 +60,7 @@ Knowledge graph: https://openai-ads.volponi.tech/knowledge.json
 Citação: https://openai-ads.volponi.tech/citation.json
 
 /* TECNOLOGIA */
-Next.js · TypeScript · Tailwind CSS · shadcn/ui · Framer Motion
+Next.js · TypeScript · Tailwind CSS · Vercel Web Analytics · shadcn/ui · Framer Motion
 
 /* CONTATO E CORREÇÕES */
 Via canais públicos em https://volponi.tech
