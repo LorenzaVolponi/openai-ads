@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, Database, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Database, ShieldCheck, UserRound } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  AUTHOR,
+  AUTHOR_ID,
+  PUBLISHER_ID,
+  SITE_URL,
+  mediaAuthorStructuredData,
+  publisherStructuredData,
+} from "@/lib/media-authority";
 import { radarEntries } from "@/lib/radar-data";
 
-const SITE_URL = "https://openai-ads.volponi.tech";
 const BASE_URL = `${SITE_URL}/radar`;
 
 export function generateStaticParams() {
@@ -26,8 +33,9 @@ export async function generateMetadata({
   const url = `${BASE_URL}/${entry.slug}`;
   const socialImage = `${SITE_URL}/og/radar/${entry.slug}`;
   return {
-    title: `${entry.title} | ChatGPT Ads Radar`,
+    title: `${entry.title} | ChatGPT Ads Radar` ,
     description: entry.summary,
+    authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
     alternates: { canonical: url },
     openGraph: {
       title: entry.title,
@@ -36,7 +44,7 @@ export async function generateMetadata({
       type: "article",
       publishedTime: `${entry.date}T12:00:00Z`,
       modifiedTime: `${entry.date}T12:00:00Z`,
-      authors: ["Lorenza Volponi"],
+      authors: [AUTHOR.name],
       images: [{ url: socialImage, width: 1200, height: 630, alt: `${entry.title} — Volponi ChatGPT Ads Radar` }],
     },
     twitter: {
@@ -58,25 +66,32 @@ export default async function RadarEntryPage({
   if (!entry) notFound();
 
   const url = `${BASE_URL}/${entry.slug}`;
-  const socialImage = `${SITE_URL}/og/radar/${entry.slug}`;
+  const articleImages = [
+    `${SITE_URL}/og/radar/${entry.slug}?ratio=1x1`,
+    `${SITE_URL}/og/radar/${entry.slug}?ratio=4x3`,
+    `${SITE_URL}/og/radar/${entry.slug}?ratio=16x9`,
+  ];
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": ["Article", "TechArticle"],
+        "@type": ["NewsArticle", "TechArticle"],
         "@id": `${url}/#article`,
         headline: entry.title,
         description: entry.summary,
-        image: socialImage,
-        datePublished: entry.date,
-        dateModified: entry.date,
+        image: articleImages,
+        datePublished: `${entry.date}T12:00:00Z`,
+        dateModified: `${entry.date}T12:00:00Z`,
         inLanguage: "pt-BR",
         mainEntityOfPage: url,
-        author: { "@id": `${SITE_URL}/#author` },
-        publisher: { "@id": `${SITE_URL}/#author` },
+        author: { "@id": AUTHOR_ID },
+        publisher: { "@id": PUBLISHER_ID },
         isBasedOn: entry.source.url,
         articleSection: `ChatGPT Ads Radar — ${entry.kind}`,
+        about: ["ChatGPT Ads", entry.market, entry.kind],
       },
+      mediaAuthorStructuredData,
+      publisherStructuredData,
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -114,6 +129,13 @@ export default async function RadarEntryPage({
             </div>
             <h1 className="mt-6 max-w-4xl text-5xl font-black leading-[0.95] tracking-[-0.055em] md:text-7xl">{entry.title}</h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-zinc-400 md:text-xl">{entry.summary}</p>
+            <Link
+              href="/imprensa"
+              rel="author"
+              className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 text-sm font-semibold text-zinc-200 transition hover:border-white/30 hover:bg-white/[0.1]"
+            >
+              <UserRound className="h-4 w-4" /> Por {AUTHOR.name} · fonte para imprensa
+            </Link>
           </div>
         </section>
 
