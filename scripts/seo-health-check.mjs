@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.1 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.2 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -8,6 +8,7 @@ const canonicalPages = [
   ["/chatgpt-ads-metricas", "/chatgpt-ads-metricas"],
   ["/ads-manager-chatgpt", "/ads-manager-chatgpt"],
   ["/chatgpt-ads-privacidade", "/chatgpt-ads-privacidade"],
+  ["/oai-adsbot-searchbot", "/oai-adsbot-searchbot"],
   ["/radar", "/radar"],
   ["/imprensa", "/imprensa"],
   ["/metodologia", "/metodologia"],
@@ -24,6 +25,10 @@ const aliases = [
   ["/chatgpt-ads-manager", "/ads-manager-chatgpt"],
   ["/quanto-custa-anunciar-no-chatgpt", "/chatgpt-ads-precos"],
   ["/metricas-chatgpt-ads", "/chatgpt-ads-metricas"],
+  ["/oai-adsbot", "/oai-adsbot-searchbot"],
+  ["/oai-searchbot", "/oai-adsbot-searchbot"],
+  ["/openai-crawlers", "/oai-adsbot-searchbot"],
+  ["/openai-adsbot", "/oai-adsbot-searchbot"],
 ];
 
 const machineOnly = [
@@ -35,6 +40,7 @@ const machineOnly = [
   "/llms.txt",
   "/llms-full.txt",
   "/humans.txt",
+  "/oai-crawlers.txt",
   "/data/chatgpt-ads-markets.json",
   "/data/chatgpt-ads-markets.csv",
 ];
@@ -54,6 +60,7 @@ const sitemapRequired = [
   "/chatgpt-ads-metricas",
   "/ads-manager-chatgpt",
   "/chatgpt-ads-privacidade",
+  "/oai-adsbot-searchbot",
   "/radar",
   "/imprensa",
   "/metodologia",
@@ -96,7 +103,7 @@ function assert(condition, label, detail = "") {
 async function request(path, options = {}) {
   const response = await fetch(`${BASE_URL}${path}`, {
     redirect: options.redirect || "follow",
-    headers: { "user-agent": USER_AGENT, accept: options.accept || "*/*" },
+    headers: { "user-agent": options.userAgent || USER_AGENT, accept: options.accept || "*/*" },
     signal: AbortSignal.timeout(15000),
   });
   return response;
@@ -192,12 +199,26 @@ async function checkFreshnessSignals() {
   }
 }
 
+async function checkCrawlerAccess() {
+  for (const userAgent of ["OAI-AdsBot", "OAI-SearchBot"]) {
+    for (const path of ["/", "/oai-adsbot-searchbot"]) {
+      try {
+        const response = await request(path, { userAgent });
+        assert(response.status === 200, `${userAgent} can fetch ${path}`, `HTTP ${response.status}`);
+      } catch (error) {
+        fail(`${userAgent} access check for ${path}`, error instanceof Error ? error.message : String(error));
+      }
+    }
+  }
+}
+
 async function checkDiscovery() {
   try {
     const response = await request("/robots.txt");
     const body = await response.text();
     assert(response.status === 200, "robots.txt returns 200", `HTTP ${response.status}`);
     assert(body.includes(`${BASE_URL}/sitemap.xml`), "robots.txt advertises canonical sitemap");
+    assert(/OAI-AdsBot/i.test(body), "robots.txt allows OAI-AdsBot explicitly");
     assert(/OAI-SearchBot/i.test(body), "robots.txt allows OAI-SearchBot explicitly");
     assert(/GPTBot/i.test(body), "robots.txt allows GPTBot explicitly");
   } catch (error) {
@@ -218,19 +239,23 @@ async function checkDiscovery() {
     fail("sitemap.xml check succeeds", error instanceof Error ? error.message : String(error));
   }
 
-  try {
-    const response = await request("/og/home");
-    const contentType = response.headers.get("content-type") || "";
-    assert(response.status === 200, "dynamic OG image returns 200", `HTTP ${response.status}`);
-    assert(/^image\//i.test(contentType), "dynamic OG route returns an image", contentType || "missing content-type");
-  } catch (error) {
-    fail("dynamic OG check succeeds", error instanceof Error ? error.message : String(error));
+  for (const card of ["home", "crawlers"]) {
+    try {
+      const response = await request(`/og/${card}`);
+      const contentType = response.headers.get("content-type") || "";
+      assert(response.status === 200, `dynamic OG ${card} returns 200`, `HTTP ${response.status}`);
+      assert(/^image\//i.test(contentType), `dynamic OG ${card} returns an image`, contentType || "missing content-type");
+    } catch (error) {
+      fail(`dynamic OG ${card} check succeeds`, error instanceof Error ? error.message : String(error));
+    }
   }
 
   try {
     const response = await request("/knowledge.json");
     const data = await response.json();
-    const aliasesFromKnowledge = Array.isArray(data?.entity?.aliases) ? data.entity.aliases.map((value) => String(value).toLowerCase()) : [];
+    const aliasesFromKnowledge = Array.isArray(data?.searchEntity?.aliases)
+      ? data.searchEntity.aliases.map((value) => String(value).toLowerCase())
+      : [];
     assert(data?.canonical === BASE_URL, "knowledge.json canonical matches production", String(data?.canonical || "missing"));
     for (const term of ["chatgpt ads", "gpt ads", "ads gpt", "openai ads"]) {
       assert(aliasesFromKnowledge.includes(term), `knowledge.json maps alias: ${term}`);
@@ -244,6 +269,7 @@ await checkCanonicalPages();
 await checkAliases();
 await checkMachineOnly();
 await checkFreshnessSignals();
+await checkCrawlerAccess();
 await checkDiscovery();
 
 console.log(`\nSEO authority health: ${results.length - failures}/${results.length} checks passed.`);

@@ -31,6 +31,11 @@ export const SOCIAL_CARDS = {
     title: "O que anunciantes recebem — e o que não recebem",
     subtitle: "Conversas, memórias, personalização, dados agregados e separação entre anúncio e resposta.",
   },
+  crawlers: {
+    eyebrow: "OAI-ADSBOT · OAI-SEARCHBOT",
+    title: "Crawlers da OpenAI: ads readiness e ChatGPT Search",
+    subtitle: "robots.txt, landing pages, WAF, CDN, 403, 429, IP ranges e descoberta pública.",
+  },
   radar: {
     eyebrow: "VOLPONI CHATGPT ADS RADAR",
     title: "Mudanças, países e disponibilidade em um registro vivo",
@@ -52,6 +57,7 @@ const PATH_TO_CARD: Record<string, SocialCardKey> = {
   "/chatgpt-ads-metricas": "metricas",
   "/ads-manager-chatgpt": "manager",
   "/chatgpt-ads-privacidade": "privacidade",
+  "/oai-adsbot-searchbot": "crawlers",
   "/radar": "radar",
   "/imprensa": "imprensa",
 };
@@ -99,6 +105,12 @@ export const searchIntentAnswers = [
     a: "A estrutura documentada trabalha com campanhas, grupos de anúncios e anúncios, além de reporting, objetivos de compra e disponibilidade que varia por mercado.",
     href: "/ads-manager-chatgpt",
     linkLabel: "Abrir guia do Ads Manager",
+  },
+  {
+    q: "O que é OAI-AdsBot e por que liberar OAI-SearchBot?",
+    a: "OAI-AdsBot é exigido pela OpenAI para validação e revisão de landing pages de ChatGPT Ads. OAI-SearchBot é recomendado para descoberta de conteúdo público e participação em experiências de busca do ChatGPT. robots.txt é só a primeira camada: WAF, CDN, CAPTCHA e rate limiting também podem bloquear acesso.",
+    href: "/oai-adsbot-searchbot",
+    linkLabel: "Abrir guia dos crawlers da OpenAI",
   },
   {
     q: "Anunciantes podem ler minhas conversas?",
