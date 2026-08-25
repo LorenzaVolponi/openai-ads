@@ -13,7 +13,7 @@ const escapeXml = (value: string) =>
 export function GET() {
   const items = radarEntries
     .map((entry) => {
-      const url = `https://openai-ads.volponi.tech/radar#${entry.slug}`;
+      const url = `https://openai-ads.volponi.tech/radar/${entry.slug}`;
       return `
     <item>
       <title>${escapeXml(entry.title)}</title>
