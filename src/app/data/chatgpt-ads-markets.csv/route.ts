@@ -1,4 +1,5 @@
-import { marketStates } from "@/lib/radar-data";
+import { createFreshnessHeaders } from "@/lib/http-freshness";
+import { marketStates, RADAR_CHECKED_AT } from "@/lib/radar-data";
 
 export const dynamic = "force-static";
 
@@ -18,15 +19,18 @@ export function GET() {
     market.source,
   ]);
 
-  const csv = [header, ...rows]
+  const body = `${[header, ...rows]
     .map((row) => row.map((value) => csvCell(String(value))).join(","))
-    .join("\n");
+    .join("\n")}\n`;
 
-  return new Response(`${csv}\n`, {
+  return new Response(body, {
     headers: {
-      "Content-Type": "text/csv; charset=utf-8",
+      ...createFreshnessHeaders({
+        body,
+        modifiedAt: `${RADAR_CHECKED_AT}T12:00:00Z`,
+        contentType: "text/csv; charset=utf-8",
+      }),
       "Content-Disposition": 'inline; filename="chatgpt-ads-markets.csv"',
-      "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }
