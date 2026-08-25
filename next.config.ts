@@ -65,6 +65,7 @@ const nextConfig: NextConfig = {
       { source: "/citation.json", headers: machineOnlyHeaders },
       { source: "/provenance.json", headers: machineOnlyHeaders },
       { source: "/evidence.json", headers: machineOnlyHeaders },
+      { source: "/press-kit.json", headers: machineOnlyHeaders },
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
       { source: "/humans.txt", headers: machineOnlyHeaders },
