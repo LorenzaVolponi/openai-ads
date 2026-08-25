@@ -41,6 +41,7 @@ const authorityDiscoveryHeaders = [
       `<${SITE_URL}/author.json>; rel=\"alternate\"; type=\"application/json\"`,
       `<${SITE_URL}/citation.json>; rel=\"cite-as\"; type=\"application/json\"`,
       `<${SITE_URL}/provenance.json>; rel=\"describedby\"; type=\"application/json\"`,
+      `<${SITE_URL}/data-catalog.json>; rel=\"describedby\"; type=\"application/json\"`,
       `<${SITE_URL}/feed.xml>; rel=\"alternate\"; type=\"application/rss+xml\"`,
       `<${SITE_URL}/feed.json>; rel=\"alternate\"; type=\"application/feed+json\"`,
     ].join(", "),
@@ -82,10 +83,7 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      {
-        source: "/:path*",
-        headers: securityHeaders,
-      },
+      { source: "/:path*", headers: securityHeaders },
       { source: "/", headers: authorityDiscoveryHeaders },
       { source: "/imprensa", headers: authorityDiscoveryHeaders },
       { source: "/radar", headers: authorityDiscoveryHeaders },
@@ -99,6 +97,7 @@ const nextConfig: NextConfig = {
       { source: "/evidence.json", headers: machineOnlyHeaders },
       { source: "/press-kit.json", headers: machineOnlyHeaders },
       { source: "/author.json", headers: machineOnlyHeaders },
+      { source: "/data-catalog.json", headers: machineOnlyHeaders },
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
       { source: "/oai-crawlers.txt", headers: machineOnlyHeaders },
