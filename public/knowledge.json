@@ -50,9 +50,10 @@
     {
       "id": "ads-manager-countries",
       "value": 9,
-      "meaning": "países listados como disponíveis no Ads Manager na auditoria de 2026-08-25",
+      "meaning": "países listados como disponíveis na fonte oficial mais recente do Ads Manager na auditoria de 2026-08-25",
       "countries": ["Australia", "Brazil", "Canada", "Japan", "South Korea", "Mexico", "New Zealand", "United Kingdom", "United States"],
-      "source": "https://help.openai.com/pt-br/articles/20001245-ads-manager-availability"
+      "caveat": "Páginas localizadas podem atualizar em momentos diferentes; a lista usa a versão oficial mais recente consultada.",
+      "source": "https://help.openai.com/en/articles/20001245"
     },
     {
       "id": "europe-expansion",
@@ -104,7 +105,7 @@
     "https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt",
     "https://help.openai.com/pt-br/articles/20001207",
     "https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads",
-    "https://help.openai.com/pt-br/articles/20001245-ads-manager-availability",
+    "https://help.openai.com/en/articles/20001245",
     "https://help.openai.com/pt-br/articles/20001206",
     "https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/",
     "https://openai.com/pt-BR/policies/ad-policies/"
