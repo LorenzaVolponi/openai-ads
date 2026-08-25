@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 export default function ChatGPTAdsPrecosPage() {
   return (
     <TopicArticle
+      canonical={URL}
       eyebrow="Preço e leilão · atualização 25/08/2026"
       title="ChatGPT Ads tem CPC, CPM e oCPC. O que ele não tem é um benchmark mágico universal."
       description="A documentação já é específica o suficiente para explicar como a compra funciona. O erro começa quando recomendação de lance vira ‘CPC médio’ ou quando um resultado isolado vira promessa de mercado."
