@@ -1,3 +1,4 @@
+import { AUDITED_KNOWLEDGE } from "@/lib/assistant/knowledge";
 import {
   apiTools,
   audienceTabs,
@@ -57,6 +58,13 @@ const sanitize = (value: string) =>
     .slice(0, 240);
 
 const entries: Entry[] = [
+  ...AUDITED_KNOWLEDGE.map((item) => ({
+    title: item.title,
+    text: item.text,
+    href: item.href,
+    section: item.section,
+    keywords: tokenize(`${item.title} ${item.text} ${item.tags}`),
+  })),
   ...faqs.map((item) => ({
     title: item.q,
     text: item.a,
@@ -131,9 +139,9 @@ const entries: Entry[] = [
 
 const STARTERS = [
   "O que são ChatGPT Ads?",
-  "Os anúncios influenciam as respostas?",
+  "Este site é oficial da OpenAI?",
+  "Quais planos têm anúncios?",
   "Anunciantes podem ler minhas conversas?",
-  "Quanto custa anunciar no ChatGPT?",
   "Está disponível no Brasil?",
   "Como medir resultados?",
 ];
@@ -142,7 +150,7 @@ export const STARTER_QUESTIONS = STARTERS;
 
 const greeting = (): AssistantAnswer => ({
   text:
-    "Oi! Eu sou a Raposa IA 🦊. Respondo somente com a versão auditada deste guia sobre ChatGPT Ads 2026. Se o guia não sustentar uma afirmação, eu prefiro dizer que não sei em vez de inventar.",
+    "Oi! Eu sou a Raposa IA 🦊. Respondo somente com a versão auditada deste guia independente sobre publicidade no ChatGPT em 2026. Se o guia não sustentar uma afirmação, eu prefiro dizer que não sei em vez de inventar.",
   sources: [],
   followUps: STARTERS.slice(0, 4),
 });
