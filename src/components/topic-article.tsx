@@ -22,6 +22,7 @@ export type TopicSource = {
 };
 
 export function TopicArticle({
+  canonical,
   eyebrow,
   title,
   description,
@@ -31,6 +32,7 @@ export function TopicArticle({
   sources,
   related,
 }: {
+  canonical: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -40,8 +42,58 @@ export function TopicArticle({
   sources: TopicSource[];
   related: { label: string; href: string }[];
 }) {
+  const topicStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["Article", "TechArticle"],
+        "@id": `${canonical}#article`,
+        mainEntityOfPage: canonical,
+        headline: title,
+        description,
+        author: { "@id": "https://openai-ads.volponi.tech/#author" },
+        publisher: { "@id": "https://openai-ads.volponi.tech/#author" },
+        dateModified: "2026-08-25T09:34:00-03:00",
+        inLanguage: "pt-BR",
+        isAccessibleForFree: true,
+        citation: sources.map((source) => source.url),
+        about: facts.map((fact) => ({
+          "@type": "PropertyValue",
+          name: fact.label,
+          value: fact.value,
+          description: fact.note,
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonical}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "ChatGPT Ads Brasil 2026",
+            item: "https://openai-ads.volponi.tech/",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: title,
+            item: canonical,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(topicStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
+
       <header className="border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
