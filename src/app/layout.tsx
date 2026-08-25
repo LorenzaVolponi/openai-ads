@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 import { SiteComplianceStrip, SiteWatermark } from "@/components/site-compliance";
 import {
@@ -175,6 +176,7 @@ export default function RootLayout({
         />
         <SiteWatermark />
         {children}
+        <Analytics />
         <SiteComplianceStrip />
       </body>
     </html>
