@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 export default function AdsManagerChatGPTPage() {
   return (
     <TopicArticle
+      canonical={URL}
       eyebrow="Ads Manager Beta · atualização 25/08/2026"
       title="OpenAI Ads Manager: já é uma plataforma operável — e ainda é beta."
       description="A ferramenta já cria, lança, mede e gerencia campanhas. O que exige cuidado é transformar uma plataforma em evolução numa lista de recursos permanentes sem data e sem verificação."
