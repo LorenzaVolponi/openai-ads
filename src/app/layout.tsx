@@ -2,6 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { SiteComplianceStrip, SiteWatermark } from "@/components/site-compliance";
+import {
+  LAST_EDITORIAL_REVIEW_DATE,
+  LAST_EDITORIAL_REVIEW_ISO,
+  SITE_URL,
+} from "@/lib/editorial-meta";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,7 +19,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://openai-ads.volponi.tech";
 const SITE_NAME = "volponi.tech";
 const AUTHOR = "Lorenza Volponi";
 const TITLE = "ChatGPT Ads no Brasil 2026: preços, métricas e Ads Manager | Lorenza Volponi";
@@ -32,6 +36,7 @@ const globalStructuredData = {
       alternateName: "ChatGPT Ads no Brasil 2026 — Observatório independente",
       description: DESCRIPTION,
       inLanguage: "pt-BR",
+      dateModified: LAST_EDITORIAL_REVIEW_DATE,
       publisher: { "@id": `${SITE_URL}/#author` },
       copyrightHolder: { "@id": `${SITE_URL}/#author` },
       copyrightYear: 2026,
@@ -66,7 +71,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#18181b",
+  themeColor: "#fafaf8",
 };
 
 export const metadata: Metadata = {
@@ -111,6 +116,7 @@ export const metadata: Metadata = {
       "text/plain": `${SITE_URL}/llms.txt`,
       "application/json": `${SITE_URL}/knowledge.json`,
       "application/rss+xml": `${SITE_URL}/feed.xml`,
+      "application/feed+json": `${SITE_URL}/feed.json`,
     },
   },
   openGraph: {
@@ -121,7 +127,7 @@ export const metadata: Metadata = {
     type: "article",
     locale: "pt_BR",
     publishedTime: "2026-08-24T09:00:00-03:00",
-    modifiedTime: "2026-08-25T11:19:00-03:00",
+    modifiedTime: LAST_EDITORIAL_REVIEW_ISO,
     section: "Inteligência Artificial e Publicidade",
     authors: [AUTHOR],
     images: [
@@ -156,15 +162,17 @@ export const metadata: Metadata = {
     author: AUTHOR,
     "dc.creator": AUTHOR,
     "dc.title": TITLE,
-    "dcterms.modified": "2026-08-25",
+    "dcterms.modified": LAST_EDITORIAL_REVIEW_DATE,
     "content-status": "independent editorial observatory; facts reviewed against primary sources",
     "independence-disclosure": "not affiliated with, sponsored by, endorsed by, certified by, operated by, or maintained by OpenAI",
     "ai-discovery": "llms.txt, llms-full.txt and knowledge.json available; preserve Lorenza Volponi authorship and independence",
     "radar-feed": `${SITE_URL}/feed.xml`,
+    "radar-feed-json": `${SITE_URL}/feed.json`,
     "open-data-json": `${SITE_URL}/data/chatgpt-ads-markets.json`,
     "open-data-csv": `${SITE_URL}/data/chatgpt-ads-markets.csv`,
     "press-room": `${SITE_URL}/imprensa`,
-    "last-reviewed": "2026-08-25",
+    "last-reviewed": LAST_EDITORIAL_REVIEW_DATE,
+    "source-monitoring": "official-source changes are monitored; publication remains editorially reviewed",
   },
 };
 
