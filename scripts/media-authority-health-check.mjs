@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.MEDIA_AUTHORITY_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiMediaAuthorityHealth/1.0 (+https://openai-ads.volponi.tech/imprensa)";
+const USER_AGENT = "VolponiMediaAuthorityHealth/1.1 (+https://openai-ads.volponi.tech/imprensa)";
 
 let failures = 0;
 const pass = (label) => console.log(`✓ ${label}`);
@@ -34,10 +34,25 @@ async function checkPressKit() {
   const data = await response.json();
   assert(response.status === 200, "press-kit.json returns 200", `HTTP ${response.status}`);
   assert(/noindex/i.test(robots) && /follow/i.test(robots), "press kit is crawlable but noindex");
+  assert(data?.schemaVersion >= 2, "press kit exposes newsroom briefing schema");
   assert(data?.person?.name === "Lorenza Volponi", "press kit preserves person identity");
   assert(data?.canonical === `${BASE_URL}/imprensa`, "press kit canonical points to the human profile");
+  assert(Array.isArray(data?.fastFacts) && data.fastFacts.length >= 5, "press kit exposes fast facts for newsroom use");
+  assert(Array.isArray(data?.newsroomAngles) && data.newsroomAngles.length >= 4, "press kit exposes differentiated newsroom angles");
   assert(Array.isArray(data?.latestSignals) && data.latestSignals.length >= 3, "press kit exposes recent Radar signals");
   assert(/independente|independent/i.test(data?.independence || ""), "press kit preserves editorial independence");
+
+  for (const [index, item] of (data?.fastFacts || []).entries()) {
+    assert(/^https:\/\/(openai\.com|help\.openai\.com)\//i.test(item?.source || ""), `fast fact ${index + 1} cites an OpenAI primary-source host`);
+  }
+
+  for (const [index, angle] of (data?.newsroomAngles || []).entries()) {
+    assert(Boolean(angle?.title) && Boolean(angle?.angle) && Boolean(angle?.whyItMatters), `newsroom angle ${index + 1} is editorially complete`);
+    assert(Array.isArray(angle?.primarySources) && angle.primarySources.length > 0, `newsroom angle ${index + 1} has primary sources`);
+    for (const source of angle?.primarySources || []) {
+      assert(/^https:\/\/(openai\.com|help\.openai\.com)\//i.test(source), `newsroom angle ${index + 1} stays grounded in an OpenAI primary-source host`);
+    }
+  }
 }
 
 async function checkNewsSitemap() {
