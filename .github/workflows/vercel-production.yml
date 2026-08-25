@@ -9,6 +9,8 @@ on:
 permissions:
   contents: read
   statuses: write
+  id-token: write
+  attestations: write
 
 concurrency:
   group: vercel-production-deploy
@@ -157,16 +159,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          vercel curl /evidence.json --deployment "$DEPLOYMENT_URL" > /tmp/openai-ads-evidence.json
-          vercel curl /provenance.json --deployment "$DEPLOYMENT_URL" > /tmp/openai-ads-provenance.json
+          mkdir -p .authority-attestation
+          vercel curl /evidence.json --deployment "$DEPLOYMENT_URL" > .authority-attestation/evidence.json
+          vercel curl /provenance.json --deployment "$DEPLOYMENT_URL" > .authority-attestation/provenance.json
 
           jq -e --arg sha "$EXPECTED_GIT_COMMIT_SHA" \
             '.schemaVersion == 2 and .sourceRevision.commitSha == $sha and .sourceRevision.commitUrl == ("https://github.com/LorenzaVolponi/openai-ads/commit/" + $sha)' \
-            /tmp/openai-ads-evidence.json >/dev/null
+            .authority-attestation/evidence.json >/dev/null
 
           jq -e --arg sha "$EXPECTED_GIT_COMMIT_SHA" \
-            '.schema_version == "1.3" and .source_revision.commitSha == $sha and .source_revision.commitUrl == ("https://github.com/LorenzaVolponi/openai-ads/commit/" + $sha)' \
-            /tmp/openai-ads-provenance.json >/dev/null
+            '.schema_version == "1.4" and .source_revision.commitSha == $sha and .source_revision.commitUrl == ("https://github.com/LorenzaVolponi/openai-ads/commit/" + $sha)' \
+            .authority-attestation/provenance.json >/dev/null
 
           echo "Source revision verified before production promotion: ${EXPECTED_GIT_COMMIT_SHA}"
 
@@ -196,6 +199,34 @@ jobs:
           fi
 
           echo "Production homepage health check passed (${HOME_BYTES} bytes)."
+
+      - name: Attest deployed authority artifacts with GitHub
+        id: authority_attestation
+        continue-on-error: true
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            .authority-attestation/evidence.json
+            .authority-attestation/provenance.json
+
+      - name: Verify GitHub authority attestation
+        id: verify_authority_attestation
+        if: steps.authority_attestation.outcome == 'success'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh attestation verify .authority-attestation/evidence.json -R "$GITHUB_REPOSITORY"
+          gh attestation verify .authority-attestation/provenance.json -R "$GITHUB_REPOSITORY"
+          echo "GitHub artifact attestation verified for deployed authority artifacts."
+
+      - name: Report authority attestation warning
+        if: steps.authority_attestation.outcome == 'failure' || steps.verify_authority_attestation.outcome == 'failure'
+        shell: bash
+        run: |
+          echo "::warning::GitHub artifact attestation was unavailable or could not be verified. Source-revision promotion checks already passed, so production remains healthy."
 
       - name: Notify IndexNow of published authority URLs
         if: success() && steps.deploy.outputs.url != ''
@@ -284,3 +315,4 @@ jobs:
         run: |
           echo "Vercel deployment URL -> ${{ steps.deploy.outputs.url }}"
           echo "Production domain -> https://${VERCEL_PRODUCTION_DOMAIN}"
+          echo "GitHub authority attestation -> ${{ steps.authority_attestation.outputs.attestation-url }}"
