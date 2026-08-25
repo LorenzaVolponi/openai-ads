@@ -2,19 +2,28 @@ import type { Metadata } from "next";
 
 import { TopicArticle } from "@/components/topic-article";
 import { SOURCES } from "@/lib/authority-data";
+import { socialImageForPath } from "@/lib/seo";
 
 const URL = "https://openai-ads.volponi.tech/chatgpt-ads-precos";
+const SOCIAL_IMAGE = socialImageForPath("/chatgpt-ads-precos");
 
 export const metadata: Metadata = {
-  title: "ChatGPT Ads preços 2026: CPC, CPM, oCPC e lance de US$ 3–5 | Lorenza Volponi",
+  title: "Quanto custa anunciar no ChatGPT? CPC, CPM e oCPC (2026)",
   description:
-    "Como funciona o preço do ChatGPT Ads em 2026: CPM, CPC, oCPC, leilão de segundo preço, recomendação de lance e o que não deve ser tratado como benchmark.",
+    "Veja como funciona o preço do ChatGPT Ads: CPC, CPM, oCPC, leilão de segundo preço, lance inicial de US$ 3–5 e o que não é benchmark.",
   alternates: { canonical: URL },
   openGraph: {
-    title: "ChatGPT Ads: preços, CPC, CPM e oCPC em 2026",
-    description: "Modelos de compra oficiais, leilão e recomendação de lance explicados sem benchmark inventado.",
+    title: "Quanto custa anunciar no ChatGPT? CPC, CPM e oCPC (2026)",
+    description: "Modelos de compra oficiais, leilão e orientação de lance explicados sem benchmark inventado.",
     url: URL,
     type: "article",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Quanto custa anunciar no ChatGPT: CPC, CPM e oCPC" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Quanto custa anunciar no ChatGPT?",
+    description: "CPC, CPM, oCPC, leilão e lance inicial explicados com fonte primária.",
+    images: [SOCIAL_IMAGE],
   },
 };
 

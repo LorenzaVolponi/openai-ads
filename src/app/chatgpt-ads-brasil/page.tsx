@@ -2,19 +2,28 @@ import type { Metadata } from "next";
 
 import { TopicArticle } from "@/components/topic-article";
 import { SOURCES } from "@/lib/authority-data";
+import { socialImageForPath } from "@/lib/seo";
 
 const URL = "https://openai-ads.volponi.tech/chatgpt-ads-brasil";
+const SOCIAL_IMAGE = socialImageForPath("/chatgpt-ads-brasil");
 
 export const metadata: Metadata = {
-  title: "ChatGPT Ads no Brasil 2026: disponibilidade, planos e como funciona | Lorenza Volponi",
+  title: "ChatGPT Ads no Brasil: disponibilidade, planos e lançamento (2026)",
   description:
-    "Estado atual do ChatGPT Ads no Brasil em 2026: Ads Manager disponível, planos com anúncios, datas de lançamento, privacidade e fontes oficiais auditadas.",
+    "ChatGPT Ads no Brasil em 2026: lançamento, Ads Manager disponível, planos Free/Go com anúncios, limites atuais e fontes oficiais auditadas.",
   alternates: { canonical: URL },
   openGraph: {
-    title: "ChatGPT Ads no Brasil 2026 — estado atual",
-    description: "Disponibilidade, planos, lançamento, privacidade e fontes primárias.",
+    title: "ChatGPT Ads no Brasil: disponibilidade e lançamento (2026)",
+    description: "Ads Manager, planos com anúncios, datas e limites atuais explicados com fontes primárias.",
     url: URL,
     type: "article",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "ChatGPT Ads no Brasil: disponibilidade e lançamento em 2026" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChatGPT Ads no Brasil: disponibilidade e lançamento (2026)",
+    description: "Ads Manager, planos com anúncios, datas e limites atuais com fontes primárias.",
+    images: [SOCIAL_IMAGE],
   },
 };
 

@@ -1,11 +1,12 @@
 import { authorityMetrics, citationBlock, SOURCES } from "@/lib/authority-data";
-import { editorialFaqs } from "@/lib/editorial-content";
 import {
   LAST_EDITORIAL_REVIEW_ISO,
   SITE_URL,
 } from "@/lib/editorial-meta";
+import { searchIntentAnswers, socialImageForPath } from "@/lib/seo";
 
 const primarySources = Object.values(SOURCES).map((source) => source.url);
+const socialImage = socialImageForPath("/");
 
 const homeStructuredData = {
   "@context": "https://schema.org",
@@ -16,7 +17,7 @@ const homeStructuredData = {
       mainEntityOfPage: { "@id": `${SITE_URL}/#webpage` },
       headline: citationBlock.title,
       description: citationBlock.description,
-      image: `${SITE_URL}/og.png`,
+      image: socialImage,
       author: { "@id": `${SITE_URL}/#author` },
       publisher: { "@id": `${SITE_URL}/#author` },
       datePublished: "2026-08-24T09:00:00-03:00",
@@ -151,12 +152,13 @@ const homeStructuredData = {
     {
       "@type": "FAQPage",
       "@id": `${SITE_URL}/#faq`,
-      mainEntity: editorialFaqs.map((item) => ({
+      mainEntity: searchIntentAnswers.map((item) => ({
         "@type": "Question",
         name: item.q,
         acceptedAnswer: {
           "@type": "Answer",
           text: item.a,
+          url: `${SITE_URL}${item.href}`,
         },
       })),
     },
@@ -164,14 +166,29 @@ const homeStructuredData = {
       "@type": "WebPage",
       "@id": `${SITE_URL}/#webpage`,
       url: SITE_URL,
-      name: "ChatGPT Ads no Brasil 2026: como anunciar, preços, métricas e Ads Manager | Lorenza Volponi",
+      name: "ChatGPT Ads Brasil 2026: como anunciar, preços e métricas | volponi.tech",
       description:
-        "Guia e observatório editorial independente sobre ChatGPT Ads no Brasil: como anúncios aparecem, como escrever melhor, dados oficiais, preços, métricas, Ads Manager, privacidade e fontes primárias.",
+        "Aprenda como anunciar no ChatGPT no Brasil em 2026 com exemplos oficiais, Ads Manager, preços, métricas, privacidade, Radar e fontes primárias.",
+      image: socialImage,
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: socialImage,
+        width: 1200,
+        height: 630,
+      },
       isPartOf: { "@id": `${SITE_URL}/#website` },
       about: [
         { "@type": "Thing", name: "ChatGPT Ads" },
         { "@type": "Thing", name: "OpenAI Ads Manager" },
         { "@type": "Thing", name: "Publicidade conversacional com IA" },
+      ],
+      hasPart: [
+        { "@type": "WebPage", name: "ChatGPT Ads no Brasil", url: `${SITE_URL}/chatgpt-ads-brasil` },
+        { "@type": "WebPage", name: "Quanto custa anunciar no ChatGPT", url: `${SITE_URL}/chatgpt-ads-precos` },
+        { "@type": "WebPage", name: "Métricas do ChatGPT Ads", url: `${SITE_URL}/chatgpt-ads-metricas` },
+        { "@type": "WebPage", name: "OpenAI Ads Manager", url: `${SITE_URL}/ads-manager-chatgpt` },
+        { "@type": "WebPage", name: "Privacidade no ChatGPT Ads", url: `${SITE_URL}/chatgpt-ads-privacidade` },
+        { "@type": "CollectionPage", name: "Volponi ChatGPT Ads Radar", url: `${SITE_URL}/radar` },
       ],
       author: { "@id": `${SITE_URL}/#author` },
       inLanguage: "pt-BR",

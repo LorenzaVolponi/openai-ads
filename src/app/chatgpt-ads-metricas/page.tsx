@@ -2,19 +2,28 @@ import type { Metadata } from "next";
 
 import { TopicArticle } from "@/components/topic-article";
 import { SOURCES } from "@/lib/authority-data";
+import { socialImageForPath } from "@/lib/seo";
 
 const URL = "https://openai-ads.volponi.tech/chatgpt-ads-metricas";
+const SOCIAL_IMAGE = socialImageForPath("/chatgpt-ads-metricas");
 
 export const metadata: Metadata = {
-  title: "ChatGPT Ads métricas 2026: CTR, CPC, CPM, conversões, CPA e ROAS | Lorenza Volponi",
+  title: "Métricas do ChatGPT Ads: CTR, CPC, CPM, CPA e ROAS (2026)",
   description:
-    "Métricas oficiais do ChatGPT Ads e como interpretá-las: impressões, cliques, gasto, CTR, CPC médio, CPM médio, conversões, CPA, CVR e ROAS.",
+    "Entenda as métricas do ChatGPT Ads: impressões, cliques, gasto, CTR, CPC, CPM, conversões, CPA, CVR e ROAS sem confundir dashboard com resultado.",
   alternates: { canonical: URL },
   openGraph: {
-    title: "ChatGPT Ads métricas 2026 — como ler o dashboard",
-    description: "As métricas oficiais do Ads Manager Beta e a matemática para interpretar performance sem autoengano.",
+    title: "Métricas do ChatGPT Ads: CTR, CPC, CPM, CPA e ROAS",
+    description: "O que o Ads Manager mede e como interpretar performance sem autoengano.",
     url: URL,
     type: "article",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Métricas do ChatGPT Ads: CTR, CPC, CPM, CPA e ROAS" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Métricas do ChatGPT Ads: CTR, CPC, CPM, CPA e ROAS",
+    description: "O que o Ads Manager mede e como interpretar cada número.",
+    images: [SOCIAL_IMAGE],
   },
 };
 

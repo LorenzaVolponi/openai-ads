@@ -2,6 +2,8 @@ import { ArrowLeft, ArrowUpRight, CheckCircle2, Quote } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
+import { LAST_EDITORIAL_REVIEW_ISO } from "@/lib/editorial-meta";
+import { socialImageForCanonical } from "@/lib/seo";
 
 export type TopicFact = {
   label: string;
@@ -42,6 +44,7 @@ export function TopicArticle({
   sources: TopicSource[];
   related: { label: string; href: string }[];
 }) {
+  const socialImage = socialImageForCanonical(canonical);
   const topicStructuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -51,9 +54,11 @@ export function TopicArticle({
         mainEntityOfPage: canonical,
         headline: title,
         description,
+        image: socialImage,
+        thumbnailUrl: socialImage,
         author: { "@id": "https://openai-ads.volponi.tech/#author" },
         publisher: { "@id": "https://openai-ads.volponi.tech/#author" },
-        dateModified: "2026-08-25T09:34:00-03:00",
+        dateModified: LAST_EDITORIAL_REVIEW_ISO,
         inLanguage: "pt-BR",
         isAccessibleForFree: true,
         citation: sources.map((source) => source.url),

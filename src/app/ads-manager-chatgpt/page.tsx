@@ -2,19 +2,28 @@ import type { Metadata } from "next";
 
 import { TopicArticle } from "@/components/topic-article";
 import { SOURCES } from "@/lib/authority-data";
+import { socialImageForPath } from "@/lib/seo";
 
 const URL = "https://openai-ads.volponi.tech/ads-manager-chatgpt";
+const SOCIAL_IMAGE = socialImageForPath("/ads-manager-chatgpt");
 
 export const metadata: Metadata = {
-  title: "OpenAI Ads Manager 2026: países, campanhas, métricas e recursos | Lorenza Volponi",
+  title: "OpenAI Ads Manager: como funciona, países e recursos (2026)",
   description:
-    "Guia do OpenAI Ads Manager Beta em 2026: países disponíveis, campanhas, grupos de anúncios, métricas, CSV, permissões, billing e limites do beta.",
+    "Guia do OpenAI Ads Manager Beta: países disponíveis, campanhas, grupos, anúncios, métricas, CSV, permissões, billing, API keys e limites atuais.",
   alternates: { canonical: URL },
   openGraph: {
-    title: "OpenAI Ads Manager 2026 — o que já existe de verdade",
-    description: "Países disponíveis, recursos, métricas e limites do Ads Manager Beta.",
+    title: "OpenAI Ads Manager: como funciona, países e recursos (2026)",
+    description: "Campanhas, reporting, países disponíveis e limites atuais do Ads Manager Beta.",
     url: URL,
     type: "article",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "OpenAI Ads Manager: como funciona, países e recursos em 2026" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OpenAI Ads Manager: como funciona em 2026",
+    description: "Campanhas, métricas, países, CSV, permissões e limites atuais do beta.",
+    images: [SOCIAL_IMAGE],
   },
 };
 

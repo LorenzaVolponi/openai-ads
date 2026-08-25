@@ -7,6 +7,7 @@ import {
   LAST_EDITORIAL_REVIEW_ISO,
   SITE_URL,
 } from "@/lib/editorial-meta";
+import { socialImageForPath } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,10 +22,11 @@ const geistMono = Geist_Mono({
 
 const SITE_NAME = "volponi.tech";
 const AUTHOR = "Lorenza Volponi";
-const TITLE = "ChatGPT Ads no Brasil 2026: preços, métricas e Ads Manager | Lorenza Volponi";
+const TITLE = "ChatGPT Ads Brasil 2026: como anunciar, preços e métricas | volponi.tech";
 const DESCRIPTION =
-  "Observatório editorial independente sobre ChatGPT Ads no Brasil em 2026: dados oficiais, preços CPC/CPM/oCPC, métricas, Ads Manager, privacidade, disponibilidade e fontes primárias auditadas por Lorenza Volponi.";
+  "Aprenda como anunciar no ChatGPT no Brasil em 2026: exemplos oficiais, Ads Manager, CPC/CPM/oCPC, métricas, privacidade e Radar com fontes primárias.";
 const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+const SOCIAL_IMAGE = socialImageForPath("/");
 
 const globalStructuredData = {
   "@context": "https://schema.org",
@@ -80,26 +82,6 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   applicationName: "volponi.tech — ChatGPT Ads Intelligence",
-  keywords: [
-    "chatgpt ads brasil",
-    "chatgpt ads",
-    "openai ads",
-    "openai ads manager",
-    "publicidade no chatgpt",
-    "anúncios no chatgpt",
-    "chatgpt ads 2026",
-    "chatgpt ads preços",
-    "chatgpt ads métricas",
-    "cpc chatgpt ads",
-    "cpm chatgpt ads",
-    "ocpc chatgpt ads",
-    "ads manager brasil",
-    "publicidade com IA",
-    "generative engine optimization",
-    "geo ai",
-    "Lorenza Volponi",
-    "volponi tech",
-  ],
   authors: [{ name: AUTHOR, url: "https://volponi.tech" }],
   creator: AUTHOR,
   publisher: SITE_NAME,
@@ -134,19 +116,18 @@ export const metadata: Metadata = {
     authors: [AUTHOR],
     images: [
       {
-        url: "/og.png",
+        url: SOCIAL_IMAGE,
         width: 1200,
         height: 630,
-        alt: "ChatGPT Ads no Brasil 2026 — dados, preços, métricas e Ads Manager por Lorenza Volponi",
+        alt: "ChatGPT Ads Brasil 2026 — como anunciar, preços e métricas por volponi.tech",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ChatGPT Ads no Brasil 2026 — dados, preços e métricas",
-    description:
-      "Observatório independente por Lorenza Volponi: dados oficiais, CPC/CPM/oCPC, Ads Manager, privacidade e fontes primárias.",
-    images: ["/og.png"],
+    title: "ChatGPT Ads Brasil 2026: como anunciar, preços e métricas",
+    description: "Exemplos oficiais, Ads Manager, CPC/CPM/oCPC, métricas e Radar com fontes primárias.",
+    images: [SOCIAL_IMAGE],
   },
   robots: {
     index: true,
