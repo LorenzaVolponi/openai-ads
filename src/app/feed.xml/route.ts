@@ -1,4 +1,5 @@
 import { LATEST_RADAR_DATE_OBJECT, SITE_URL } from "@/lib/editorial-meta";
+import { createFreshnessHeaders } from "@/lib/http-freshness";
 import { radarEntries } from "@/lib/radar-data";
 
 export const dynamic = "force-static";
@@ -42,9 +43,10 @@ export function GET() {
 </rss>`;
 
   return new Response(xml, {
-    headers: {
-      "Content-Type": "application/rss+xml; charset=utf-8",
-      "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
-    },
+    headers: createFreshnessHeaders({
+      body: xml,
+      modifiedAt: LATEST_RADAR_DATE_OBJECT,
+      contentType: "application/rss+xml; charset=utf-8",
+    }),
   });
 }
