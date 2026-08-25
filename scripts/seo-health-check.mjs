@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.1 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.2 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -199,6 +199,7 @@ async function checkDiscovery() {
     assert(response.status === 200, "robots.txt returns 200", `HTTP ${response.status}`);
     assert(body.includes(`${BASE_URL}/sitemap.xml`), "robots.txt advertises canonical sitemap");
     assert(/OAI-SearchBot/i.test(body), "robots.txt allows OAI-SearchBot explicitly");
+    assert(/OAI-AdsBot/i.test(body), "robots.txt allows OAI-AdsBot explicitly");
     assert(/GPTBot/i.test(body), "robots.txt allows GPTBot explicitly");
   } catch (error) {
     fail("robots.txt check succeeds", error instanceof Error ? error.message : String(error));
