@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+import { radarEntries } from "@/lib/radar-data";
+
 const BASE_URL = "https://openai-ads.volponi.tech";
 const LAST_REVIEW = new Date("2026-08-25T11:19:00-03:00");
 
@@ -17,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.95,
     },
+    ...radarEntries.map((entry) => ({
+      url: `${BASE_URL}/radar/${entry.slug}`,
+      lastModified: new Date(`${entry.date}T12:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.78,
+    })),
     ...[
       "/chatgpt-ads-brasil",
       "/chatgpt-ads-precos",
