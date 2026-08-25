@@ -30,7 +30,8 @@ O objetivo do observatório é explicar ChatGPT Ads com dados primários, contex
 ### Brasil e disponibilidade
 
 - A OpenAI confirmou o lançamento de ChatGPT Ads no Brasil em 11/08/2026, juntamente com Reino Unido, México, Japão e Coreia do Sul.
-- A página oficial de disponibilidade do Ads Manager listava 9 países disponíveis na auditoria de 25/08/2026: Austrália, Brasil, Canadá, Japão, Coreia do Sul, México, Nova Zelândia, Reino Unido e Estados Unidos.
+- A versão oficial mais recente da página de disponibilidade do Ads Manager consultada em 25/08/2026 listava 9 países disponíveis: Austrália, Brasil, Canadá, Japão, Coreia do Sul, México, Nova Zelândia, Reino Unido e Estados Unidos.
+- Páginas localizadas do Help Center podem atualizar em momentos diferentes; quando há divergência temporária, este observatório prioriza a versão oficial com atualização mais recente e registra a data da auditoria.
 - Em 24/08/2026, a expansão de ChatGPT Ads entrou em operação em 31 mercados europeus anunciados pela OpenAI. Presença de anúncios e autosserviço no Ads Manager são camadas diferentes e podem seguir cronogramas distintos.
 
 ### Planos e experiência do usuário
@@ -188,8 +189,8 @@ https://help.openai.com/pt-br/articles/20001207
 OpenAI Help Center — Create campaigns for ChatGPT Ads
 https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads
 
-OpenAI Help Center — Ads Manager availability
-https://help.openai.com/pt-br/articles/20001245-ads-manager-availability
+OpenAI Help Center — Ads Manager availability, latest official locale
+https://help.openai.com/en/articles/20001245
 
 OpenAI Help Center — Ads Manager Beta overview
 https://help.openai.com/pt-br/articles/20001206
