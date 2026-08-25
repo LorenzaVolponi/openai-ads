@@ -175,10 +175,15 @@ const current = {
 };
 
 const changes = [];
+const newlyTracked = [];
 if (previous?.sources) {
   for (const source of currentSources) {
     const old = previous.sources[source.id];
-    if (!old || old.fingerprint !== source.fingerprint) {
+    if (!old) {
+      newlyTracked.push(source);
+      continue;
+    }
+    if (old.fingerprint !== source.fingerprint) {
       changes.push({ source, old });
     }
   }
@@ -209,11 +214,23 @@ if (changes.length) {
   lines.push(seeded ? "Baseline inicial criado; nenhum alerta editorial foi aberto." : "Nenhuma mudança material detectada nas assinaturas monitoradas.");
 }
 
+if (newlyTracked.length) {
+  lines.push("", "### Novas fontes adicionadas ao monitoramento", "");
+  for (const source of newlyTracked) {
+    lines.push(`- ${source.label}: baseline criado sem gerar alerta de mudança.`);
+  }
+}
+
 await writeFile(stateFile, `${JSON.stringify(current, null, 2)}\n`);
 await writeFile(reportFile, `${lines.join("\n")}\n`);
 await setOutput("changed", String(changed));
 await setOutput("seeded", String(seeded));
 await setOutput("changed_count", String(changes.length));
+await setOutput("new_source_count", String(newlyTracked.length));
 await setOutput("report_path", reportFile);
 
-console.log(seeded ? "Radar source watcher baseline seeded." : `Radar source watcher: ${changes.length} source change(s).`);
+console.log(
+  seeded
+    ? "Radar source watcher baseline seeded."
+    : `Radar source watcher: ${changes.length} source change(s), ${newlyTracked.length} new baseline source(s).`,
+);
