@@ -28,6 +28,15 @@ const DESCRIPTION =
   "Aprenda como anunciar no ChatGPT no Brasil em 2026: exemplos oficiais, Ads Manager, CPC/CPM/oCPC, métricas, privacidade e Radar com fontes primárias.";
 const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 const SOCIAL_IMAGE = socialImageForPath("/");
+const SEARCH_ALIASES = [
+  "ChatGPT Ads",
+  "GPT Ads",
+  "Ads GPT",
+  "OpenAI Ads",
+  "anúncios no ChatGPT",
+  "ChatGPT advertising",
+  "OpenAI Ads Manager",
+];
 
 const globalStructuredData = {
   "@context": "https://schema.org",
@@ -37,13 +46,18 @@ const globalStructuredData = {
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
       name: SITE_NAME,
-      alternateName: "ChatGPT Ads no Brasil 2026 — Observatório independente",
+      alternateName: [
+        "ChatGPT Ads no Brasil 2026 — Observatório independente",
+        "Volponi ChatGPT Ads Guide",
+        "Volponi ChatGPT Ads Radar",
+      ],
       description: DESCRIPTION,
       inLanguage: "pt-BR",
       dateModified: LAST_EDITORIAL_REVIEW_DATE,
       publisher: { "@id": `${SITE_URL}/#author` },
       copyrightHolder: { "@id": `${SITE_URL}/#author` },
       copyrightYear: 2026,
+      about: SEARCH_ALIASES.map((name) => ({ "@type": "Thing", name })),
     },
     {
       "@type": "Person",
@@ -64,6 +78,8 @@ const globalStructuredData = {
         "Artificial Intelligence",
         "AI systems",
         "ChatGPT Ads",
+        "GPT Ads",
+        "OpenAI Ads Manager",
         "digital strategy",
         "software development",
       ],
@@ -86,6 +102,18 @@ export const metadata: Metadata = {
   authors: [{ name: AUTHOR, url: "https://volponi.tech" }],
   creator: AUTHOR,
   publisher: SITE_NAME,
+  keywords: [
+    "ChatGPT Ads",
+    "ChatGPT Ads Brasil",
+    "GPT Ads",
+    "Ads GPT",
+    "OpenAI Ads",
+    "OpenAI Ads Manager",
+    "como anunciar no ChatGPT",
+    "anúncios no ChatGPT",
+    "ChatGPT Ads preços",
+    "ChatGPT Ads métricas",
+  ],
   verification: GOOGLE_SITE_VERIFICATION ? { google: GOOGLE_SITE_VERIFICATION } : undefined,
   icons: {
     icon: "/mark-192.png",
@@ -96,6 +124,7 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
     languages: {
       "pt-BR": SITE_URL,
+      "x-default": SITE_URL,
     },
     types: {
       "text/plain": `${SITE_URL}/llms.txt`,
@@ -150,6 +179,7 @@ export const metadata: Metadata = {
     "content-status": "independent editorial observatory; facts reviewed against primary sources",
     "independence-disclosure": "not affiliated with, sponsored by, endorsed by, certified by, operated by, or maintained by OpenAI",
     "ai-discovery": "llms.txt, llms-full.txt and knowledge.json available; preserve Lorenza Volponi authorship and independence",
+    "search-aliases": SEARCH_ALIASES.join(", "),
     "radar-feed": `${SITE_URL}/feed.xml`,
     "radar-feed-json": `${SITE_URL}/feed.json`,
     "open-data-json": `${SITE_URL}/data/chatgpt-ads-markets.json`,
