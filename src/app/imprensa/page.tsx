@@ -16,56 +16,81 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { citationBlock } from "@/lib/authority-data";
+import {
+  AUTHOR,
+  AUTHOR_ID,
+  PRESS_URL,
+  PUBLISHER_ID,
+  SITE_URL,
+  mediaAuthorStructuredData,
+  publisherStructuredData,
+} from "@/lib/media-authority";
 import { radarEntries } from "@/lib/radar-data";
 
-const URL = "https://openai-ads.volponi.tech/imprensa";
-
 export const metadata: Metadata = {
-  title: "Sala de Imprensa: Lorenza Volponi, IA, GEO e ChatGPT Ads | volponi.tech",
+  title: "Lorenza Volponi: especialista em ChatGPT Ads, IA e GEO | Imprensa",
   description:
-    "Media Source Room de Lorenza Volponi: bio curta, temas para entrevistas, dados auditados, fontes, datasets e forma correta de citar o observatório ChatGPT Ads.",
-  alternates: { canonical: URL },
+    "Fonte para entrevistas e matérias sobre ChatGPT Ads, publicidade conversacional, IA, GEO e AI systems. Bio, dados auditados, Radar, datasets, fontes primárias e citação de Lorenza Volponi.",
+  authors: [{ name: AUTHOR.name, url: PRESS_URL }],
+  alternates: { canonical: PRESS_URL },
   openGraph: {
-    title: "Lorenza Volponi — Media Source Room",
-    description: "Fonte editorial sobre IA, GEO, sistemas de IA e publicidade conversacional.",
-    url: URL,
+    title: "Lorenza Volponi — fonte para imprensa em ChatGPT Ads, IA e GEO",
+    description: "Bio, pautas, dados auditados, fontes primárias e Radar independente para redações e jornalistas.",
+    url: PRESS_URL,
     type: "profile",
     images: ["/og.png"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lorenza Volponi — ChatGPT Ads, IA e GEO",
+    description: "Fonte para entrevistas com evidência, dados auditados e fontes primárias.",
+    images: ["/og.png"],
+  },
+  other: {
+    "expert-source": "ChatGPT Ads, conversational advertising, GEO, AI systems, AI discovery",
+    "media-source": "Lorenza Volponi / volponi.tech",
+  },
 };
+
+const latestProfileArticles = radarEntries.slice(0, 5).map((entry) => ({
+  "@type": "NewsArticle",
+  "@id": `${SITE_URL}/radar/${entry.slug}#article`,
+  headline: entry.title,
+  url: `${SITE_URL}/radar/${entry.slug}`,
+  datePublished: `${entry.date}T12:00:00Z`,
+  author: { "@id": AUTHOR_ID },
+  publisher: { "@id": PUBLISHER_ID },
+}));
 
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "ProfilePage",
-      "@id": `${URL}/#page`,
-      url: URL,
-      name: "Lorenza Volponi — Media Source Room",
+      "@id": `${PRESS_URL}#page`,
+      url: PRESS_URL,
+      name: "Lorenza Volponi — fonte para imprensa em ChatGPT Ads, IA e GEO",
+      description:
+        "Perfil editorial e Media Source Room de Lorenza Volponi para entrevistas, contexto e citação sobre ChatGPT Ads, publicidade conversacional, GEO e sistemas de IA.",
       inLanguage: "pt-BR",
-      dateModified: "2026-08-25",
-      mainEntity: { "@id": "https://openai-ads.volponi.tech/#author" },
-      isPartOf: { "@id": "https://openai-ads.volponi.tech/#website" },
+      dateModified: "2026-08-25T16:30:00-03:00",
+      mainEntity: { "@id": AUTHOR_ID },
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      publisher: { "@id": PUBLISHER_ID },
+      hasPart: latestProfileArticles,
     },
     {
-      "@type": "Person",
-      "@id": "https://openai-ads.volponi.tech/#author",
-      name: "Lorenza Volponi",
-      url: "https://volponi.tech",
-      sameAs: [
-        "https://github.com/LorenzaVolponi",
-        "https://www.linkedin.com/in/lorenzavolponi",
-      ],
-      knowsAbout: [
-        "Generative Engine Optimization",
-        "Artificial Intelligence",
-        "AI systems",
-        "ChatGPT Ads",
-        "Search Engine Optimization",
-        "software development",
-        "digital strategy",
+      ...mediaAuthorStructuredData,
+      description:
+        "AI Systems Strategist & Builder, autora do observatório independente Volponi ChatGPT Ads Radar e fonte para imprensa sobre ChatGPT Ads, IA, GEO e publicidade conversacional.",
+      image: `${SITE_URL}/fox-black.png`,
+      worksFor: { "@id": PUBLISHER_ID },
+      subjectOf: [
+        { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: SITE_URL },
+        { "@type": "CollectionPage", url: `${SITE_URL}/radar`, name: "Volponi ChatGPT Ads Radar" },
       ],
     },
+    publisherStructuredData,
   ],
 };
 
@@ -92,6 +117,14 @@ const interviewTopics = [
   },
 ];
 
+const newsroomQuestions = [
+  "Como funcionam os anúncios dentro do ChatGPT — e o que eles não mudam na resposta?",
+  "O que a chegada do ChatGPT Ads ao Brasil muda para anunciantes, agências e publishers?",
+  "Quanto custa anunciar no ChatGPT e por que lance recomendado não é benchmark de CPC?",
+  "Como medir ChatGPT Ads sem confundir clique, atribuição e causalidade?",
+  "O que GEO realmente significa quando buscadores e IAs passam a escolher fontes?",
+];
+
 export default function PressPage() {
   const latest = radarEntries.slice(0, 3);
 
@@ -115,14 +148,17 @@ export default function PressPage() {
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:px-6 md:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
             <Badge className="border border-zinc-950 bg-zinc-950 text-white hover:bg-zinc-950">
-              fonte para imprensa · IA · GEO · ads
+              fonte para imprensa · ChatGPT Ads · IA · GEO
             </Badge>
             <h1 className="mt-6 max-w-5xl text-5xl font-black leading-[0.94] tracking-[-0.055em] md:text-7xl">
-              Se a pauta é IA em movimento,
-              <span className="block text-zinc-400">eu prefiro chegar com evidência.</span>
+              ChatGPT Ads, IA e GEO.
+              <span className="block text-zinc-400">Fonte para redações com evidência.</span>
             </h1>
             <p className="mt-7 max-w-3xl text-lg font-medium leading-8 text-zinc-700 md:text-xl">
-              Lorenza Volponi é AI systems strategist, builder e autora do observatório independente sobre ChatGPT Ads da volponi.tech. O trabalho cruza código, busca, GEO, arquitetura de informação e leitura estratégica de produtos de IA em rápida evolução.
+              Lorenza Volponi é AI systems strategist, builder e autora do observatório independente sobre ChatGPT Ads da volponi.tech. O trabalho cruza código, busca, GEO, arquitetura de informação, publicidade conversacional e leitura estratégica de produtos de IA em rápida evolução.
+            </p>
+            <p className="mt-4 max-w-3xl text-sm font-semibold leading-6 text-zinc-500">
+              Disponível como fonte para entrevistas, comentários de contexto e explicações técnicas sobre mudanças verificadas no ecossistema de publicidade e IA.
             </p>
           </div>
 
@@ -133,10 +169,10 @@ export default function PressPage() {
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               <Button asChild size="sm" className="bg-white text-zinc-950 hover:bg-zinc-200">
-                <a href="https://volponi.tech" target="_blank" rel="noopener noreferrer">volponi.tech <ArrowUpRight className="ml-1 h-3.5 w-3.5" /></a>
+                <a href={AUTHOR.personalSite} target="_blank" rel="noopener noreferrer">volponi.tech <ArrowUpRight className="ml-1 h-3.5 w-3.5" /></a>
               </Button>
               <Button asChild size="sm" variant="outline" className="border-white/20 bg-transparent text-white hover:bg-white hover:text-zinc-950">
-                <a href="https://www.linkedin.com/in/lorenzavolponi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href={AUTHOR.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
               </Button>
             </div>
           </aside>
@@ -163,6 +199,23 @@ export default function PressPage() {
         </div>
       </section>
 
+      <section className="content-auto border-y border-border bg-zinc-50">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:px-6 lg:grid-cols-[0.38fr_0.62fr]">
+          <div>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-zinc-950">Para redações</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">Cinco perguntas que eu consigo responder sem enrolação.</h2>
+          </div>
+          <div className="divide-y divide-zinc-200 rounded-3xl border border-zinc-200 bg-white px-6">
+            {newsroomQuestions.map((question, index) => (
+              <div key={question} className="flex gap-4 py-5">
+                <span className="font-mono text-xs font-black text-zinc-400">0{index + 1}</span>
+                <p className="font-semibold leading-6 text-zinc-800">{question}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="content-auto border-y border-border bg-zinc-950 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
           <div className="grid gap-10 lg:grid-cols-[0.42fr_0.58fr]">
@@ -170,14 +223,14 @@ export default function PressPage() {
               <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">Últimos sinais</p>
               <h2 className="mt-4 text-4xl font-black tracking-[-0.045em]">Três fatos que mudaram recentemente.</h2>
               <p className="mt-5 text-sm leading-6 text-zinc-400">
-                Cada item aponta para o Radar completo e para a fonte primária que sustenta a afirmação.
+                Cada item aponta para uma URL permanente do Radar e para a fonte primária que sustenta a afirmação.
               </p>
             </div>
             <div className="space-y-3">
               {latest.map((entry) => (
-                <a
+                <Link
                   key={entry.slug}
-                  href={`/radar#${entry.slug}`}
+                  href={`/radar/${entry.slug}`}
                   className="block rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/30 hover:bg-white/[0.07]"
                 >
                   <div className="flex flex-wrap items-center gap-2">
@@ -186,7 +239,7 @@ export default function PressPage() {
                   </div>
                   <p className="mt-2 font-bold">{entry.title}</p>
                   <p className="mt-2 text-sm leading-6 text-zinc-400">{entry.summary}</p>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -206,6 +259,9 @@ export default function PressPage() {
               </blockquote>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button asChild size="sm">
+                  <a href="/press-kit.json">Press Kit JSON</a>
+                </Button>
+                <Button asChild size="sm" variant="outline">
                   <a href="/citation.json">Citation JSON</a>
                 </Button>
                 <Button asChild size="sm" variant="outline">
@@ -237,7 +293,7 @@ export default function PressPage() {
           <div className="flex flex-wrap gap-3">
             <Button asChild variant="outline"><Link href="/radar">Radar</Link></Button>
             <Button asChild variant="outline"><Link href="/metodologia">Metodologia</Link></Button>
-            <Button asChild variant="outline"><a href="https://github.com/LorenzaVolponi/openai-ads" target="_blank" rel="noopener noreferrer"><Github className="mr-2 h-4 w-4" /> Código</a></Button>
+            <Button asChild variant="outline"><a href={AUTHOR.github} target="_blank" rel="noopener noreferrer"><Github className="mr-2 h-4 w-4" /> Código</a></Button>
           </div>
         </div>
       </section>

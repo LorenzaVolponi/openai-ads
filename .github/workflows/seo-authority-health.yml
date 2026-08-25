@@ -24,9 +24,9 @@ concurrency:
 jobs:
   health:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
-    name: Verify canonical SEO/GEO and evidence invariants
+    name: Verify SEO/GEO, evidence and media-authority invariants
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
 
     steps:
       - name: Checkout authority expectations
@@ -80,6 +80,15 @@ jobs:
           EXPECTED_GIT_COMMIT_SHA="$(git rev-parse HEAD)" \
             node scripts/evidence-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/evidence-health.log
 
+      - name: Check media authority and news discovery
+        id: media
+        if: github.event_name != 'schedule' || steps.deployment.outputs.state == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/media-authority-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/media-authority-health.log
+
       - name: Note deferred scheduled check
         if: github.event_name == 'schedule' && steps.deployment.outputs.state != 'success'
         shell: bash
@@ -93,7 +102,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Open or refresh authority regression issue
-        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure'
+        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure' || steps.media.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -101,14 +110,15 @@ jobs:
           set -euo pipefail
           TITLE="SEO authority health regression"
           RUN_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          SEO_LOG_TAIL="$(tail -n 60 /tmp/seo-health.log 2>/dev/null || true)"
-          EVIDENCE_LOG_TAIL="$(tail -n 60 /tmp/evidence-health.log 2>/dev/null || true)"
+          SEO_LOG_TAIL="$(tail -n 50 /tmp/seo-health.log 2>/dev/null || true)"
+          EVIDENCE_LOG_TAIL="$(tail -n 50 /tmp/evidence-health.log 2>/dev/null || true)"
+          MEDIA_LOG_TAIL="$(tail -n 50 /tmp/media-authority-health.log 2>/dev/null || true)"
           BODY_FILE="/tmp/seo-issue.md"
 
           cat > "$BODY_FILE" <<EOF
-          ## SEO / evidence authority regression
+          ## SEO / evidence / media authority regression
 
-          The automated production invariants found a canonical SEO/GEO, evidence-ledger or source-revision regression.
+          The automated production invariants found a canonical SEO/GEO, evidence-ledger, source-revision or media-authority regression.
 
           - Production: https://openai-ads.volponi.tech
           - Workflow run: ${RUN_URL}
@@ -116,6 +126,7 @@ jobs:
           - Detected at: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
           - SEO result: ${{ steps.seo.outcome }}
           - Evidence result: ${{ steps.evidence.outcome }}
+          - Media authority result: ${{ steps.media.outcome }}
 
           ### SEO check output
 
@@ -129,7 +140,13 @@ jobs:
           ${EVIDENCE_LOG_TAIL}
           \`\`\`
 
-          This issue is maintained automatically. It will be closed after both production checks are clean.
+          ### Media authority output
+
+          \`\`\`
+          ${MEDIA_LOG_TAIL}
+          \`\`\`
+
+          This issue is maintained automatically. It will be closed after all production checks are clean.
           EOF
 
           ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
@@ -141,7 +158,7 @@ jobs:
           fi
 
       - name: Close resolved authority regression issue
-        if: steps.seo.outcome == 'success' && steps.evidence.outcome == 'success'
+        if: steps.seo.outcome == 'success' && steps.evidence.outcome == 'success' && steps.media.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -150,23 +167,25 @@ jobs:
           TITLE="SEO authority health regression"
           ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
           if [ -n "$ISSUE_NUMBER" ]; then
-            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --comment "Production SEO authority, evidence-ledger and source-revision checks are green again. Closing automatically."
+            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --comment "Production SEO authority, evidence-ledger, source-revision and media-authority checks are green again. Closing automatically."
           fi
 
       - name: Publish authority health summary
-        if: always() && (steps.seo.outcome != 'skipped' || steps.evidence.outcome != 'skipped')
+        if: always() && (steps.seo.outcome != 'skipped' || steps.evidence.outcome != 'skipped' || steps.media.outcome != 'skipped')
         shell: bash
         run: |
           {
-            echo "### SEO / evidence authority health"
+            echo "### SEO / evidence / media authority health"
             echo "- Production: https://openai-ads.volponi.tech"
             echo "- Expected source commit: $(git rev-parse HEAD)"
             echo "- SEO result: ${{ steps.seo.outcome }}"
             echo "- Evidence result: ${{ steps.evidence.outcome }}"
+            echo "- Media authority result: ${{ steps.media.outcome }}"
             echo "- SEO checks: canonicals, aliases, machine noindex, freshness headers, robots, sitemap, OG and entity aliases"
             echo "- Evidence checks: source Git revision, X-Source-Commit, SHA-256 record hashes, chain links, root hash, OpenAI primary-source hosts and proof caveats"
+            echo "- Media checks: press ProfilePage, press kit, NewsArticle linkage, temporal news sitemap and multi-ratio article images"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail when authority invariants fail
-        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure'
+        if: steps.seo.outcome == 'failure' || steps.evidence.outcome == 'failure' || steps.media.outcome == 'failure'
         run: exit 1

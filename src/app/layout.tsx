@@ -6,8 +6,15 @@ import { SiteComplianceStrip, SiteWatermark } from "@/components/site-compliance
 import {
   LAST_EDITORIAL_REVIEW_DATE,
   LAST_EDITORIAL_REVIEW_ISO,
-  SITE_URL,
 } from "@/lib/editorial-meta";
+import {
+  AUTHOR,
+  AUTHOR_ID,
+  PUBLISHER_ID,
+  SITE_URL,
+  mediaAuthorStructuredData,
+  publisherStructuredData,
+} from "@/lib/media-authority";
 import { socialImageForPath } from "@/lib/seo";
 import "./globals.css";
 
@@ -22,7 +29,6 @@ const geistMono = Geist_Mono({
 });
 
 const SITE_NAME = "volponi.tech";
-const AUTHOR = "Lorenza Volponi";
 const TITLE = "ChatGPT Ads Brasil 2026: como anunciar, preços e métricas | volponi.tech";
 const DESCRIPTION =
   "Aprenda como anunciar no ChatGPT no Brasil em 2026: exemplos oficiais, Ads Manager, CPC/CPM/oCPC, métricas, privacidade e Radar com fontes primárias.";
@@ -54,36 +60,20 @@ const globalStructuredData = {
       description: DESCRIPTION,
       inLanguage: "pt-BR",
       dateModified: LAST_EDITORIAL_REVIEW_DATE,
-      publisher: { "@id": `${SITE_URL}/#author` },
-      copyrightHolder: { "@id": `${SITE_URL}/#author` },
+      publisher: { "@id": PUBLISHER_ID },
+      copyrightHolder: { "@id": AUTHOR_ID },
       copyrightYear: 2026,
       about: SEARCH_ALIASES.map((name) => ({ "@type": "Thing", name })),
+      author: { "@id": AUTHOR_ID },
     },
     {
-      "@type": "Person",
-      "@id": `${SITE_URL}/#author`,
-      name: AUTHOR,
-      url: "https://volponi.tech",
+      ...mediaAuthorStructuredData,
       image: `${SITE_URL}/fox-black.png`,
       description:
-        "AI systems strategist, builder e autora do observatório independente sobre ChatGPT Ads publicado por volponi.tech.",
-      sameAs: [
-        "https://volponi.tech",
-        "https://github.com/LorenzaVolponi",
-        "https://www.linkedin.com/in/lorenzavolponi",
-      ],
-      knowsAbout: [
-        "Generative Engine Optimization",
-        "Search Engine Optimization",
-        "Artificial Intelligence",
-        "AI systems",
-        "ChatGPT Ads",
-        "GPT Ads",
-        "OpenAI Ads Manager",
-        "digital strategy",
-        "software development",
-      ],
+        "AI Systems Strategist & Builder, autora do observatório independente sobre ChatGPT Ads e fonte para imprensa em IA, GEO e publicidade conversacional.",
+      worksFor: { "@id": PUBLISHER_ID },
     },
+    publisherStructuredData,
   ],
 };
 
@@ -99,8 +89,8 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   applicationName: "volponi.tech — ChatGPT Ads Intelligence",
-  authors: [{ name: AUTHOR, url: "https://volponi.tech" }],
-  creator: AUTHOR,
+  authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
+  creator: AUTHOR.name,
   publisher: SITE_NAME,
   keywords: [
     "ChatGPT Ads",
@@ -143,7 +133,7 @@ export const metadata: Metadata = {
     publishedTime: "2026-08-24T09:00:00-03:00",
     modifiedTime: LAST_EDITORIAL_REVIEW_ISO,
     section: "Inteligência Artificial e Publicidade",
-    authors: [AUTHOR],
+    authors: [AUTHOR.name],
     images: [
       {
         url: SOCIAL_IMAGE,
@@ -172,8 +162,8 @@ export const metadata: Metadata = {
   },
   category: "marketing digital e inteligência artificial",
   other: {
-    author: AUTHOR,
-    "dc.creator": AUTHOR,
+    author: AUTHOR.name,
+    "dc.creator": AUTHOR.name,
     "dc.title": TITLE,
     "dcterms.modified": LAST_EDITORIAL_REVIEW_DATE,
     "content-status": "independent editorial observatory; facts reviewed against primary sources",
@@ -182,9 +172,11 @@ export const metadata: Metadata = {
     "search-aliases": SEARCH_ALIASES.join(", "),
     "radar-feed": `${SITE_URL}/feed.xml`,
     "radar-feed-json": `${SITE_URL}/feed.json`,
+    "news-sitemap": `${SITE_URL}/news-sitemap.xml`,
     "open-data-json": `${SITE_URL}/data/chatgpt-ads-markets.json`,
     "open-data-csv": `${SITE_URL}/data/chatgpt-ads-markets.csv`,
     "press-room": `${SITE_URL}/imprensa`,
+    "press-kit": `${SITE_URL}/press-kit.json`,
     "last-reviewed": LAST_EDITORIAL_REVIEW_DATE,
     "source-monitoring": "official-source changes are monitored; publication remains editorially reviewed",
   },

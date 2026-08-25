@@ -33,7 +33,10 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       })),
     ],
-    sitemap: "https://openai-ads.volponi.tech/sitemap.xml",
+    sitemap: [
+      "https://openai-ads.volponi.tech/sitemap.xml",
+      "https://openai-ads.volponi.tech/news-sitemap.xml",
+    ],
     host: "https://openai-ads.volponi.tech",
   };
 }
