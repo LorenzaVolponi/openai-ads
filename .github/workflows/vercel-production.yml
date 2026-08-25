@@ -25,6 +25,7 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_SCOPE: adm-wuazecoms-projects
       VERCEL_PROJECT_NAME: openai-ads
+      VERCEL_PRODUCTION_DOMAIN: openai-ads.volponi.tech
       VERCEL_DEPLOY_COOLDOWN_SECONDS: "60"
       NEXT_TELEMETRY_DISABLED: "1"
 
@@ -124,6 +125,33 @@ jobs:
           echo "url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
           echo "Production deployment: $DEPLOYMENT_URL"
 
+      - name: Attach production domain
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel alias set "$DEPLOYMENT_URL" "$VERCEL_PRODUCTION_DOMAIN" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+          echo "Production alias: https://${VERCEL_PRODUCTION_DOMAIN}"
+
+      - name: Verify production deployment and homepage
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel inspect "$DEPLOYMENT_URL" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+          vercel curl / --deployment "$DEPLOYMENT_URL" > /tmp/openai-ads-home.html
+
+          test -s /tmp/openai-ads-home.html
+          HOME_BYTES="$(wc -c < /tmp/openai-ads-home.html | tr -d ' ')"
+          if [ "$HOME_BYTES" -lt 1000 ]; then
+            echo "::error::Production homepage returned an unexpectedly small response (${HOME_BYTES} bytes)."
+            exit 1
+          fi
+
+          echo "Production homepage health check passed (${HOME_BYTES} bytes)."
+
       - name: Mark deployment success
         if: success() && steps.deploy.outputs.url != ''
         env:
@@ -138,7 +166,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -d "{\"state\":\"success\",\"context\":\"deployment/vercel-cli\",\"description\":\"Production deployed by GitHub Actions\",\"target_url\":\"${DEPLOYMENT_URL}\"}"
+            -d "{\"state\":\"success\",\"context\":\"deployment/vercel-cli\",\"description\":\"Production deployed and verified\",\"target_url\":\"https://${VERCEL_PRODUCTION_DOMAIN}\"}"
 
       - name: Mark deployment failure
         if: failure()
@@ -160,6 +188,8 @@ jobs:
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
             -d "{\"state\":\"failure\",\"context\":\"deployment/vercel-cli\",\"description\":\"${DESCRIPTION}\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}" || true
 
-      - name: Publish deployment URL
+      - name: Publish production URLs
         if: steps.deploy.outputs.url != ''
-        run: echo "Vercel production URL -> ${{ steps.deploy.outputs.url }}"
+        run: |
+          echo "Vercel deployment URL -> ${{ steps.deploy.outputs.url }}"
+          echo "Production domain -> https://${VERCEL_PRODUCTION_DOMAIN}"
