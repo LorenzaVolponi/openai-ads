@@ -13,7 +13,7 @@ export const dynamic = "force-static";
 
 export function GET() {
   const data = {
-    schema_version: "1.3",
+    schema_version: "1.4",
     project: "Volponi ChatGPT Ads Guide & Radar",
     canonical: SITE_URL,
     search_entity: {
@@ -65,9 +65,24 @@ export function GET() {
       construction:
         "Each normalized Radar record has a SHA-256 digest. Records are linked chronologically by hashing the previous chain digest plus the current record digest.",
       source_anchor:
-        "The generated evidence artifact also publishes the exact Git commit used for the production build, and deployment promotion verifies that commit before attaching the production alias.",
+        "The generated evidence artifact publishes the exact Git commit used for the production build, and deployment promotion verifies that commit before attaching the production alias.",
       scope:
         "Tamper-evident integrity and source-code provenance for the published editorial record. Neither the hash chain nor the Git revision independently proves that a primary source was true at a given time.",
+    },
+    artifact_attestation_policy: {
+      provider: "GitHub Artifact Attestations / Sigstore",
+      subjects: [`${SITE_URL}/evidence.json`, `${SITE_URL}/provenance.json`],
+      generated_after_verified_deploy: true,
+      public_repository_transparency:
+        "The deployment workflow requests a GitHub provenance attestation for the exact evidence and provenance bytes fetched from the Vercel deployment. Public GitHub repositories use the Sigstore Public Good Instance and public transparency infrastructure.",
+      verification: {
+        evidence: "gh attestation verify evidence.json -R LorenzaVolponi/openai-ads",
+        provenance: "gh attestation verify provenance.json -R LorenzaVolponi/openai-ads",
+      },
+      availability_policy:
+        "Attestation is an additional provenance layer. A transient attestation-service failure is reported as a warning and does not take an otherwise verified production site offline.",
+      caveat:
+        "An artifact attestation links artifact bytes to build provenance. It is not a guarantee that the artifact is secure or that upstream editorial claims are true.",
     },
     indexing_policy: {
       html_authority_pages: "index, follow",
