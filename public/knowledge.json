@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "canonical": "https://openai-ads.volponi.tech",
   "language": "pt-BR",
   "title": "ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade",
@@ -20,6 +20,7 @@
   },
   "author": {
     "name": "Lorenza Volponi",
+    "profile": "https://openai-ads.volponi.tech/imprensa",
     "site": "https://volponi.tech",
     "github": "https://github.com/LorenzaVolponi",
     "linkedin": "https://www.linkedin.com/in/lorenzavolponi"
@@ -131,6 +132,8 @@
     "overview": "https://openai-ads.volponi.tech/",
     "radar": "https://openai-ads.volponi.tech/radar",
     "press": "https://openai-ads.volponi.tech/imprensa",
+    "pressKit": "https://openai-ads.volponi.tech/press-kit.json",
+    "newsSitemap": "https://openai-ads.volponi.tech/news-sitemap.xml",
     "brazil": "https://openai-ads.volponi.tech/chatgpt-ads-brasil",
     "pricing": "https://openai-ads.volponi.tech/chatgpt-ads-precos",
     "metrics": "https://openai-ads.volponi.tech/chatgpt-ads-metricas",
@@ -147,6 +150,7 @@
     "https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt",
     "https://help.openai.com/pt-br/articles/20001207",
     "https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads",
+    "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers",
     "https://help.openai.com/en/articles/20001245-ads-manager-availability",
     "https://help.openai.com/en/articles/20001220",
     "https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/",
@@ -156,6 +160,17 @@
     "preferredSourceGoogle": "https://www.google.com/preferences/source?q=openai-ads.volponi.tech",
     "indexNow": true,
     "indexNowBehavior": "After a verified production deploy, public authority URLs are submitted server-to-server. No visitor data is included.",
+    "openAICrawlers": {
+      "OAI-SearchBot": {
+        "allowed": true,
+        "purpose": "ChatGPT search discovery and citation of public web content"
+      },
+      "OAI-AdsBot": {
+        "allowed": true,
+        "purpose": "ChatGPT Ads landing-page validation and relevance assessment",
+        "rankingCaveat": "Allowing OAI-AdsBot is ad-readiness compatibility and is not presented as an organic ranking signal."
+      }
+    },
     "canonicalRedirectAliases": [
       "/chatgpt-ads",
       "/gpt-ads",
@@ -168,6 +183,7 @@
     "summary": "https://openai-ads.volponi.tech/llms.txt",
     "extended": "https://openai-ads.volponi.tech/llms-full.txt",
     "citation": "https://openai-ads.volponi.tech/citation.json",
+    "pressKit": "https://openai-ads.volponi.tech/press-kit.json",
     "evidence": "https://openai-ads.volponi.tech/evidence.json",
     "provenance": "https://openai-ads.volponi.tech/provenance.json",
     "humanManifest": "https://openai-ads.volponi.tech/humans.txt"
