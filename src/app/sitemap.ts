@@ -22,6 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.95,
     },
+    {
+      url: `${SITE_URL}/oai-adsbot-searchbot`,
+      lastModified: LAST_REVIEW,
+      changeFrequency: "weekly",
+      priority: 0.96,
+    },
     ...radarEntries.map((entry) => ({
       url: `${SITE_URL}/radar/${entry.slug}`,
       lastModified: new Date(`${entry.date}T12:00:00Z`),
