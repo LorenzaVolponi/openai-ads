@@ -16,7 +16,7 @@ export default function PrivacyPage() {
     <LegalDocument
       eyebrow="Privacidade e LGPD"
       title="Política de Privacidade"
-      description="Transparência sobre dados, infraestrutura, cookies e direitos dos titulares na versão auditada deste site."
+      description="Transparência sobre dados, infraestrutura, cookies, descoberta em buscadores e direitos dos titulares nesta versão do site."
       updatedAt="25 de agosto de 2026"
     >
       <LegalSection title="1. Quem mantém este site">
@@ -63,7 +63,23 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="5. Compartilhamento e transferências">
+      <LegalSection title="5. Descoberta em buscadores, Preferred Sources e IndexNow">
+        <p>
+          O site publica sitemap, RSS e arquivos estruturados para facilitar descoberta e citação por
+          mecanismos de busca e sistemas de IA. Também disponibiliza um link para a ferramenta oficial de
+          “Preferred Sources” do Google. Esse recurso é implementado como link externo: o script do Google
+          não é carregado automaticamente por este domínio e a navegação para a ferramenta ocorre somente
+          quando a pessoa decide clicar.
+        </p>
+        <p>
+          Após uma publicação de produção validada, o pipeline pode notificar o protocolo IndexNow sobre
+          URLs públicas que foram publicadas ou atualizadas. Esse envio ocorre entre servidores e contém
+          apenas o host, a chave pública de verificação e URLs públicas do próprio site; ele não envia
+          histórico de navegação, perguntas à Raposa IA ou identificadores de visitantes.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="6. Compartilhamento e transferências">
         <p>
           O projeto não vende dados pessoais. Dados técnicos de infraestrutura podem ser processados por
           fornecedores essenciais de hospedagem, rede, segurança e entrega de conteúdo. Alguns desses
@@ -72,7 +88,7 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="6. Retenção e segurança">
+      <LegalSection title="7. Retenção e segurança">
         <p>
           Dados pessoais eventualmente tratados devem ser mantidos somente pelo período necessário às
           finalidades informadas, ao cumprimento de obrigações legais e à defesa de direitos. São adotadas
@@ -81,7 +97,7 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="7. Direitos dos titulares">
+      <LegalSection title="8. Direitos dos titulares">
         <p>
           Nos termos da LGPD, o titular pode solicitar, conforme aplicável, confirmação e acesso aos dados,
           correção, anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em desacordo
@@ -95,15 +111,15 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="8. Links externos">
+      <LegalSection title="9. Links externos">
         <p>
-          O guia contém links para sites de terceiros, inclusive fontes oficiais. Ao sair deste domínio,
-          passam a valer os termos, práticas de privacidade e controles do respectivo terceiro. Este
-          projeto não controla o tratamento de dados realizado por sites externos.
+          O guia contém links para sites de terceiros, inclusive fontes oficiais e ferramentas de busca.
+          Ao sair deste domínio, passam a valer os termos, práticas de privacidade e controles do respectivo
+          terceiro. Este projeto não controla o tratamento de dados realizado por sites externos.
         </p>
       </LegalSection>
 
-      <LegalSection title="9. Alterações">
+      <LegalSection title="10. Alterações">
         <p>
           Esta política pode ser atualizada quando o código, a infraestrutura, a legislação ou as práticas
           de tratamento mudarem. A data exibida no topo identifica a versão vigente desta página.

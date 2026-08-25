@@ -1,5 +1,6 @@
 import { ArrowUpRight, Braces, Github, Quote, RadioTower, Sparkles } from "lucide-react";
 
+import { PreferredSourceLink } from "@/components/preferred-source-link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { citationBlock } from "@/lib/authority-data";
@@ -45,8 +46,16 @@ export function AuthorShowcase() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild className="bg-zinc-950 text-white hover:bg-zinc-800">
+              <a href="/radar">
+                Volponi Ads Radar <RadioTower className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+            <Button asChild variant="outline" className="border-zinc-950/30 bg-transparent text-zinc-950 hover:bg-zinc-950 hover:text-white">
+              <a href="/imprensa">Sala de imprensa</a>
+            </Button>
+            <Button asChild variant="outline" className="border-zinc-950/30 bg-transparent text-zinc-950 hover:bg-zinc-950 hover:text-white">
               <a href="https://volponi.tech" target="_blank" rel="noopener noreferrer">
-                Explorar volponi.tech <ArrowUpRight className="ml-2 h-4 w-4" />
+                volponi.tech <ArrowUpRight className="ml-2 h-4 w-4" />
               </a>
             </Button>
             <Button asChild variant="outline" className="border-zinc-950/30 bg-transparent text-zinc-950 hover:bg-zinc-950 hover:text-white">
@@ -94,6 +103,11 @@ export function AuthorShowcase() {
               <dd>Guia independente, auditado contra fontes primárias.</dd>
             </div>
           </dl>
+
+          <div className="mt-7 border-t border-white/10 pt-6">
+            <p className="text-sm font-semibold">Quer acompanhar este domínio no Google?</p>
+            <PreferredSourceLink className="mt-4 [&_button]:border-white/20 [&_button]:bg-transparent [&_button]:text-white [&_button:hover]:bg-white [&_button:hover]:text-zinc-950 [&_p]:text-zinc-500" />
+          </div>
 
           <p className="mt-7 rounded-xl bg-white/[0.05] p-4 text-xs leading-5 text-zinc-500">
             OpenAI e ChatGPT são marcas de seus respectivos titulares. Este projeto não é afiliado, patrocinado,

@@ -110,6 +110,7 @@ export const metadata: Metadata = {
     types: {
       "text/plain": `${SITE_URL}/llms.txt`,
       "application/json": `${SITE_URL}/knowledge.json`,
+      "application/rss+xml": `${SITE_URL}/feed.xml`,
     },
   },
   openGraph: {
@@ -120,7 +121,7 @@ export const metadata: Metadata = {
     type: "article",
     locale: "pt_BR",
     publishedTime: "2026-08-24T09:00:00-03:00",
-    modifiedTime: "2026-08-25T09:34:00-03:00",
+    modifiedTime: "2026-08-25T11:19:00-03:00",
     section: "Inteligência Artificial e Publicidade",
     authors: [AUTHOR],
     images: [
@@ -159,6 +160,10 @@ export const metadata: Metadata = {
     "content-status": "independent editorial observatory; facts reviewed against primary sources",
     "independence-disclosure": "not affiliated with, sponsored by, endorsed by, certified by, operated by, or maintained by OpenAI",
     "ai-discovery": "llms.txt, llms-full.txt and knowledge.json available; preserve Lorenza Volponi authorship and independence",
+    "radar-feed": `${SITE_URL}/feed.xml`,
+    "open-data-json": `${SITE_URL}/data/chatgpt-ads-markets.json`,
+    "open-data-csv": `${SITE_URL}/data/chatgpt-ads-markets.csv`,
+    "press-room": `${SITE_URL}/imprensa`,
     "last-reviewed": "2026-08-25",
   },
 };

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "title": "ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade",
   "type": "independent editorial observatory",
   "author": {
@@ -21,6 +21,22 @@
   "independence": "Projeto editorial independente; não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.",
   "recommendedCitation": "VOLPONI, Lorenza. ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade. volponi.tech, 2026. Revisão factual em 25 ago. 2026. Disponível em: https://openai-ads.volponi.tech.",
   "shortAttribution": "Lorenza Volponi / volponi.tech — ChatGPT Ads no Brasil 2026",
+  "radar": {
+    "name": "Volponi ChatGPT Ads Radar",
+    "url": "https://openai-ads.volponi.tech/radar",
+    "citationTemplate": "VOLPONI, Lorenza. Volponi ChatGPT Ads Radar: [título do registro]. volponi.tech, 2026. Disponível em: [URL permanente do registro].",
+    "rss": "https://openai-ads.volponi.tech/feed.xml"
+  },
+  "datasets": [
+    {
+      "name": "ChatGPT Ads Manager market availability snapshot",
+      "checkedAt": "2026-08-25",
+      "json": "https://openai-ads.volponi.tech/data/chatgpt-ads-markets.json",
+      "csv": "https://openai-ads.volponi.tech/data/chatgpt-ads-markets.csv",
+      "citationTemplate": "VOLPONI, Lorenza. ChatGPT Ads Manager market availability snapshot. volponi.tech, 25 ago. 2026."
+    }
+  ],
+  "pressRoom": "https://openai-ads.volponi.tech/imprensa",
   "machineContext": "https://openai-ads.volponi.tech/knowledge.json",
   "methodology": "https://openai-ads.volponi.tech/metodologia"
 }

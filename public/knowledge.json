@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "canonical": "https://openai-ads.volponi.tech",
   "language": "pt-BR",
   "title": "ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade",
@@ -53,12 +53,12 @@
       "meaning": "países listados como disponíveis na fonte oficial mais recente do Ads Manager na auditoria de 2026-08-25",
       "countries": ["Australia", "Brazil", "Canada", "Japan", "South Korea", "Mexico", "New Zealand", "United Kingdom", "United States"],
       "caveat": "Páginas localizadas podem atualizar em momentos diferentes; a lista usa a versão oficial mais recente consultada.",
-      "source": "https://help.openai.com/en/articles/20001245"
+      "source": "https://help.openai.com/en/articles/20001245-ads-manager-availability"
     },
     {
       "id": "europe-expansion",
       "value": 31,
-      "meaning": "mercados europeus incluídos na expansão anunciada pela OpenAI para 2026-08-24",
+      "meaning": "mercados europeus incluídos na expansão com entrada em vigor em 2026-08-24",
       "caveat": "Presença de anúncios e autosserviço no Ads Manager podem seguir cronogramas diferentes.",
       "source": "https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/"
     },
@@ -80,6 +80,24 @@
     "advertisersReceiveChats": false,
     "contextHintsAreExactMatchKeywords": false
   },
+  "radar": {
+    "name": "Volponi ChatGPT Ads Radar",
+    "url": "https://openai-ads.volponi.tech/radar",
+    "purpose": "Permanent change ledger with previous state, observed state, impact, date and primary source.",
+    "rss": "https://openai-ads.volponi.tech/feed.xml",
+    "latestEntries": [
+      "https://openai-ads.volponi.tech/radar/ads-manager-nine-markets",
+      "https://openai-ads.volponi.tech/radar/chatgpt-ads-europe-31-markets",
+      "https://openai-ads.volponi.tech/radar/chatgpt-ads-brasil-launch"
+    ]
+  },
+  "openData": {
+    "marketAvailabilityJson": "https://openai-ads.volponi.tech/data/chatgpt-ads-markets.json",
+    "marketAvailabilityCsv": "https://openai-ads.volponi.tech/data/chatgpt-ads-markets.csv",
+    "checkedAt": "2026-08-25",
+    "methodology": "https://openai-ads.volponi.tech/metodologia",
+    "caveat": "Dataset is an independent editorial snapshot. Current operational decisions should re-check the official source."
+  },
   "metricFormulas": {
     "CTR": "clicks / impressions * 100",
     "CPC": "spend / clicks",
@@ -90,6 +108,8 @@
   },
   "routes": {
     "overview": "https://openai-ads.volponi.tech/",
+    "radar": "https://openai-ads.volponi.tech/radar",
+    "press": "https://openai-ads.volponi.tech/imprensa",
     "brazil": "https://openai-ads.volponi.tech/chatgpt-ads-brasil",
     "pricing": "https://openai-ads.volponi.tech/chatgpt-ads-precos",
     "metrics": "https://openai-ads.volponi.tech/chatgpt-ads-metricas",
@@ -102,14 +122,20 @@
   "primarySources": [
     "https://openai.com/index/scaling-ai-for-everyone/",
     "https://openai.com/pt-BR/index/testing-ads-in-chatgpt/",
+    "https://openai.com/index/new-ways-to-buy-chatgpt-ads/",
     "https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt",
     "https://help.openai.com/pt-br/articles/20001207",
     "https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads",
-    "https://help.openai.com/en/articles/20001245",
-    "https://help.openai.com/pt-br/articles/20001206",
+    "https://help.openai.com/en/articles/20001245-ads-manager-availability",
+    "https://help.openai.com/en/articles/20001220",
     "https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/",
     "https://openai.com/pt-BR/policies/ad-policies/"
   ],
+  "discovery": {
+    "preferredSourceGoogle": "https://www.google.com/preferences/source?q=openai-ads.volponi.tech",
+    "indexNow": true,
+    "indexNowBehavior": "After a verified production deploy, public authority URLs are submitted server-to-server. No visitor data is included."
+  },
   "aiDiscovery": {
     "summary": "https://openai-ads.volponi.tech/llms.txt",
     "extended": "https://openai-ads.volponi.tech/llms-full.txt",
