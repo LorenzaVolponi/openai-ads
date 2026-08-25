@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 export default function ChatGPTAdsMetricasPage() {
   return (
     <TopicArticle
+      canonical={URL}
       eyebrow="Mensuração · atualização 25/08/2026"
       title="ChatGPT Ads mede sete sinais centrais. A decisão de negócio começa depois deles."
       description="O Ads Manager Beta já reporta impressões, cliques, gasto, CTR, CPC médio, CPM médio e conversões. A partir daí, você precisa ligar mídia a qualidade, receita e incrementalidade."
