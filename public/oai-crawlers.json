@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "canonical": "https://openai-ads.volponi.tech/oai-adsbot-searchbot",
+  "publisher": "volponi.tech",
+  "author": "Lorenza Volponi",
+  "language": "pt-BR",
+  "reviewedAt": "2026-08-25",
+  "type": "independent crawler-readiness reference",
+  "independence": "This is an independent editorial and technical reference. It is not an OpenAI standard, partnership, certification or official crawler manifest.",
+  "crawlers": {
+    "OAI-AdsBot": {
+      "role": "ChatGPT Ads landing-page validation and review",
+      "advertiserPriority": "required",
+      "robotsExample": "User-agent: OAI-AdsBot\nAllow: /",
+      "documentedLandingPageUse": [
+        "validate safety and policy compliance of pages submitted as ads",
+        "landing-page content may be used to help determine when an ad is relevant to show"
+      ],
+      "ipRanges": "https://openai.com/adsbot.json",
+      "officialSource": "https://help.openai.com/pt-br/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers"
+    },
+    "OAI-SearchBot": {
+      "role": "public web discovery for ChatGPT search experiences",
+      "advertiserPriority": "recommended alongside OAI-AdsBot",
+      "robotsExample": "User-agent: OAI-SearchBot\nAllow: /",
+      "documentedPublisherUse": [
+        "helps public content be discovered and surfaced",
+        "allows eligible content to appear in summaries and snippets",
+        "supports clear citations and links in ChatGPT search experiences"
+      ],
+      "referralSignal": "utm_source=chatgpt.com",
+      "ipRanges": "https://openai.com/searchbot.json",
+      "officialSource": "https://help.openai.com/en/articles/12627856-publishers-and-developers-faq"
+    },
+    "GPTBot": {
+      "role": "separate publisher control associated with potential training",
+      "note": "Do not treat GPTBot, OAI-SearchBot and OAI-AdsBot as interchangeable controls.",
+      "officialSource": "https://help.openai.com/en/articles/12627856-publishers-and-developers-faq"
+    }
+  },
+  "infrastructureChecks": [
+    "robots.txt explicitly permits the intended crawler and path",
+    "landing page returns a successful HTTP response without authentication",
+    "WAF/CDN/bot mitigation does not return 403",
+    "CAPTCHA or JavaScript challenges do not block crawler access",
+    "geo restrictions do not block validation",
+    "rate limiting does not return 429 during crawler activity",
+    "redirect chains resolve to a crawlable web destination",
+    "IP allowlists reference current official OpenAI JSON endpoints when required"
+  ],
+  "siteImplementation": {
+    "robots": "https://openai-ads.volponi.tech/robots.txt",
+    "sitemap": "https://openai-ads.volponi.tech/sitemap.xml",
+    "humanGuide": "https://openai-ads.volponi.tech/oai-adsbot-searchbot",
+    "textManifest": "https://openai-ads.volponi.tech/oai-crawlers.txt",
+    "jsonManifest": "https://openai-ads.volponi.tech/oai-crawlers.json"
+  },
+  "limits": [
+    "Crawler access does not guarantee ChatGPT Search ranking, citation, indexing or ad delivery.",
+    "Allowing OAI-AdsBot is a technical prerequisite for the documented ads-review flow, not a guarantee of ad approval.",
+    "Official crawler behavior and IP ranges may change; operational decisions should re-check OpenAI primary sources."
+  ]
+}
