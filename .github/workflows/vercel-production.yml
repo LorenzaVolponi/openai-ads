@@ -5,6 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    # Retry once per day after the rolling 24h Hobby deployment window has had
+    # time to clear. A provenance gate below skips this entirely when production
+    # is already on the current main SHA.
+    - cron: "37 21 * * *"
 
 permissions:
   contents: read
@@ -19,10 +24,55 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  gate:
+    name: Decide whether production needs a deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      should_deploy: ${{ steps.decide.outputs.should_deploy }}
+      production_sha: ${{ steps.decide.outputs.production_sha }}
+    steps:
+      - name: Compare production revision with current main
+        id: decide
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EXPECTED_SHA: ${{ github.sha }}
+          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
+          PRODUCTION_PROVENANCE_URL: https://openai-ads.volponi.tech/provenance.json
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "push" ] && printf '%s' "$HEAD_MESSAGE" | grep -Fq '[skip deploy]'; then
+            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "production_sha=unknown" >> "$GITHUB_OUTPUT"
+            echo "Deploy skipped explicitly by commit message."
+            exit 0
+          fi
+
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            PRODUCTION_SHA="$(curl --fail --silent --show-error --max-time 15 "$PRODUCTION_PROVENANCE_URL" 2>/dev/null \
+              | jq -r '.source_revision.commitSha // .sourceRevision.commitSha // empty' 2>/dev/null || true)"
+            echo "production_sha=${PRODUCTION_SHA:-unknown}" >> "$GITHUB_OUTPUT"
+
+            if [ -n "$PRODUCTION_SHA" ] && [ "$PRODUCTION_SHA" = "$EXPECTED_SHA" ]; then
+              echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+              echo "Production already matches main (${EXPECTED_SHA}); scheduled retry is a no-op."
+              exit 0
+            fi
+
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "Production is behind main or provenance could not prove equality; scheduled retry may proceed."
+            exit 0
+          fi
+
+          echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+          echo "production_sha=unchecked" >> "$GITHUB_OUTPUT"
+          echo "Push/manual execution is eligible for deployment."
+
   deploy:
-    # A merge commit can intentionally include [skip deploy] while Vercel's
-    # daily API quota is known to be exhausted. workflow_dispatch always runs.
-    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip deploy]') }}
+    needs: gate
+    if: needs.gate.outputs.should_deploy == 'true'
     name: Build and deploy with Vercel CLI
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -151,6 +201,17 @@ jobs:
 
           echo "url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
           echo "Production deployment: $DEPLOYMENT_URL"
+
+      - name: Preserve prebuilt artifact when Hobby quota is exhausted
+        if: failure() && steps.deploy.outputs.quota_limited == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-prebuilt-${{ github.sha }}
+          path: |
+            .vercel/output
+            .vercel/project.json
+          if-no-files-found: error
+          retention-days: 2
 
       - name: Verify source revision before production promotion
         env:
