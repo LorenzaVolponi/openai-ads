@@ -16,6 +16,16 @@ async function request(path, accept = "*/*") {
   });
 }
 
+async function checkAuthorityLinkHeaders(path) {
+  const response = await request(path, "text/html");
+  const links = response.headers.get("link") || "";
+  assert(response.status === 200, `${path} returns 200 for authority-link verification`, `HTTP ${response.status}`);
+  assert(links.includes(`${BASE_URL}/imprensa`) && /rel="author"/i.test(links), `${path} exposes author Link header`);
+  assert(links.includes(`${BASE_URL}/citation.json`) && /rel="cite-as"/i.test(links), `${path} exposes cite-as Link header`);
+  assert(links.includes(`${BASE_URL}/provenance.json`) && /rel="describedby"/i.test(links), `${path} exposes provenance Link header`);
+  assert(links.includes(`${BASE_URL}/feed.xml`) && /application\/rss\+xml/i.test(links), `${path} exposes RSS discovery Link header`);
+}
+
 async function checkPressPage() {
   const response = await request("/imprensa", "text/html");
   const html = await response.text();
@@ -26,6 +36,19 @@ async function checkPressPage() {
   assert(/ProfilePage/i.test(html), "press page exposes ProfilePage structured data");
   assert(/AI Systems Strategist/i.test(html), "press page exposes expert role");
   assert(/\/press-kit\.json/i.test(html), "press page links the machine-readable press kit");
+}
+
+async function checkAuthorManifest() {
+  const response = await request("/author.json", "application/json");
+  const robots = response.headers.get("x-robots-tag") || "";
+  const data = await response.json();
+  assert(response.status === 200, "author.json returns 200", `HTTP ${response.status}`);
+  assert(/noindex/i.test(robots) && /follow/i.test(robots), "author manifest is crawlable but noindex");
+  assert(data?.name === "Lorenza Volponi", "author manifest preserves Lorenza Volponi identity");
+  assert(data?.canonical === `${BASE_URL}/imprensa`, "author manifest points to canonical press profile");
+  assert(Array.isArray(data?.expertise) && data.expertise.includes("ChatGPT Ads"), "author manifest declares ChatGPT Ads expertise");
+  assert(Array.isArray(data?.latestAuthoredRecords) && data.latestAuthoredRecords.length >= 3, "author manifest exposes authored Radar records");
+  assert(/independent/i.test(data?.editorialBoundary || ""), "author manifest preserves independence boundary");
 }
 
 async function checkPressKit() {
@@ -85,7 +108,10 @@ async function checkImageVariants() {
   }
 }
 
+await checkAuthorityLinkHeaders("/");
+await checkAuthorityLinkHeaders("/imprensa");
 await checkPressPage();
+await checkAuthorManifest();
 await checkPressKit();
 await checkNewsSitemap();
 await checkLatestRadarArticle();
