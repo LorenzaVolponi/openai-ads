@@ -7,6 +7,14 @@ import { searchIntentAnswers, socialImageForPath } from "@/lib/seo";
 
 const primarySources = Object.values(SOURCES).map((source) => source.url);
 const socialImage = socialImageForPath("/");
+const searchAliases = [
+  "ChatGPT Ads",
+  "GPT Ads",
+  "Ads GPT",
+  "OpenAI Ads",
+  "anúncios no ChatGPT",
+  "ChatGPT advertising",
+];
 
 const homeStructuredData = {
   "@context": "https://schema.org",
@@ -16,6 +24,7 @@ const homeStructuredData = {
       "@id": `${SITE_URL}/#article`,
       mainEntityOfPage: { "@id": `${SITE_URL}/#webpage` },
       headline: citationBlock.title,
+      alternateName: searchAliases,
       description: citationBlock.description,
       image: socialImage,
       author: { "@id": `${SITE_URL}/#author` },
@@ -26,13 +35,18 @@ const homeStructuredData = {
       isAccessibleForFree: true,
       citation: primarySources,
       keywords: [
+        "ChatGPT Ads",
         "ChatGPT Ads Brasil",
         "ChatGPT Ads 2026",
+        "GPT Ads",
+        "Ads GPT",
+        "OpenAI Ads",
         "OpenAI Ads Manager",
         "ChatGPT Ads preços",
         "ChatGPT Ads métricas",
         "como anunciar no ChatGPT",
         "como criar anúncio no ChatGPT",
+        "anúncios no ChatGPT",
         "CPC ChatGPT Ads",
         "CPM ChatGPT Ads",
         "oCPC ChatGPT Ads",
@@ -51,6 +65,7 @@ const homeStructuredData = {
       "@type": "LearningResource",
       "@id": `${SITE_URL}/#learning-resource`,
       name: "Aprenda a fazer anúncios no ChatGPT",
+      alternateName: ["Guia ChatGPT Ads", "Guia GPT Ads", "Guia OpenAI Ads"],
       description:
         "Guia didático e independente para entender como anúncios aparecem, como escrever mensagens mais claras e como interpretar métricas sem confundir orientação editorial com garantia de performance.",
       url: SITE_URL,
@@ -167,6 +182,7 @@ const homeStructuredData = {
       "@id": `${SITE_URL}/#webpage`,
       url: SITE_URL,
       name: "ChatGPT Ads Brasil 2026: como anunciar, preços e métricas | volponi.tech",
+      alternateName: searchAliases,
       description:
         "Aprenda como anunciar no ChatGPT no Brasil em 2026 com exemplos oficiais, Ads Manager, preços, métricas, privacidade, Radar e fontes primárias.",
       image: socialImage,
@@ -177,11 +193,7 @@ const homeStructuredData = {
         height: 630,
       },
       isPartOf: { "@id": `${SITE_URL}/#website` },
-      about: [
-        { "@type": "Thing", name: "ChatGPT Ads" },
-        { "@type": "Thing", name: "OpenAI Ads Manager" },
-        { "@type": "Thing", name: "Publicidade conversacional com IA" },
-      ],
+      about: searchAliases.map((name) => ({ "@type": "Thing", name })),
       hasPart: [
         { "@type": "WebPage", name: "ChatGPT Ads no Brasil", url: `${SITE_URL}/chatgpt-ads-brasil` },
         { "@type": "WebPage", name: "Quanto custa anunciar no ChatGPT", url: `${SITE_URL}/chatgpt-ads-precos` },
