@@ -1,16 +1,16 @@
 {
-  "name": "volponi.tech — Publicidade no ChatGPT 2026",
+  "name": "volponi.tech — ChatGPT Ads Brasil Intelligence 2026",
   "short_name": "volponi.tech",
-  "description": "Guia editorial independente em português sobre publicidade no ChatGPT, privacidade, disponibilidade, políticas e mensuração. Por Lorenza Volponi. Sem afiliação com a OpenAI.",
+  "description": "Observatório editorial independente por Lorenza Volponi sobre ChatGPT Ads no Brasil: dados oficiais, preços, métricas, Ads Manager e privacidade. Sem afiliação com a OpenAI.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#fcfaf6",
-  "theme_color": "#b45309",
+  "background_color": "#18181b",
+  "theme_color": "#18181b",
   "lang": "pt-BR",
   "dir": "ltr",
-  "categories": ["education", "business", "marketing"],
+  "categories": ["education", "business", "marketing", "technology"],
   "icons": [
     {
       "src": "/mark-192.png",
