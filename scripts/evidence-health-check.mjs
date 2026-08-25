@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 
 const BASE_URL = (process.argv[2] || process.env.EVIDENCE_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiEvidenceHealth/1.0 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiEvidenceHealth/1.1 (+https://openai-ads.volponi.tech/metodologia)";
+const EXPECTED_COMMIT_SHA = (process.env.EXPECTED_GIT_COMMIT_SHA || "").trim().toLowerCase();
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
 
@@ -24,15 +25,34 @@ assert(response.status === 200, `evidence.json returns 200 (HTTP ${response.stat
 const robots = response.headers.get("x-robots-tag") || "";
 const etag = response.headers.get("etag") || "";
 const lastModified = response.headers.get("last-modified") || "";
+const sourceCommitHeader = (response.headers.get("x-source-commit") || "").toLowerCase();
 
 assert(/noindex/i.test(robots) && /follow/i.test(robots), "evidence.json is crawlable but excluded from traditional index");
 assert(Boolean(etag), "evidence.json exposes ETag");
 assert(Boolean(lastModified) && !Number.isNaN(Date.parse(lastModified)), "evidence.json exposes valid Last-Modified");
 
 const ledger = await response.json();
-assert(ledger?.schemaVersion === 1, "evidence ledger schemaVersion is 1");
+assert(ledger?.schemaVersion === 2, "evidence ledger schemaVersion is 2");
 assert(ledger?.hashChain?.algorithm === "sha-256", "evidence ledger declares SHA-256");
 assert(Array.isArray(ledger?.entries) && ledger.entries.length > 0, "evidence ledger contains records");
+
+const sourceCommitSha = String(ledger?.sourceRevision?.commitSha || "").toLowerCase();
+const sourceCommitUrl = String(ledger?.sourceRevision?.commitUrl || "");
+assert(/^[0-9a-f]{40}$/.test(sourceCommitSha), "evidence ledger publishes a full 40-character source commit SHA");
+assert(sourceCommitHeader === sourceCommitSha, "X-Source-Commit header matches the evidence body");
+assert(
+  sourceCommitUrl === `https://github.com/LorenzaVolponi/openai-ads/commit/${sourceCommitSha}`,
+  "evidence ledger source commit URL matches the published SHA",
+);
+assert(
+  ledger?.sourceRevision?.repository === "LorenzaVolponi/openai-ads",
+  "evidence ledger anchors to the canonical public repository",
+);
+if (EXPECTED_COMMIT_SHA) {
+  assert(/^[0-9a-f]{40}$/.test(EXPECTED_COMMIT_SHA), "expected deployment commit is a full Git SHA");
+  assert(sourceCommitSha === EXPECTED_COMMIT_SHA, "published source revision matches the expected deployment commit");
+}
+assert(/does not prove/i.test(ledger?.sourceRevision?.scope || ""), "source revision explicitly avoids overstating Git provenance");
 
 let previousChainSha256 = null;
 for (const [index, entry] of (ledger.entries || []).entries()) {
@@ -75,4 +95,4 @@ if (process.exitCode) {
   process.exit(process.exitCode);
 }
 
-console.log(`\nEvidence ledger integrity: ${ledger.entries.length} record(s) verified; root ${previousChainSha256}.`);
+console.log(`\nEvidence ledger integrity: ${ledger.entries.length} record(s) verified; source ${sourceCommitSha}; root ${previousChainSha256}.`);
