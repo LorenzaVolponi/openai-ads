@@ -1,7 +1,7 @@
 {
-  "name": "ChatGPT Ads — Guia Completo | volponi.tech",
-  "short_name": "ChatGPT Ads",
-  "description": "Guia completo em português sobre ChatGPT Ads, GPT Ads e publicidade com IA: como anunciar no ChatGPT, API, medição e estratégias. Por Lorenza Volponi — volponi.tech.",
+  "name": "volponi.tech — Publicidade no ChatGPT 2026",
+  "short_name": "volponi.tech",
+  "description": "Guia editorial independente em português sobre publicidade no ChatGPT, privacidade, disponibilidade, políticas e mensuração. Por Lorenza Volponi. Sem afiliação com a OpenAI.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
