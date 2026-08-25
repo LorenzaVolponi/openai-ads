@@ -5,6 +5,7 @@ import type { MetadataRoute } from "next";
 const AI_CRAWLERS = [
   "GPTBot", // OpenAI — treinamento
   "OAI-SearchBot", // OpenAI — ChatGPT Search
+  "OAI-AdsBot", // OpenAI — validação e relevância de landing pages de ChatGPT Ads
   "ChatGPT-User", // OpenAI — respostas em tempo real
   "ClaudeBot", // Anthropic
   "Claude-Web", // Anthropic — web
