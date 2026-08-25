@@ -104,35 +104,35 @@ export default function PressPage() {
 
       <header className="border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
+          <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold hover:text-zinc-600">
             <ArrowLeft className="h-4 w-4" /> Observatório
           </Link>
           <span className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">Media Source Room</span>
         </div>
       </header>
 
-      <section className="border-b border-border bg-amber-300 text-zinc-950">
+      <section className="border-b border-border bg-white text-zinc-950">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:px-6 md:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
-            <Badge className="border border-zinc-950/20 bg-zinc-950 text-amber-200 hover:bg-zinc-950">
+            <Badge className="border border-zinc-950 bg-zinc-950 text-white hover:bg-zinc-950">
               fonte para imprensa · IA · GEO · ads
             </Badge>
             <h1 className="mt-6 max-w-5xl text-5xl font-black leading-[0.94] tracking-[-0.055em] md:text-7xl">
               Se a pauta é IA em movimento,
-              <span className="block text-zinc-950/45">eu prefiro chegar com evidência.</span>
+              <span className="block text-zinc-400">eu prefiro chegar com evidência.</span>
             </h1>
-            <p className="mt-7 max-w-3xl text-lg font-medium leading-8 text-zinc-900/75 md:text-xl">
+            <p className="mt-7 max-w-3xl text-lg font-medium leading-8 text-zinc-700 md:text-xl">
               Lorenza Volponi é AI systems strategist, builder e autora do observatório independente sobre ChatGPT Ads da volponi.tech. O trabalho cruza código, busca, GEO, arquitetura de informação e leitura estratégica de produtos de IA em rápida evolução.
             </p>
           </div>
 
           <aside className="rounded-3xl bg-zinc-950 p-7 text-white shadow-2xl">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">bio curta · pronta para uso</p>
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-400">bio curta · pronta para uso</p>
             <p className="mt-4 text-sm leading-7 text-zinc-300">
               Lorenza Volponi é AI systems strategist e builder. Pesquisa como sistemas de IA, busca e publicidade conversacional mudam descoberta, decisão e distribuição de informação. É autora do Volponi ChatGPT Ads Radar, observatório independente com fontes primárias, dados abertos e histórico auditado do mercado.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
-              <Button asChild size="sm" className="bg-amber-300 text-zinc-950 hover:bg-amber-200">
+              <Button asChild size="sm" className="bg-white text-zinc-950 hover:bg-zinc-200">
                 <a href="https://volponi.tech" target="_blank" rel="noopener noreferrer">volponi.tech <ArrowUpRight className="ml-1 h-3.5 w-3.5" /></a>
               </Button>
               <Button asChild size="sm" variant="outline" className="border-white/20 bg-transparent text-white hover:bg-white hover:text-zinc-950">
@@ -143,17 +143,17 @@ export default function PressPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
+      <section className="content-auto mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="grid gap-8 lg:grid-cols-[0.32fr_0.68fr]">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Pautas</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-zinc-950">Pautas</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">Onde eu posso acrescentar contexto.</h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {interviewTopics.map((topic) => (
               <Card key={topic.title}>
                 <CardContent className="p-6">
-                  <topic.icon className="h-5 w-5 text-primary" />
+                  <topic.icon className="h-5 w-5 text-zinc-950" />
                   <h3 className="mt-5 text-lg font-black">{topic.title}</h3>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{topic.text}</p>
                 </CardContent>
@@ -163,11 +163,11 @@ export default function PressPage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-zinc-950 text-white">
+      <section className="content-auto border-y border-border bg-zinc-950 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
           <div className="grid gap-10 lg:grid-cols-[0.42fr_0.58fr]">
             <div>
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-300">Últimos sinais</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">Últimos sinais</p>
               <h2 className="mt-4 text-4xl font-black tracking-[-0.045em]">Três fatos que mudaram recentemente.</h2>
               <p className="mt-5 text-sm leading-6 text-zinc-400">
                 Cada item aponta para o Radar completo e para a fonte primária que sustenta a afirmação.
@@ -178,10 +178,10 @@ export default function PressPage() {
                 <a
                   key={entry.slug}
                   href={`/radar#${entry.slug}`}
-                  className="block rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-amber-300/30 hover:bg-white/[0.07]"
+                  className="block rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/30 hover:bg-white/[0.07]"
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-amber-300">{entry.date}</span>
+                    <span className="font-mono text-xs font-bold text-white">{entry.date}</span>
                     <span className="text-xs text-zinc-600">· {entry.market}</span>
                   </div>
                   <p className="mt-2 font-bold">{entry.title}</p>
@@ -193,15 +193,15 @@ export default function PressPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
+      <section className="content-auto mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="grid gap-5 lg:grid-cols-2">
-          <Card className="border-primary/20 bg-primary/5">
+          <Card className="border-zinc-200 bg-zinc-50">
             <CardContent className="p-7 md:p-9">
-              <div className="flex items-center gap-2 text-primary">
+              <div className="flex items-center gap-2 text-zinc-950">
                 <Quote className="h-5 w-5" />
                 <span className="font-mono text-xs font-bold uppercase tracking-[0.16em]">Como citar</span>
               </div>
-              <blockquote className="mt-5 border-l-2 border-primary pl-5 text-lg font-semibold leading-8">
+              <blockquote className="mt-5 border-l-2 border-zinc-950 pl-5 text-lg font-semibold leading-8">
                 “{citationBlock.title}”, por {citationBlock.author}, publicado por {citationBlock.publisher}, revisão factual em 25 de agosto de 2026.
               </blockquote>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -217,7 +217,7 @@ export default function PressPage() {
 
           <Card>
             <CardContent className="p-7 md:p-9">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-primary">Acompanhar</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-zinc-950">Acompanhar</p>
               <h2 className="mt-3 text-2xl font-black">Se isso virar sua fonte, diga ao Google.</h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
                 O link abaixo abre a ferramenta oficial de Preferred Sources do Google. O domínio não carrega o script do Google automaticamente e não recebe dados sobre a sua seleção.
