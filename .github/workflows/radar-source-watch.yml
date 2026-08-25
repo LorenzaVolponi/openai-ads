@@ -55,7 +55,7 @@ jobs:
         run: |
           set -euo pipefail
           TITLE="Radar: mudança detectada em fonte oficial"
-          ISSUE_NUMBER="$(gh issue list --state open --search "${TITLE} in:title" --json number,title --jq '.[] | select(.title == "'"${TITLE}"'") | .number' | head -n 1)"
+          ISSUE_NUMBER="$(gh issue list --state open --json number,title --jq '.[] | select(.title == "Radar: mudança detectada em fonte oficial") | .number' | head -n 1)"
 
           if [ -n "${ISSUE_NUMBER}" ]; then
             gh issue comment "${ISSUE_NUMBER}" --body-file .radar-watch/report.md
