@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { SITE_URL } from "@/lib/editorial-meta";
 import { RADAR_CHECKED_AT, radarEntries } from "@/lib/radar-data";
+import { sourceRevision } from "@/lib/source-revision";
 
 const sha256 = (value: string) =>
   createHash("sha256").update(value, "utf8").digest("hex");
@@ -53,13 +54,14 @@ export const evidenceLedgerEntries = chronologicalEntries.map((entry, index) => 
 export const EVIDENCE_LEDGER_ROOT_SHA256 = previousChainSha256 ?? sha256("EMPTY");
 
 export const evidenceLedger = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   name: "Volponi ChatGPT Ads Evidence Ledger",
   canonical: `${SITE_URL}/evidence.json`,
   publisher: "volponi.tech",
   author: "Lorenza Volponi",
   checkedAt: RADAR_CHECKED_AT,
   methodology: `${SITE_URL}/metodologia`,
+  sourceRevision,
   hashChain: {
     algorithm: "sha-256",
     construction:
