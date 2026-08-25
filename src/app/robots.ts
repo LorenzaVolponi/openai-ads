@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 
 // GEO (Generative Engine Optimization): explicitamente permite os principais
-// crawlers de IA/GEO — GPTBot, ClaudeBot, PerplexityBot etc. — além do Googlebot.
+// crawlers de IA/GEO — incluindo os crawlers oficiais da OpenAI para Search e Ads.
 const AI_CRAWLERS = [
   "GPTBot", // OpenAI — treinamento
-  "OAI-SearchBot", // OpenAI — ChatGPT Search
+  "OAI-SearchBot", // OpenAI — ChatGPT Search / descoberta publica
+  "OAI-AdsBot", // OpenAI — validacao de landing pages de ChatGPT Ads
   "ChatGPT-User", // OpenAI — respostas em tempo real
   "ClaudeBot", // Anthropic
   "Claude-Web", // Anthropic — web

@@ -51,6 +51,10 @@ const nextConfig: NextConfig = {
       { source: "/chatgpt-ads-manager", destination: "/ads-manager-chatgpt", permanent: true },
       { source: "/quanto-custa-anunciar-no-chatgpt", destination: "/chatgpt-ads-precos", permanent: true },
       { source: "/metricas-chatgpt-ads", destination: "/chatgpt-ads-metricas", permanent: true },
+      { source: "/oai-adsbot", destination: "/oai-adsbot-searchbot", permanent: true },
+      { source: "/oai-searchbot", destination: "/oai-adsbot-searchbot", permanent: true },
+      { source: "/openai-crawlers", destination: "/oai-adsbot-searchbot", permanent: true },
+      { source: "/openai-adsbot", destination: "/oai-adsbot-searchbot", permanent: true },
     ];
   },
   async headers() {
@@ -68,6 +72,7 @@ const nextConfig: NextConfig = {
       { source: "/press-kit.json", headers: machineOnlyHeaders },
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
+      { source: "/oai-crawlers.txt", headers: machineOnlyHeaders },
       { source: "/humans.txt", headers: machineOnlyHeaders },
       { source: "/data/:path*", headers: machineOnlyHeaders },
       { source: "/26b5fac8058e49e09141a6a4b7b6adc4.txt", headers: machineOnlyHeaders },
