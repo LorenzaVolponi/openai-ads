@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.2 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.3 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -32,6 +32,8 @@ const machineOnly = [
   "/knowledge.json",
   "/citation.json",
   "/provenance.json",
+  "/evidence.json",
+  "/press-kit.json",
   "/llms.txt",
   "/llms-full.txt",
   "/humans.txt",
@@ -43,6 +45,8 @@ const freshnessAssets = [
   "/feed.xml",
   "/feed.json",
   "/provenance.json",
+  "/evidence.json",
+  "/press-kit.json",
   "/data/chatgpt-ads-markets.json",
   "/data/chatgpt-ads-markets.csv",
 ];
@@ -231,11 +235,15 @@ async function checkDiscovery() {
   try {
     const response = await request("/knowledge.json");
     const data = await response.json();
-    const aliasesFromKnowledge = Array.isArray(data?.entity?.aliases) ? data.entity.aliases.map((value) => String(value).toLowerCase()) : [];
+    const rawAliases = data?.searchEntity?.aliases ?? data?.entity?.aliases ?? [];
+    const aliasesFromKnowledge = Array.isArray(rawAliases) ? rawAliases.map((value) => String(value).toLowerCase()) : [];
     assert(data?.canonical === BASE_URL, "knowledge.json canonical matches production", String(data?.canonical || "missing"));
     for (const term of ["chatgpt ads", "gpt ads", "ads gpt", "openai ads"]) {
       assert(aliasesFromKnowledge.includes(term), `knowledge.json maps alias: ${term}`);
     }
+    assert(data?.discovery?.openAICrawlers?.["OAI-SearchBot"]?.allowed === true, "knowledge.json declares OAI-SearchBot discovery policy");
+    assert(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.allowed === true, "knowledge.json declares OAI-AdsBot readiness policy");
+    assert(/not presented as an organic ranking signal/i.test(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.rankingCaveat || ""), "knowledge.json avoids overstating AdsBot as an SEO ranking signal");
   } catch (error) {
     fail("knowledge.json semantic check succeeds", error instanceof Error ? error.message : String(error));
   }
