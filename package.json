@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seo:health": "node scripts/seo-health-check.mjs"
   },
   "dependencies": {
     "next": "^16.1.1",
