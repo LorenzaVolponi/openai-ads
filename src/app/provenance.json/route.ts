@@ -1,3 +1,4 @@
+import { EVIDENCE_LEDGER_ROOT_SHA256 } from "@/lib/evidence-ledger";
 import {
   LAST_EDITORIAL_REVIEW_DATE,
   LAST_EDITORIAL_REVIEW_ISO,
@@ -11,7 +12,7 @@ export const dynamic = "force-static";
 
 export function GET() {
   const data = {
-    schema_version: "1.1",
+    schema_version: "1.2",
     project: "Volponi ChatGPT Ads Guide & Radar",
     canonical: SITE_URL,
     search_entity: {
@@ -55,6 +56,15 @@ export function GET() {
         url: source.url,
       })),
     },
+    evidence_integrity: {
+      ledger: `${SITE_URL}/evidence.json`,
+      algorithm: "sha-256",
+      root_sha256: EVIDENCE_LEDGER_ROOT_SHA256,
+      construction:
+        "Each normalized Radar record has a SHA-256 digest. Records are linked chronologically by hashing the previous chain digest plus the current record digest.",
+      scope:
+        "Tamper-evident integrity for the published editorial record. This is not a digital signature and does not independently prove that a primary source was true at a given time.",
+    },
     indexing_policy: {
       html_authority_pages: "index, follow",
       machine_context_files: "crawlable, noindex",
@@ -77,8 +87,11 @@ export function GET() {
       llms_full: `${SITE_URL}/llms-full.txt`,
       knowledge: `${SITE_URL}/knowledge.json`,
       citation: `${SITE_URL}/citation.json`,
+      provenance: `${SITE_URL}/provenance.json`,
+      evidence: `${SITE_URL}/evidence.json`,
       dataset_json: `${SITE_URL}/data/chatgpt-ads-markets.json`,
       dataset_csv: `${SITE_URL}/data/chatgpt-ads-markets.csv`,
+      repository_citation: "https://github.com/LorenzaVolponi/openai-ads/blob/main/CITATION.cff",
     },
     methodology: `${SITE_URL}/metodologia`,
     terms: `${SITE_URL}/termos`,
