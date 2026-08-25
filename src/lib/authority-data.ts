@@ -41,8 +41,8 @@ export const SOURCES = {
     checkedAt: CHECKED_AT,
   },
   availability: {
-    label: "Disponibilidade do Gerenciador de Anúncios",
-    url: "https://help.openai.com/pt-br/articles/20001245-ads-manager-availability",
+    label: "Ads Manager Availability — latest official locale",
+    url: "https://help.openai.com/en/articles/20001245",
     publisher: "OpenAI Help Center",
     checkedAt: CHECKED_AT,
   },
@@ -92,7 +92,7 @@ export const authorityMetrics: AuthorityMetric[] = [
     value: "9",
     label: "países com Ads Manager disponível",
     context: "Austrália, Brasil, Canadá, Japão, Coreia do Sul, México, Nova Zelândia, Reino Unido e EUA.",
-    caveat: "A disponibilidade muda rápido; esta contagem é um retrato da auditoria de 25/08/2026.",
+    caveat: "Retrato da fonte oficial mais recente na auditoria de 25/08/2026; páginas localizadas podem atualizar em momentos diferentes.",
     source: SOURCES.availability,
   },
   {
@@ -193,7 +193,7 @@ export const evidenceLedger = [
   {
     status: "confirmado",
     title: "Brasil está disponível no Ads Manager",
-    text: "A página de disponibilidade lista o Brasil como disponível na auditoria de 25/08/2026.",
+    text: "A fonte oficial mais recente lista o Brasil como disponível na auditoria de 25/08/2026.",
     source: SOURCES.availability,
   },
   {
@@ -223,7 +223,7 @@ export const evidenceLedger = [
   {
     status: "em evolução",
     title: "Mercados e recursos mudam rapidamente",
-    text: "O Ads Manager continua beta; disponibilidade, integrações e fluxos podem mudar sem que benchmarks antigos continuem válidos.",
+    text: "O Ads Manager continua beta; disponibilidade, integrações e fluxos podem mudar e páginas localizadas podem refletir atualizações em ritmos diferentes.",
     source: SOURCES.availability,
   },
 ] as const;
