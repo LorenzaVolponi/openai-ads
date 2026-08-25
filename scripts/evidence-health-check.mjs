@@ -25,6 +25,7 @@ assert(response.status === 200, `evidence.json returns 200 (HTTP ${response.stat
 const robots = response.headers.get("x-robots-tag") || "";
 const etag = response.headers.get("etag") || "";
 const lastModified = response.headers.get("last-modified") || "";
+const sourceCommitHeader = (response.headers.get("x-source-commit") || "").toLowerCase();
 
 assert(/noindex/i.test(robots) && /follow/i.test(robots), "evidence.json is crawlable but excluded from traditional index");
 assert(Boolean(etag), "evidence.json exposes ETag");
@@ -38,6 +39,7 @@ assert(Array.isArray(ledger?.entries) && ledger.entries.length > 0, "evidence le
 const sourceCommitSha = String(ledger?.sourceRevision?.commitSha || "").toLowerCase();
 const sourceCommitUrl = String(ledger?.sourceRevision?.commitUrl || "");
 assert(/^[0-9a-f]{40}$/.test(sourceCommitSha), "evidence ledger publishes a full 40-character source commit SHA");
+assert(sourceCommitHeader === sourceCommitSha, "X-Source-Commit header matches the evidence body");
 assert(
   sourceCommitUrl === `https://github.com/LorenzaVolponi/openai-ads/commit/${sourceCommitSha}`,
   "evidence ledger source commit URL matches the published SHA",
