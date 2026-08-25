@@ -27,6 +27,7 @@ jobs:
       VERCEL_PROJECT_NAME: openai-ads
       VERCEL_PRODUCTION_DOMAIN: openai-ads.volponi.tech
       VERCEL_DEPLOY_COOLDOWN_SECONDS: "60"
+      INDEXNOW_KEY: "26b5fac8058e49e09141a6a4b7b6adc4"
       NEXT_TELEMETRY_DISABLED: "1"
 
     steps:
@@ -151,6 +152,49 @@ jobs:
           fi
 
           echo "Production homepage health check passed (${HOME_BYTES} bytes)."
+
+      - name: Notify IndexNow of published authority URLs
+        if: success() && steps.deploy.outputs.url != ''
+        shell: bash
+        run: |
+          set -uo pipefail
+          INDEXNOW_ENDPOINT="https://api.indexnow.org/indexnow"
+          KEY_LOCATION="https://${VERCEL_PRODUCTION_DOMAIN}/${INDEXNOW_KEY}.txt"
+
+          cat > /tmp/indexnow.json <<JSON
+          {
+            "host": "${VERCEL_PRODUCTION_DOMAIN}",
+            "key": "${INDEXNOW_KEY}",
+            "keyLocation": "${KEY_LOCATION}",
+            "urlList": [
+              "https://${VERCEL_PRODUCTION_DOMAIN}/",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/radar",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/radar/ads-manager-nine-markets",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/radar/chatgpt-ads-europe-31-markets",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/radar/chatgpt-ads-brasil-launch",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-brasil",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-precos",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-metricas",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/ads-manager-chatgpt",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-privacidade",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/imprensa",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/metodologia"
+            ]
+          }
+          JSON
+
+          HTTP_CODE="$(curl -sS -o /tmp/indexnow-response.txt -w '%{http_code}' \
+            -X POST \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data-binary @/tmp/indexnow.json \
+            "$INDEXNOW_ENDPOINT" || true)"
+
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "202" ]; then
+            echo "IndexNow accepted the published URL batch (HTTP ${HTTP_CODE})."
+          else
+            echo "::warning::IndexNow notification did not return 200/202 (HTTP ${HTTP_CODE:-network-error}). Production remains healthy."
+            cat /tmp/indexnow-response.txt 2>/dev/null || true
+          fi
 
       - name: Mark deployment success
         if: success() && steps.deploy.outputs.url != ''
