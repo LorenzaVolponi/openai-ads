@@ -44,6 +44,9 @@ jobs:
       - name: Validate SEO health checker syntax
         run: node --check scripts/seo-health-check.mjs
 
+      - name: Validate evidence health checker syntax
+        run: node --check scripts/evidence-health-check.mjs
+
       - name: Validate SEO insights syntax
         run: node --check scripts/seo-authority-insights.mjs
 
