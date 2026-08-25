@@ -4,8 +4,17 @@ import { radarEntries } from "@/lib/radar-data";
 
 export const runtime = "nodejs";
 
+const IMAGE_VARIANTS = {
+  "1x1": { width: 1080, height: 1080 },
+  "4x3": { width: 1200, height: 900 },
+  "16x9": { width: 1200, height: 675 },
+  social: { width: 1200, height: 630 },
+} as const;
+
+type ImageVariant = keyof typeof IMAGE_VARIANTS;
+
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
@@ -14,6 +23,12 @@ export async function GET(
   if (!entry) {
     return new Response("Not found", { status: 404 });
   }
+
+  const ratio = new URL(request.url).searchParams.get("ratio") as ImageVariant | null;
+  const variant: ImageVariant = ratio && ratio in IMAGE_VARIANTS ? ratio : "social";
+  const { width, height } = IMAGE_VARIANTS[variant];
+  const square = variant === "1x1";
+  const tall = square || variant === "4x3";
 
   return new ImageResponse(
     (
@@ -26,7 +41,7 @@ export async function GET(
           justifyContent: "space-between",
           background: "#111111",
           color: "#ffffff",
-          padding: "62px 72px",
+          padding: square ? "70px" : tall ? "64px 72px" : "58px 72px",
           fontFamily: "Arial, Helvetica, sans-serif",
         }}
       >
@@ -49,28 +64,49 @@ export async function GET(
               V
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <div style={{ fontSize: 21, fontWeight: 800 }}>Volponi ChatGPT Ads Radar</div>
+              <div style={{ fontSize: square ? 19 : 21, fontWeight: 800 }}>Volponi ChatGPT Ads Radar</div>
               <div style={{ fontSize: 13, letterSpacing: 2, color: "#a1a1aa" }}>CHANGE LEDGER · PRIMARY SOURCES</div>
             </div>
           </div>
-          <div style={{ fontSize: 16, color: "#a1a1aa" }}>{entry.date}</div>
+          {!square && <div style={{ fontSize: 16, color: "#a1a1aa" }}>{entry.date}</div>}
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", maxWidth: 1040 }}>
-          <div style={{ fontSize: 17, letterSpacing: 2.2, color: "#d4d4d8", marginBottom: 20 }}>{entry.market.toUpperCase()} · {entry.kind.toUpperCase()}</div>
-          <div style={{ fontSize: 66, lineHeight: 1.02, letterSpacing: -3.1, fontWeight: 800 }}>{entry.title}</div>
-          <div style={{ marginTop: 26, fontSize: 23, lineHeight: 1.35, color: "#d4d4d8", maxWidth: 970 }}>{entry.summary}</div>
+        <div style={{ display: "flex", flexDirection: "column", maxWidth: square ? 890 : 1040 }}>
+          <div style={{ fontSize: square ? 16 : 17, letterSpacing: 2.2, color: "#d4d4d8", marginBottom: 20 }}>
+            {entry.market.toUpperCase()} · {entry.kind.toUpperCase()} · {entry.date}
+          </div>
+          <div
+            style={{
+              fontSize: square ? 58 : tall ? 62 : 66,
+              lineHeight: 1.02,
+              letterSpacing: square ? -2.4 : -3.1,
+              fontWeight: 800,
+            }}
+          >
+            {entry.title}
+          </div>
+          <div
+            style={{
+              marginTop: 26,
+              fontSize: square ? 22 : 23,
+              lineHeight: 1.35,
+              color: "#d4d4d8",
+              maxWidth: square ? 860 : 970,
+            }}
+          >
+            {entry.summary}
+          </div>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #3f3f46", paddingTop: 22 }}>
           <div style={{ fontSize: 17, fontWeight: 700 }}>Lorenza Volponi · volponi.tech</div>
-          <div style={{ fontSize: 14, color: "#a1a1aa" }}>estado observado · impacto · fonte primária</div>
+          {!square && <div style={{ fontSize: 14, color: "#a1a1aa" }}>estado observado · impacto · fonte primária</div>}
         </div>
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      width,
+      height,
       headers: {
         "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
       },
