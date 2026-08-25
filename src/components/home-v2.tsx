@@ -1,12 +1,14 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import { ArrowRight, ArrowUpRight, BookOpen, Check, Radio, ShieldCheck } from "lucide-react";
 import { AssistantChat } from "@/components/assistant-chat";
 import { AdQualityLab } from "@/components/ad-quality-lab";
 import { OfficialAdsLearning } from "@/components/official-ads-learning";
 import { AuthorityMetrics, EvidenceLedger, MediaMath, ProductRealityGrid } from "@/components/authority-dashboard";
 import { AuthorShowcase } from "@/components/author-showcase";
+import { MobileDock } from "@/components/mobile-dock";
 import { authorityMetrics, CHECKED_AT } from "@/lib/authority-data";
 
 const deepDives = [
@@ -44,14 +46,16 @@ export default function HomeV2() {
   } as CSSProperties;
 
   return (
-    <div style={theme} className="min-h-screen bg-[#fafaf8] text-zinc-950">
-      <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-[#fafaf8]/92 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
-          <a href="https://volponi.tech" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
-            <img src="/fox-black.png" alt="" className="h-9 w-9 rounded-xl" />
-            <div>
-              <span className="block text-sm font-black tracking-tight">volponi.tech</span>
-              <span className="block font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">ChatGPT Ads Guide</span>
+    <div style={theme} className="min-h-screen bg-[#fafaf8] pb-[calc(5.5rem+env(safe-area-inset-bottom))] text-zinc-950 lg:pb-0">
+      <a href="#main-content" className="skip-link">Pular para o conteúdo</a>
+
+      <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-[#fafaf8]/94 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 md:px-6">
+          <a href="https://volponi.tech" target="_blank" rel="noopener noreferrer" className="flex min-w-0 items-center gap-3">
+            <Image src="/fox-black.png" alt="" width={36} height={36} className="h-9 w-9 shrink-0 rounded-xl" />
+            <div className="min-w-0">
+              <span className="block truncate text-sm font-black tracking-tight">volponi.tech</span>
+              <span className="block truncate font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">ChatGPT Ads Guide</span>
             </div>
           </a>
           <nav className="hidden items-center gap-5 lg:flex" aria-label="Navegação principal">
@@ -59,31 +63,31 @@ export default function HomeV2() {
               <a key={href} href={href} className="text-xs font-semibold text-zinc-600 transition hover:text-zinc-950">{label}</a>
             ))}
           </nav>
-          <a href="/radar" className="inline-flex items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-xs font-bold text-white transition hover:bg-zinc-800">
-            Ver Radar <ArrowRight className="h-3.5 w-3.5" />
+          <a href="/radar" className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-xs font-bold text-white transition hover:bg-zinc-800">
+            <span className="hidden sm:inline">Ver Radar</span><span className="sm:hidden">Radar</span> <ArrowRight className="h-3.5 w-3.5" />
           </a>
         </div>
       </header>
 
-      <main>
+      <main id="main-content">
         <section className="relative overflow-hidden border-b border-zinc-200 bg-white">
-          <div className="pointer-events-none absolute inset-0 [background:radial-gradient(circle_at_72%_24%,rgba(0,0,0,.06),transparent_24%),linear-gradient(180deg,#fff_0%,#fafaf8_100%)]" />
-          <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-16 md:px-6 md:py-24 lg:grid-cols-[0.72fr_0.28fr] lg:items-center">
+          <div className="pointer-events-none absolute inset-0 [background:radial-gradient(circle_at_72%_24%,rgba(0,0,0,.055),transparent_24%),linear-gradient(180deg,#fff_0%,#fafaf8_100%)]" />
+          <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 md:px-6 md:py-24 lg:grid-cols-[0.72fr_0.28fr] lg:items-center">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-600 shadow-sm">
                 <BookOpen className="h-3.5 w-3.5" /> guia independente · volponi.tech
               </div>
-              <h1 className="geo-answer mt-7 max-w-4xl font-serif text-6xl leading-[0.92] tracking-[-0.055em] text-zinc-950 sm:text-7xl md:text-8xl">
+              <h1 className="geo-answer mt-7 max-w-4xl font-serif text-[clamp(3.35rem,14vw,5rem)] leading-[0.92] tracking-[-0.055em] text-zinc-950 md:text-8xl">
                 Aprenda a fazer anúncios no ChatGPT.
               </h1>
               <p className="press-summary mt-7 max-w-2xl text-lg leading-8 text-zinc-600 md:text-xl">
                 De forma simples, direta e útil. Veja como o anúncio aparece, como escrever melhor e como medir sem transformar hype em resultado.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button type="button" onClick={() => navigate("#como-aparece")} className="inline-flex items-center gap-2 rounded-full bg-zinc-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-zinc-800">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <button type="button" onClick={() => navigate("#como-aparece")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-zinc-800">
                   Ver como funciona <ArrowRight className="h-4 w-4" />
                 </button>
-                <a href="https://ads.openai.com/pt-BR" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:border-zinc-500">
+                <a href="https://ads.openai.com/pt-BR" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:border-zinc-500">
                   Fonte oficial <ArrowUpRight className="h-4 w-4" />
                 </a>
               </div>
@@ -97,7 +101,7 @@ export default function HomeV2() {
             <aside className="relative mx-auto w-full max-w-sm">
               <div className="absolute inset-6 rounded-full bg-zinc-100 blur-3xl" />
               <div className="relative rounded-[2.25rem] border border-zinc-200 bg-[#f7f7f5] p-8 text-center shadow-[0_30px_90px_rgba(0,0,0,.08)]">
-                <img src="/fox-black.png" alt="Marca da volponi.tech" className="mx-auto h-36 w-36 rounded-[2rem] object-contain opacity-95" />
+                <Image src="/fox-black.png" alt="Marca da volponi.tech" width={144} height={144} className="mx-auto h-36 w-36 rounded-[2rem] object-contain opacity-95" />
                 <p className="mt-6 font-serif text-2xl tracking-[-0.03em]">Entender primeiro. Anunciar depois.</p>
                 <p className="mt-3 text-sm leading-6 text-zinc-500">A Raposa transforma documentação técnica em explicação que dá para usar.</p>
                 <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-2 text-[11px] font-semibold text-zinc-600">
@@ -121,7 +125,7 @@ export default function HomeV2() {
         <OfficialAdsLearning />
         <AdQualityLab />
 
-        <section id="dados" className="scroll-mt-24 bg-white">
+        <section id="dados" className="content-auto scroll-mt-24 bg-white">
           <div className="mx-auto max-w-7xl px-4 pt-16 md:px-6 md:pt-24">
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-zinc-500">Dados auditados</p>
             <h2 className="mt-4 max-w-4xl font-serif text-5xl leading-[0.96] tracking-[-0.045em] md:text-7xl">Depois de aprender o formato, veja o que já está confirmado.</h2>
@@ -134,7 +138,7 @@ export default function HomeV2() {
         <EvidenceLedger />
         <MediaMath />
 
-        <section className="border-y border-zinc-200 bg-white">
+        <section className="content-auto border-y border-zinc-200 bg-white">
           <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
             <div className="grid gap-10 lg:grid-cols-[0.38fr_0.62fr]">
               <div>
@@ -179,6 +183,7 @@ export default function HomeV2() {
         </section>
       </main>
 
+      <MobileDock />
       <AssistantChat onNavigate={navigate} />
     </div>
   );

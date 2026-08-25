@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
-import { ArrowUpRight, Check, MousePointer2, Target, BarChart3, Layers3 } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BarChart3, Check, Focus, Layers3, Minus, MousePointer2, Plus, RotateCcw, Target } from "lucide-react";
 
 const OFFICIAL_ASSETS = [
   {
@@ -71,20 +72,31 @@ const OFFICIAL_ASSETS = [
 ] as const;
 
 const anatomy = [
-  ["1", "Patrocinado", "Deixa claro que é publicidade."],
-  ["2", "Marca", "Mostra quem está anunciando."],
-  ["3", "Título", "Resume o benefício principal."],
-  ["4", "Texto", "Explica por que a oferta ajuda."],
-  ["5", "Imagem", "Acrescenta informação visual."],
-  ["6", "Destino", "Leva para uma página coerente com a promessa."],
+  { id: "sponsored", n: "1", title: "Patrocinado", desc: "Deixa claro que é publicidade.", question: "A pessoa consegue distinguir anúncio de resposta sem precisar adivinhar?" },
+  { id: "brand", n: "2", title: "Marca", desc: "Mostra quem está anunciando.", question: "Está claro quem assume a promessa e para qual marca o clique leva?" },
+  { id: "headline", n: "3", title: "Título", desc: "Resume o benefício principal.", question: "O título explica um ganho concreto em poucos segundos?" },
+  { id: "copy", n: "4", title: "Texto", desc: "Explica por que a oferta ajuda.", question: "A copy responde por que isso é útil agora, sem encher de adjetivos?" },
+  { id: "image", n: "5", title: "Imagem", desc: "Acrescenta informação visual.", question: "O criativo ensina alguma coisa ou só ocupa espaço?" },
+  { id: "destination", n: "6", title: "Destino", desc: "Leva para uma página coerente com a promessa.", question: "A landing continua exatamente a conversa iniciada pelo anúncio?" },
 ] as const;
+
+type AnatomyId = (typeof anatomy)[number]["id"];
 
 export function OfficialAdsLearning() {
   const [activeId, setActiveId] = useState<(typeof OFFICIAL_ASSETS)[number]["id"]>("experience");
+  const [zoom, setZoom] = useState(1);
+  const [deconstruct, setDeconstruct] = useState(false);
+  const [anatomyId, setAnatomyId] = useState<AnatomyId>("sponsored");
   const active = useMemo(() => OFFICIAL_ASSETS.find((item) => item.id === activeId) ?? OFFICIAL_ASSETS[0], [activeId]);
+  const activeAnatomy = anatomy.find((item) => item.id === anatomyId) ?? anatomy[0];
+
+  const selectScreen = (id: (typeof OFFICIAL_ASSETS)[number]["id"]) => {
+    setActiveId(id);
+    setZoom(1);
+  };
 
   return (
-    <section id="como-aparece" className="scroll-mt-24 border-y border-zinc-200 bg-white">
+    <section id="como-aparece" className="content-auto scroll-mt-24 border-y border-zinc-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="max-w-4xl">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-zinc-500">Aprenda olhando · prints oficiais</p>
@@ -94,50 +106,59 @@ export function OfficialAdsLearning() {
           </p>
         </div>
 
-        <div className="mt-8 flex gap-2 overflow-x-auto pb-2 scrollbar-none" role="tablist" aria-label="Etapas de aprendizado com telas oficiais">
+        <div className="mt-8 flex snap-x gap-2 overflow-x-auto pb-3" role="tablist" aria-label="Etapas de aprendizado com telas oficiais">
           {OFFICIAL_ASSETS.map((item) => (
             <button
               key={item.id}
               type="button"
               role="tab"
               aria-selected={activeId === item.id}
-              onClick={() => setActiveId(item.id)}
-              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition ${activeId === item.id ? "border-zinc-950 bg-zinc-950 text-white" : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400 hover:text-zinc-950"}`}
+              aria-controls="official-screen-panel"
+              onClick={() => selectScreen(item.id)}
+              className={`min-h-11 shrink-0 snap-start rounded-full border px-4 py-2 text-sm font-semibold transition ${activeId === item.id ? "border-zinc-950 bg-zinc-950 text-white" : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400 hover:text-zinc-950"}`}
             >
               {item.label}
             </button>
           ))}
         </div>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
+        <div id="official-screen-panel" role="tabpanel" className="mt-6 grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
           <figure className="overflow-hidden rounded-[1.75rem] border border-zinc-200 bg-zinc-50 shadow-[0_24px_80px_rgba(0,0,0,.08)]">
-            <div className="flex items-center justify-between gap-4 border-b border-zinc-200 bg-white px-5 py-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-4 md:px-5">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-500">Captura oficial</p>
                 <p className="mt-1 text-sm font-semibold text-zinc-950">{active.sourceLabel}</p>
               </div>
-              <a href={active.source} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-zinc-600 hover:text-zinc-950">
-                Ver fonte <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
+              <div className="flex items-center gap-1 rounded-full border border-zinc-200 bg-zinc-50 p-1" aria-label="Controles de ampliação">
+                <button type="button" onClick={() => setZoom((value) => Math.max(1, Number((value - 0.25).toFixed(2))))} disabled={zoom <= 1} aria-label="Diminuir imagem" className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 hover:bg-white disabled:opacity-30"><Minus className="h-4 w-4" /></button>
+                <span className="min-w-12 text-center font-mono text-[10px] font-bold text-zinc-500">{Math.round(zoom * 100)}%</span>
+                <button type="button" onClick={() => setZoom((value) => Math.min(1.75, Number((value + 0.25).toFixed(2))))} disabled={zoom >= 1.75} aria-label="Ampliar imagem" className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 hover:bg-white disabled:opacity-30"><Plus className="h-4 w-4" /></button>
+                <button type="button" onClick={() => setZoom(1)} aria-label="Restaurar ampliação" className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 hover:bg-white"><RotateCcw className="h-4 w-4" /></button>
+              </div>
             </div>
-            <div className="bg-[#f7f7f5] p-3 md:p-6">
-              <a href={active.source} target="_blank" rel="noopener noreferrer" aria-label={`Abrir fonte oficial: ${active.sourceLabel}`}>
-                <img
+
+            <div className="relative h-[min(62dvh,660px)] min-h-[360px] overflow-hidden bg-[#f7f7f5]">
+              <div className="absolute inset-0 transition-transform duration-200 ease-out" style={{ transform: `scale(${zoom})` }}>
+                <Image
                   key={active.image}
                   src={active.image}
                   alt={active.alt}
-                  loading="lazy"
-                  className="mx-auto max-h-[660px] w-full rounded-xl border border-zinc-200 bg-white object-contain"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 68vw"
+                  quality={82}
+                  className="object-contain p-3 md:p-6"
                 />
-              </a>
+              </div>
             </div>
+
             <figcaption className="border-t border-zinc-200 bg-white px-5 py-4 text-xs leading-5 text-zinc-500">
               Imagem oficial publicada pela OpenAI. O Ads Manager está em beta e a interface pode evoluir. A captura é exibida aqui apenas para explicação editorial e educacional; a volponi.tech não é afiliada à OpenAI.
+              <a href={active.source} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center gap-1 font-semibold text-zinc-950 hover:underline">Abrir fonte em tamanho real <ArrowUpRight className="h-3.5 w-3.5" /></a>
             </figcaption>
           </figure>
 
           <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-6 md:p-8">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">O que a criança precisa entender</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">O que você precisa guardar</p>
             <h3 className="mt-3 text-2xl font-black tracking-[-0.03em] text-zinc-950">{active.title}</h3>
             <p className="mt-4 text-sm leading-6 text-zinc-600">{active.text}</p>
             <div className="mt-6 space-y-3">
@@ -148,8 +169,36 @@ export function OfficialAdsLearning() {
                 </div>
               ))}
             </div>
+            <button type="button" onClick={() => setDeconstruct((value) => !value)} className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-zinc-950 bg-white px-4 py-2 text-sm font-bold text-zinc-950 transition hover:bg-zinc-950 hover:text-white">
+              <Focus className="h-4 w-4" /> {deconstruct ? "Fechar radiografia" : "Desmontar este anúncio"}
+            </button>
           </div>
         </div>
+
+        {deconstruct ? (
+          <div className="mt-6 rounded-[1.75rem] border border-zinc-200 bg-[#fafaf8] p-5 md:p-7">
+            <div className="grid gap-6 lg:grid-cols-[0.58fr_0.42fr]">
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Radiografia didática</p>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {anatomy.map((item) => (
+                    <button key={item.id} type="button" onClick={() => setAnatomyId(item.id)} className={`min-h-20 rounded-2xl border p-4 text-left transition ${anatomyId === item.id ? "border-zinc-950 bg-zinc-950 text-white" : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400"}`}>
+                      <span className={`flex h-7 w-7 items-center justify-center rounded-full border text-xs font-bold ${anatomyId === item.id ? "border-white/30" : "border-zinc-300"}`}>{item.n}</span>
+                      <span className="mt-3 block text-sm font-bold">{item.title}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+                <p className="font-mono text-xs font-bold text-zinc-500">{activeAnatomy.n}/6</p>
+                <h3 className="mt-2 text-2xl font-black tracking-[-0.03em]">{activeAnatomy.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-zinc-600">{activeAnatomy.desc}</p>
+                <p className="mt-5 border-l-2 border-zinc-950 pl-4 text-sm font-semibold leading-6 text-zinc-950">Pergunte: {activeAnatomy.question}</p>
+                <a href="#review" className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-sm font-bold text-white">Agora revise o seu <ArrowRight className="h-4 w-4" /></a>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
@@ -172,17 +221,9 @@ export function OfficialAdsLearning() {
         <div className="mt-8 rounded-[1.75rem] border border-zinc-200 bg-zinc-950 p-6 text-white md:p-8">
           <div className="flex items-center gap-3">
             <Layers3 className="h-5 w-5" />
-            <h3 className="text-lg font-bold">Anatomia de um anúncio, sem complicar</h3>
+            <h3 className="text-lg font-bold">Regra simples</h3>
           </div>
-          <div className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
-            {anatomy.map(([n, title, desc]) => (
-              <div key={n} className="bg-zinc-950 p-5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full border border-white/25 text-xs font-bold">{n}</span>
-                <p className="mt-4 font-bold">{title}</p>
-                <p className="mt-1 text-sm leading-5 text-zinc-400">{desc}</p>
-              </div>
-            ))}
-          </div>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">Problema real → benefício claro → promessa específica → próximo passo coerente → mensuração. Se uma etapa não faz sentido, o anúncio ainda não está pronto para mídia.</p>
         </div>
       </div>
     </section>

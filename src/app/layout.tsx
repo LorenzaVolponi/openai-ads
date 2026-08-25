@@ -24,6 +24,7 @@ const AUTHOR = "Lorenza Volponi";
 const TITLE = "ChatGPT Ads no Brasil 2026: preços, métricas e Ads Manager | Lorenza Volponi";
 const DESCRIPTION =
   "Observatório editorial independente sobre ChatGPT Ads no Brasil em 2026: dados oficiais, preços CPC/CPM/oCPC, métricas, Ads Manager, privacidade, disponibilidade e fontes primárias auditadas por Lorenza Volponi.";
+const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
 const globalStructuredData = {
   "@context": "https://schema.org",
@@ -102,6 +103,7 @@ export const metadata: Metadata = {
   authors: [{ name: AUTHOR, url: "https://volponi.tech" }],
   creator: AUTHOR,
   publisher: SITE_NAME,
+  verification: GOOGLE_SITE_VERIFICATION ? { google: GOOGLE_SITE_VERIFICATION } : undefined,
   icons: {
     icon: "/mark-192.png",
     apple: "/mark.png",

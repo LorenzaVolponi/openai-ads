@@ -29,6 +29,7 @@ export const metadata: Metadata = {
     canonical: URL,
     types: {
       "application/rss+xml": "https://openai-ads.volponi.tech/feed.xml",
+      "application/feed+json": "https://openai-ads.volponi.tech/feed.json",
       "application/json": "https://openai-ads.volponi.tech/data/chatgpt-ads-markets.json",
       "text/csv": "https://openai-ads.volponi.tech/data/chatgpt-ads-markets.csv",
     },
@@ -94,23 +95,23 @@ export default function RadarPage() {
 
       <header className="border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
+          <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold hover:text-zinc-600">
             <ArrowLeft className="h-4 w-4" /> Observatório
           </Link>
           <div className="flex items-center gap-2 text-sm font-black">
-            <RadioTower className="h-4 w-4 text-primary" /> Volponi Ads Radar
+            <RadioTower className="h-4 w-4 text-zinc-950" /> Volponi Ads Radar
           </div>
         </div>
       </header>
 
       <section className="border-b border-border bg-zinc-950 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
-          <Badge className="border border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/10">
+          <Badge className="border border-white/20 bg-white/10 text-white hover:bg-white/10">
             snapshot auditado · {RADAR_CHECKED_AT}
           </Badge>
           <h1 className="mt-6 max-w-5xl text-5xl font-black leading-[0.94] tracking-[-0.055em] md:text-7xl">
             O mercado muda.
-            <span className="block text-amber-300">O Radar guarda a memória.</span>
+            <span className="block text-zinc-400">O Radar guarda a memória.</span>
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-400 md:text-xl">
             Um registro público de mudanças em ChatGPT Ads, com estado anterior, estado atual, impacto,
@@ -118,7 +119,7 @@ export default function RadarPage() {
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
-            <Button asChild className="bg-amber-300 text-zinc-950 hover:bg-amber-200">
+            <Button asChild className="bg-white text-zinc-950 hover:bg-zinc-200">
               <a href="/data/chatgpt-ads-markets.json">
                 <Database className="mr-2 h-4 w-4" /> Dataset JSON
               </a>
@@ -143,7 +144,7 @@ export default function RadarPage() {
             [String(radarEntries.length), "mudanças registradas", "com fonte primária e contexto"],
           ].map(([value, label, note]) => (
             <div key={label} className="bg-background p-7">
-              <p className="text-5xl font-black tracking-[-0.05em] text-primary">{value}</p>
+              <p className="text-5xl font-black tracking-[-0.05em] text-zinc-950">{value}</p>
               <p className="mt-2 font-bold">{label}</p>
               <p className="mt-1 text-sm text-muted-foreground">{note}</p>
             </div>
@@ -151,10 +152,10 @@ export default function RadarPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
+      <section className="content-auto mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
         <div className="grid gap-8 lg:grid-cols-[0.32fr_0.68fr]">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Readiness Matrix v1</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-zinc-950">Readiness Matrix v1</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">Maturidade sem nota mágica.</h2>
             <p className="mt-4 text-sm leading-6 text-muted-foreground">
               Em vez de fabricar um score agregado, a matriz publica cada dimensão e a evidência que sustenta a leitura.
@@ -167,16 +168,16 @@ export default function RadarPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-sm font-bold">{item.dimension}</p>
-                      <p className="mt-1 text-2xl font-black text-primary">{item.level}</p>
+                      <p className="mt-1 text-2xl font-black text-zinc-950">{item.level}</p>
                     </div>
-                    <ShieldCheck className="h-5 w-5 text-primary" />
+                    <ShieldCheck className="h-5 w-5 text-zinc-950" />
                   </div>
                   <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.evidence}</p>
                   <a
                     href={item.source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                    className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-zinc-950 hover:underline"
                   >
                     {item.source.publisher} <ArrowUpRight className="h-3 w-3" />
                   </a>
@@ -187,10 +188,10 @@ export default function RadarPage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-muted/30">
+      <section className="content-auto border-y border-border bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
           <div className="max-w-3xl">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Change ledger</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-zinc-950">Change ledger</p>
             <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Cada mudança deixa rastro.</h2>
           </div>
 
@@ -199,7 +200,7 @@ export default function RadarPage() {
               <article id={entry.slug} key={entry.slug} className="scroll-mt-24 rounded-3xl border border-border bg-background p-6 md:p-8">
                 <div className="grid gap-7 lg:grid-cols-[150px_1fr]">
                   <div>
-                    <p className="font-mono text-sm font-black text-primary">{entry.date}</p>
+                    <p className="font-mono text-sm font-black text-zinc-950">{entry.date}</p>
                     <p className="mt-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">{entry.market}</p>
                   </div>
                   <div>
@@ -215,8 +216,8 @@ export default function RadarPage() {
                         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">antes</p>
                         <p className="mt-2 text-sm leading-6">{entry.previousState}</p>
                       </div>
-                      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
-                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-primary">agora</p>
+                      <div className="rounded-2xl border border-zinc-300 bg-white p-4">
+                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-950">agora</p>
                         <p className="mt-2 text-sm font-semibold leading-6">{entry.currentState}</p>
                       </div>
                       <div className="rounded-2xl border border-border bg-muted/30 p-4">
@@ -229,7 +230,7 @@ export default function RadarPage() {
                       href={entry.source.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+                      className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-zinc-950 hover:underline"
                     >
                       Fonte: {entry.source.label} <ArrowUpRight className="h-3.5 w-3.5" />
                     </a>
@@ -241,9 +242,9 @@ export default function RadarPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
-        <div className="rounded-3xl border border-primary/20 bg-primary/5 p-8 md:p-12">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">Como usar</p>
+      <section className="content-auto mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
+        <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-8 md:p-12">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-zinc-950">Como usar</p>
           <h2 className="mt-4 max-w-3xl text-3xl font-black tracking-[-0.04em] md:text-5xl">
             Pode baixar, comparar e citar. Só preserve a fonte e a data.
           </h2>

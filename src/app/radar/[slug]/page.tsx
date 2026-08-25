@@ -53,7 +53,7 @@ export default async function RadarEntryPage({
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "NewsArticle",
+        "@type": ["Article", "TechArticle"],
         "@id": `${url}/#article`,
         headline: entry.title,
         description: entry.summary,
@@ -86,10 +86,10 @@ export default async function RadarEntryPage({
 
       <header className="border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 md:px-6">
-          <Link href="/radar" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
+          <Link href="/radar" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold hover:text-zinc-600">
             <ArrowLeft className="h-4 w-4" /> Voltar ao Radar
           </Link>
-          <span className="font-mono text-xs font-bold text-primary">{entry.date}</span>
+          <span className="font-mono text-xs font-bold text-zinc-950">{entry.date}</span>
         </div>
       </header>
 
@@ -97,9 +97,9 @@ export default async function RadarEntryPage({
         <section className="border-b border-border bg-zinc-950 text-white">
           <div className="mx-auto max-w-5xl px-4 py-16 md:px-6 md:py-24">
             <div className="flex flex-wrap gap-2">
-              <Badge className="border border-amber-300/30 bg-amber-300/10 text-amber-200 hover:bg-amber-300/10">{entry.kind}</Badge>
+              <Badge className="border border-white/20 bg-white/10 text-white hover:bg-white/10">{entry.kind}</Badge>
               <Badge className="border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/5">{entry.market}</Badge>
-              <Badge className="border border-emerald-400/20 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/10">{entry.confidence}</Badge>
+              <Badge className="border border-white/20 bg-white/10 text-zinc-200 hover:bg-white/10">{entry.confidence}</Badge>
             </div>
             <h1 className="mt-6 max-w-4xl text-5xl font-black leading-[0.95] tracking-[-0.055em] md:text-7xl">{entry.title}</h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-zinc-400 md:text-xl">{entry.summary}</p>
@@ -112,8 +112,8 @@ export default async function RadarEntryPage({
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Estado anterior</p>
               <p className="mt-3 text-sm leading-6">{entry.previousState}</p>
             </div>
-            <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Estado observado</p>
+            <div className="rounded-2xl border border-zinc-300 bg-zinc-50 p-6">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-950">Estado observado</p>
               <p className="mt-3 text-sm font-semibold leading-6">{entry.currentState}</p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-6">
@@ -124,7 +124,7 @@ export default async function RadarEntryPage({
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[0.68fr_0.32fr]">
             <div className="rounded-3xl border border-border p-7 md:p-9">
-              <div className="flex items-center gap-2 text-primary">
+              <div className="flex items-center gap-2 text-zinc-950">
                 <ShieldCheck className="h-5 w-5" />
                 <span className="font-mono text-xs font-bold uppercase tracking-[0.16em]">Critério editorial</span>
               </div>
@@ -136,14 +136,14 @@ export default async function RadarEntryPage({
                 href={entry.source.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                className="mt-6 inline-flex items-center gap-1 font-semibold text-zinc-950 hover:underline"
               >
                 {entry.source.label} · {entry.source.publisher} <ArrowUpRight className="h-4 w-4" />
               </a>
             </div>
 
-            <aside className="rounded-3xl border border-primary/20 bg-primary/5 p-7">
-              <Database className="h-5 w-5 text-primary" />
+            <aside className="rounded-3xl border border-zinc-200 bg-zinc-50 p-7">
+              <Database className="h-5 w-5 text-zinc-950" />
               <h2 className="mt-4 text-xl font-black">Dados abertos</h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
                 O snapshot de mercados também está disponível em formatos estruturados para auditoria e reutilização.

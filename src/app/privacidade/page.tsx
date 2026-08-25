@@ -70,11 +70,12 @@ export default function PrivacyPage() {
           pela volponi.tech e são identificadas como material oficial de terceiros com link para a fonte.
         </p>
         <p>
-          Para preservar fidelidade e evitar apresentar mockups como se fossem telas reais, essas imagens
-          podem ser carregadas diretamente do CDN usado nas páginas oficiais da OpenAI. Ao carregar um ativo
-          externo, o navegador pode transmitir ao respectivo provedor dados técnicos de rede inerentes à
-          requisição, como endereço IP, user-agent, horário e URL solicitada. O projeto não utiliza essa
-          requisição para perfilamento, remarketing ou venda de dados.
+          A aplicação pode usar a camada de otimização de imagens do próprio framework/hospedagem para
+          entregar essas capturas em formato e tamanho adequados ao dispositivo. Nesse fluxo, a infraestrutura
+          do site pode recuperar o arquivo original no CDN usado pelas páginas oficiais da OpenAI e então
+          entregar ao navegador uma versão otimizada pelo próprio domínio. O projeto não usa essa operação
+          para perfilamento, remarketing ou venda de dados. Ao abrir a fonte oficial por link, passam a valer
+          as práticas de privacidade do respectivo terceiro.
         </p>
       </LegalSection>
 
@@ -141,7 +142,7 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <p className="rounded-xl border border-primary/25 bg-primary/5 p-5 text-sm text-muted-foreground">
+      <p className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 text-sm text-muted-foreground">
         Este texto tem finalidade informativa e de transparência e não substitui aconselhamento jurídico
         individualizado.
       </p>
