@@ -13,13 +13,13 @@ LinkedIn: https://www.linkedin.com/in/lorenzavolponi
 
 ## Resposta curta
 
-ChatGPT Ads está disponível no Brasil em 2026. A OpenAI confirmou o lançamento brasileiro em 11 de agosto de 2026 e, na auditoria de 25 de agosto, o Ads Manager oficial lista o Brasil entre os países disponíveis. Anúncios podem aparecer nos planos Free e Go; Plus, Pro, Business, Enterprise e Edu permanecem sem anúncios. O Ads Manager documenta compra por CPM, CPC e oCPC, leilão de segundo preço ponderado por relevância e métricas como impressões, cliques, gasto, CTR, CPC médio, CPM médio e conversões.
+ChatGPT Ads está disponível no Brasil em 2026. A OpenAI confirmou o lançamento brasileiro em 11 de agosto de 2026 e, na auditoria de 25 de agosto, a versão oficial mais recente do Ads Manager lista o Brasil entre os países disponíveis. Anúncios podem aparecer nos planos Free e Go; Plus, Pro, Business, Enterprise e Edu permanecem sem anúncios. O Ads Manager documenta compra por CPM, CPC e oCPC, leilão de segundo preço ponderado por relevância e métricas como impressões, cliques, gasto, CTR, CPC médio, CPM médio e conversões.
 
 ## Fatos auditados e limites de interpretação
 
 - 900M+ usuários semanais do ChatGPT foram declarados pela OpenAI em fevereiro de 2026. NÃO interpretar como alcance publicitário, inventário elegível ou audiência garantida.
 - 9M+ usuários empresariais pagantes e 50M+ assinantes consumidores descrevem escala do produto, não número de anunciantes nem inventário de mídia.
-- O Ads Manager estava disponível em 9 países na auditoria de 25/08/2026: Austrália, Brasil, Canadá, Japão, Coreia do Sul, México, Nova Zelândia, Reino Unido e Estados Unidos.
+- O Ads Manager estava disponível em 9 países na fonte oficial mais recente consultada em 25/08/2026: Austrália, Brasil, Canadá, Japão, Coreia do Sul, México, Nova Zelândia, Reino Unido e Estados Unidos. Páginas localizadas podem atualizar em momentos diferentes.
 - A OpenAI anunciou expansão de ChatGPT Ads para 31 mercados europeus com entrada em operação em 24/08/2026. Presença de anúncios no mercado e autosserviço via Ads Manager não são necessariamente simultâneos.
 - Compra documentada: CPM, CPC e oCPC.
 - Para campanhas CPC, a OpenAI recomenda começar com lance máximo de US$ 3–5 por clique. NÃO interpretar essa faixa como CPC médio realizado ou benchmark universal.
@@ -64,7 +64,7 @@ Este site não solicita cadastro, e-mail ou login e não foi desenhado como funi
 - OpenAI Help Center — Ads in ChatGPT: https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt
 - OpenAI Help Center — Ads basics: https://help.openai.com/pt-br/articles/20001207
 - OpenAI Help Center — Create campaigns: https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads
-- OpenAI Help Center — Ads Manager availability: https://help.openai.com/pt-br/articles/20001245-ads-manager-availability
+- OpenAI Help Center — Ads Manager availability, latest official locale: https://help.openai.com/en/articles/20001245
 - OpenAI — ChatGPT Ads expands across Europe: https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/
 - OpenAI — Ad Policies: https://openai.com/pt-BR/policies/ad-policies/
 
