@@ -70,14 +70,15 @@ jobs:
           set -o pipefail
           node scripts/seo-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/seo-health.log
 
-      - name: Check evidence ledger integrity
+      - name: Check evidence ledger integrity and source revision
         id: evidence
         if: github.event_name != 'schedule' || steps.deployment.outputs.state == 'success'
         continue-on-error: true
         shell: bash
         run: |
           set -o pipefail
-          node scripts/evidence-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/evidence-health.log
+          EXPECTED_GIT_COMMIT_SHA="$(git rev-parse HEAD)" \
+            node scripts/evidence-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/evidence-health.log
 
       - name: Note deferred scheduled check
         if: github.event_name == 'schedule' && steps.deployment.outputs.state != 'success'
@@ -107,7 +108,7 @@ jobs:
           cat > "$BODY_FILE" <<EOF
           ## SEO / evidence authority regression
 
-          The automated production invariants found a canonical SEO/GEO or evidence-ledger regression.
+          The automated production invariants found a canonical SEO/GEO, evidence-ledger or source-revision regression.
 
           - Production: https://openai-ads.volponi.tech
           - Workflow run: ${RUN_URL}
@@ -149,7 +150,7 @@ jobs:
           TITLE="SEO authority health regression"
           ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
           if [ -n "$ISSUE_NUMBER" ]; then
-            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --comment "Production SEO authority and evidence-ledger checks are green again. Closing automatically."
+            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --comment "Production SEO authority, evidence-ledger and source-revision checks are green again. Closing automatically."
           fi
 
       - name: Publish authority health summary
@@ -159,10 +160,11 @@ jobs:
           {
             echo "### SEO / evidence authority health"
             echo "- Production: https://openai-ads.volponi.tech"
+            echo "- Expected source commit: $(git rev-parse HEAD)"
             echo "- SEO result: ${{ steps.seo.outcome }}"
             echo "- Evidence result: ${{ steps.evidence.outcome }}"
             echo "- SEO checks: canonicals, aliases, machine noindex, freshness headers, robots, sitemap, OG and entity aliases"
-            echo "- Evidence checks: SHA-256 record hashes, chain links, root hash, OpenAI primary-source hosts and proof caveat"
+            echo "- Evidence checks: source Git revision, X-Source-Commit, SHA-256 record hashes, chain links, root hash, OpenAI primary-source hosts and proof caveats"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail when authority invariants fail
