@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 export default function ChatGPTAdsPrivacidadePage() {
   return (
     <TopicArticle
+      canonical={URL}
       eyebrow="Privacidade · atualização 25/08/2026"
       title="O sistema de anúncios pode usar contexto. O anunciante não recebe sua conversa."
       description="A nuance mais importante da privacidade do ChatGPT Ads é separar o que o sistema usa para selecionar anúncios daquilo que é efetivamente compartilhado com o anunciante."
