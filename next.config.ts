@@ -73,6 +73,7 @@ const nextConfig: NextConfig = {
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
       { source: "/oai-crawlers.txt", headers: machineOnlyHeaders },
+      { source: "/oai-crawlers.json", headers: machineOnlyHeaders },
       { source: "/humans.txt", headers: machineOnlyHeaders },
       { source: "/data/:path*", headers: machineOnlyHeaders },
       { source: "/26b5fac8058e49e09141a6a4b7b6adc4.txt", headers: machineOnlyHeaders },
