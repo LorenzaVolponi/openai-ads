@@ -1,3 +1,4 @@
+import { LATEST_RADAR_DATE_OBJECT, SITE_URL } from "@/lib/editorial-meta";
 import { radarEntries } from "@/lib/radar-data";
 
 export const dynamic = "force-static";
@@ -13,7 +14,7 @@ const escapeXml = (value: string) =>
 export function GET() {
   const items = radarEntries
     .map((entry) => {
-      const url = `https://openai-ads.volponi.tech/radar/${entry.slug}`;
+      const url = `${SITE_URL}/radar/${entry.slug}`;
       return `
     <item>
       <title>${escapeXml(entry.title)}</title>
@@ -27,13 +28,15 @@ export function GET() {
     .join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Volponi ChatGPT Ads Radar</title>
-    <link>https://openai-ads.volponi.tech/radar</link>
+    <link>${SITE_URL}/radar</link>
+    <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
     <description>Mudanças auditadas em ChatGPT Ads, Ads Manager, mercados, compra e mensuração.</description>
     <language>pt-BR</language>
-    <lastBuildDate>${new Date("2026-08-25T12:00:00Z").toUTCString()}</lastBuildDate>
+    <lastBuildDate>${LATEST_RADAR_DATE_OBJECT.toUTCString()}</lastBuildDate>
+    <ttl>1440</ttl>
     <managingEditor>Lorenza Volponi — volponi.tech</managingEditor>${items}
   </channel>
 </rss>`;
