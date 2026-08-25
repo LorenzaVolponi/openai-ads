@@ -7,7 +7,7 @@ import {
 } from "@/lib/editorial-meta";
 import { createFreshnessHeaders } from "@/lib/http-freshness";
 import { RADAR_SOURCES } from "@/lib/radar-data";
-import { sourceRevision } from "@/lib/source-revision";
+import { SOURCE_COMMIT_SHA, sourceRevision } from "@/lib/source-revision";
 
 export const dynamic = "force-static";
 
@@ -104,10 +104,13 @@ export function GET() {
   const body = JSON.stringify(data);
 
   return new Response(body, {
-    headers: createFreshnessHeaders({
-      body,
-      modifiedAt: LAST_EDITORIAL_REVIEW_ISO,
-      contentType: "application/json; charset=utf-8",
-    }),
+    headers: {
+      ...createFreshnessHeaders({
+        body,
+        modifiedAt: LAST_EDITORIAL_REVIEW_ISO,
+        contentType: "application/json; charset=utf-8",
+      }),
+      ...(SOURCE_COMMIT_SHA ? { "X-Source-Commit": SOURCE_COMMIT_SHA } : {}),
+    },
   });
 }
