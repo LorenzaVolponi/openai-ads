@@ -16,7 +16,7 @@ export default function PrivacyPage() {
     <LegalDocument
       eyebrow="Privacidade e LGPD"
       title="Política de Privacidade"
-      description="Transparência sobre dados, infraestrutura, cookies, descoberta em buscadores, imagens oficiais de terceiros e direitos dos titulares nesta versão do site."
+      description="Transparência sobre dados, infraestrutura, mensuração de audiência, cookies, descoberta em buscadores, imagens oficiais de terceiros e direitos dos titulares nesta versão do site."
       updatedAt="25 de agosto de 2026"
     >
       <LegalSection title="1. Quem mantém este site">
@@ -30,36 +30,49 @@ export default function PrivacyPage() {
       <LegalSection title="2. Dados tratados nesta versão">
         <p>
           Na revisão técnica realizada em 25 de agosto de 2026, o código do site não contém formulário
-          próprio de cadastro ou contato, login de usuário, pixel publicitário, plataforma própria de
-          analytics ou chamada remota do assistente “Raposa IA”. O assistente e o módulo Volponi Ad Quality
-          Review processam o conteúdo localmente no navegador, usando regras e conteúdo embarcados no próprio site.
+          próprio de cadastro ou contato, login de usuário, pixel publicitário, ferramenta de remarketing
+          ou chamada remota do assistente “Raposa IA”. O assistente e o módulo Volponi Ad Quality Review
+          processam o conteúdo localmente no navegador, usando regras e conteúdo embarcados no próprio site.
         </p>
         <p>
-          A infraestrutura de hospedagem e segurança pode, contudo, tratar dados técnicos necessários à
-          entrega e proteção do serviço, como endereço IP, data e hora da requisição, user-agent, rota
-          acessada e registros de segurança. Esses tratamentos podem ser executados pelo provedor de
-          infraestrutura segundo seus próprios termos e políticas.
+          O site utiliza Vercel Web Analytics para mensuração agregada de audiência, incluindo page views,
+          páginas/rotas acessadas, origem de referência e dimensões técnicas agregadas como país aproximado,
+          navegador, sistema operacional e tipo de dispositivo. Segundo a documentação da Vercel, o Web
+          Analytics foi desenhado para operar sem cookies de terceiros e sem associar os dados analíticos a
+          uma pessoa identificável ou a um endereço IP individual. Não são configurados neste projeto eventos
+          personalizados com e-mail, nome, telefone, conteúdo digitado na Raposa IA ou texto submetido ao
+          Volponi Ad Quality Review.
+        </p>
+        <p>
+          Separadamente da camada de analytics, a infraestrutura de hospedagem e segurança pode tratar dados
+          técnicos necessários à entrega e proteção do serviço, como endereço IP, data e hora da requisição,
+          user-agent, rota acessada e registros de segurança. Esses tratamentos podem ser executados pelo
+          provedor de infraestrutura segundo seus próprios termos e políticas.
         </p>
       </LegalSection>
 
       <LegalSection title="3. Finalidades e bases legais">
         <p>
           Quando houver tratamento de dados pessoais sob responsabilidade deste projeto, ele deverá ser
-          limitado ao necessário para disponibilizar, proteger, diagnosticar e melhorar tecnicamente o
-          site, prevenir abuso e atender obrigações legais. A base legal aplicável depende da operação e
-          da finalidade concreta, observando as hipóteses previstas na Lei nº 13.709/2018 (LGPD), inclusive
-          legítimo interesse quando cabível e consentimento quando exigido.
+          limitado ao necessário para disponibilizar, proteger, diagnosticar, mensurar audiência de forma
+          agregada e melhorar tecnicamente o site, prevenir abuso e atender obrigações legais. A base legal
+          aplicável depende da operação e da finalidade concreta, observando as hipóteses previstas na Lei
+          nº 13.709/2018 (LGPD), inclusive legítimo interesse quando cabível e consentimento quando exigido.
         </p>
       </LegalSection>
 
       <LegalSection title="4. Cookies e tecnologias semelhantes">
         <p>
-          Esta versão não instala intencionalmente cookies próprios de publicidade ou perfilamento. O
-          provedor de hospedagem, mecanismos de proteção contra abuso ou serviços externos acessados por
-          links podem utilizar cookies estritamente necessários ou outras tecnologias sob suas próprias
-          políticas. Caso novas ferramentas de analytics, marketing ou personalização sejam adicionadas,
-          esta política deverá ser atualizada e, quando necessário, será implementado mecanismo adequado
-          de consentimento.
+          Esta versão não instala intencionalmente cookies próprios de publicidade, remarketing ou
+          perfilamento comportamental. O Vercel Web Analytics utilizado pelo projeto é descrito pela Vercel
+          como uma solução de analytics sem cookies de terceiros, baseada em dados agregados para medir
+          audiência. O provedor de hospedagem, mecanismos de proteção contra abuso ou serviços externos
+          acessados por links podem utilizar tecnologias estritamente necessárias sob suas próprias políticas.
+        </p>
+        <p>
+          Caso sejam adicionadas no futuro ferramentas de marketing, personalização, sessão gravada ou
+          mensuração que alterem materialmente o tratamento aqui descrito, esta política deverá ser atualizada
+          e, quando necessário, será implementado mecanismo adequado de consentimento ou oposição.
         </p>
       </LegalSection>
 
@@ -97,10 +110,11 @@ export default function PrivacyPage() {
 
       <LegalSection title="7. Compartilhamento e transferências">
         <p>
-          O projeto não vende dados pessoais. Dados técnicos de infraestrutura e entrega de conteúdo podem
-          ser processados por fornecedores essenciais de hospedagem, rede, segurança e CDN. Alguns desses
-          fornecedores podem operar fora do Brasil; quando houver transferência internacional de dados,
-          devem ser observados os requisitos aplicáveis da LGPD e da regulamentação da ANPD.
+          O projeto não vende dados pessoais. Dados técnicos de infraestrutura, entrega de conteúdo e
+          mensuração agregada de audiência podem ser processados pela Vercel e por fornecedores essenciais
+          de hospedagem, rede, segurança e CDN. Alguns desses fornecedores podem operar fora do Brasil;
+          quando houver transferência internacional de dados, devem ser observados os requisitos aplicáveis
+          da LGPD e da regulamentação da ANPD.
         </p>
       </LegalSection>
 
