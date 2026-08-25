@@ -23,6 +23,7 @@ async function checkAuthorityLinkHeaders(path) {
   assert(links.includes(`${BASE_URL}/imprensa`) && /rel="author"/i.test(links), `${path} exposes author Link header`);
   assert(links.includes(`${BASE_URL}/citation.json`) && /rel="cite-as"/i.test(links), `${path} exposes cite-as Link header`);
   assert(links.includes(`${BASE_URL}/provenance.json`) && /rel="describedby"/i.test(links), `${path} exposes provenance Link header`);
+  assert(links.includes(`${BASE_URL}/data-catalog.json`), `${path} exposes data-catalog discovery Link header`);
   assert(links.includes(`${BASE_URL}/feed.xml`) && /application\/rss\+xml/i.test(links), `${path} exposes RSS discovery Link header`);
 }
 
@@ -49,6 +50,23 @@ async function checkAuthorManifest() {
   assert(Array.isArray(data?.expertise) && data.expertise.includes("ChatGPT Ads"), "author manifest declares ChatGPT Ads expertise");
   assert(Array.isArray(data?.latestAuthoredRecords) && data.latestAuthoredRecords.length >= 3, "author manifest exposes authored Radar records");
   assert(/independent/i.test(data?.editorialBoundary || ""), "author manifest preserves independence boundary");
+}
+
+async function checkDataCatalog() {
+  const response = await request("/data-catalog.json", "application/json");
+  const robots = response.headers.get("x-robots-tag") || "";
+  const data = await response.json();
+  assert(response.status === 200, "data-catalog.json returns 200", `HTTP ${response.status}`);
+  assert(/noindex/i.test(robots) && /follow/i.test(robots), "data catalog is crawlable but noindex");
+  assert(data?.type === "DataCatalog", "data catalog declares DataCatalog type");
+  assert(data?.author === "Lorenza Volponi", "data catalog preserves author identity");
+  assert(Array.isArray(data?.datasets) && data.datasets.length > 0, "data catalog contains datasets");
+  const dataset = data?.datasets?.[0] || {};
+  assert(dataset.json === `${BASE_URL}/data/chatgpt-ads-markets.json`, "data catalog points to JSON dataset");
+  assert(dataset.csv === `${BASE_URL}/data/chatgpt-ads-markets.csv`, "data catalog points to CSV dataset");
+  assert(/^https:\/\/help\.openai\.com\//i.test(dataset.source || ""), "data catalog preserves primary-source URL");
+  assert(data?.provenance === `${BASE_URL}/provenance.json`, "data catalog links provenance");
+  assert(data?.evidence === `${BASE_URL}/evidence.json`, "data catalog links evidence ledger");
 }
 
 async function checkPressKit() {
@@ -112,6 +130,7 @@ await checkAuthorityLinkHeaders("/");
 await checkAuthorityLinkHeaders("/imprensa");
 await checkPressPage();
 await checkAuthorManifest();
+await checkDataCatalog();
 await checkPressKit();
 await checkNewsSitemap();
 await checkLatestRadarArticle();
