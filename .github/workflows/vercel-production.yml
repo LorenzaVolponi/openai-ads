@@ -111,6 +111,8 @@ jobs:
         run: vercel pull --yes --environment=production --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Build production artifact inside GitHub Actions
+        env:
+          PUBLIC_GIT_COMMIT_SHA: ${{ github.sha }}
         run: vercel build --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Cooldown before production deploy
@@ -147,6 +149,26 @@ jobs:
 
           echo "url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
           echo "Production deployment: $DEPLOYMENT_URL"
+
+      - name: Verify source revision before production promotion
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+          EXPECTED_GIT_COMMIT_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel curl /evidence.json --deployment "$DEPLOYMENT_URL" > /tmp/openai-ads-evidence.json
+          vercel curl /provenance.json --deployment "$DEPLOYMENT_URL" > /tmp/openai-ads-provenance.json
+
+          jq -e --arg sha "$EXPECTED_GIT_COMMIT_SHA" \
+            '.schemaVersion == 2 and .sourceRevision.commitSha == $sha and .sourceRevision.commitUrl == ("https://github.com/LorenzaVolponi/openai-ads/commit/" + $sha)' \
+            /tmp/openai-ads-evidence.json >/dev/null
+
+          jq -e --arg sha "$EXPECTED_GIT_COMMIT_SHA" \
+            '.schema_version == "1.3" and .source_revision.commitSha == $sha and .source_revision.commitUrl == ("https://github.com/LorenzaVolponi/openai-ads/commit/" + $sha)' \
+            /tmp/openai-ads-provenance.json >/dev/null
+
+          echo "Source revision verified before production promotion: ${EXPECTED_GIT_COMMIT_SHA}"
 
       - name: Attach production domain
         env:
