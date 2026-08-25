@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.0 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.1 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -35,6 +35,14 @@ const machineOnly = [
   "/llms.txt",
   "/llms-full.txt",
   "/humans.txt",
+  "/data/chatgpt-ads-markets.json",
+  "/data/chatgpt-ads-markets.csv",
+];
+
+const freshnessAssets = [
+  "/feed.xml",
+  "/feed.json",
+  "/provenance.json",
   "/data/chatgpt-ads-markets.json",
   "/data/chatgpt-ads-markets.csv",
 ];
@@ -165,6 +173,25 @@ async function checkMachineOnly() {
   }
 }
 
+async function checkFreshnessSignals() {
+  for (const path of freshnessAssets) {
+    try {
+      const response = await request(path);
+      const etag = response.headers.get("etag") || "";
+      const lastModified = response.headers.get("last-modified") || "";
+      const cacheControl = response.headers.get("cache-control") || "";
+      const language = response.headers.get("content-language") || "";
+
+      assert(Boolean(etag), `${path} exposes deterministic ETag`, etag || "missing");
+      assert(Boolean(lastModified) && !Number.isNaN(Date.parse(lastModified)), `${path} exposes valid Last-Modified`, lastModified || "missing");
+      assert(/s-maxage=/i.test(cacheControl), `${path} exposes shared-cache policy`, cacheControl || "missing");
+      assert(language.toLowerCase().includes("pt-br"), `${path} declares pt-BR`, language || "missing");
+    } catch (error) {
+      fail(`${path} freshness check succeeds`, error instanceof Error ? error.message : String(error));
+    }
+  }
+}
+
 async function checkDiscovery() {
   try {
     const response = await request("/robots.txt");
@@ -216,6 +243,7 @@ async function checkDiscovery() {
 await checkCanonicalPages();
 await checkAliases();
 await checkMachineOnly();
+await checkFreshnessSignals();
 await checkDiscovery();
 
 console.log(`\nSEO authority health: ${results.length - failures}/${results.length} checks passed.`);
