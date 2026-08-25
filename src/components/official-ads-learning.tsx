@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowRight, ArrowUpRight, BarChart3, Check, Focus, Layers3, Minus, MousePointer2, Plus, RotateCcw, Target } from "lucide-react";
 
 const OFFICIAL_ASSETS = [
@@ -88,9 +88,10 @@ export function OfficialAdsLearning() {
   const active = useMemo(() => OFFICIAL_ASSETS.find((item) => item.id === activeId) ?? OFFICIAL_ASSETS[0], [activeId]);
   const activeAnatomy = anatomy.find((item) => item.id === anatomyId) ?? anatomy[0];
 
-  useEffect(() => {
+  const selectScreen = (id: (typeof OFFICIAL_ASSETS)[number]["id"]) => {
+    setActiveId(id);
     setZoom(1);
-  }, [activeId]);
+  };
 
   return (
     <section id="como-aparece" className="content-auto scroll-mt-24 border-y border-zinc-200 bg-white">
@@ -111,7 +112,7 @@ export function OfficialAdsLearning() {
               role="tab"
               aria-selected={activeId === item.id}
               aria-controls="official-screen-panel"
-              onClick={() => setActiveId(item.id)}
+              onClick={() => selectScreen(item.id)}
               className={`min-h-11 shrink-0 snap-start rounded-full border px-4 py-2 text-sm font-semibold transition ${activeId === item.id ? "border-zinc-950 bg-zinc-950 text-white" : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400 hover:text-zinc-950"}`}
             >
               {item.label}
