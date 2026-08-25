@@ -1,7 +1,11 @@
 name: Vercel Production Deploy
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - CI Build
+    types:
+      - completed
     branches:
       - main
   workflow_dispatch:
@@ -19,8 +23,7 @@ permissions:
 
 concurrency:
   group: vercel-production-deploy
-  # Only the newest production commit is worth deploying. This prevents a burst
-  # of rapid merges from draining the Vercel Hobby daily deployment quota.
+  # Only the newest CI-verified production commit is worth deploying.
   cancel-in-progress: true
 
 jobs:
@@ -31,22 +34,47 @@ jobs:
     outputs:
       should_deploy: ${{ steps.decide.outputs.should_deploy }}
       production_sha: ${{ steps.decide.outputs.production_sha }}
+      expected_sha: ${{ steps.decide.outputs.expected_sha }}
     steps:
-      - name: Compare production revision with current main
+      - name: Resolve CI-verified source revision and production state
         id: decide
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT_NAME: ${{ github.event_name }}
-          EXPECTED_SHA: ${{ github.sha }}
-          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
+          WORKFLOW_RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+          WORKFLOW_RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
           PRODUCTION_PROVENANCE_URL: https://openai-ads.volponi.tech/provenance.json
         shell: bash
         run: |
           set -euo pipefail
 
-          if [ "$EVENT_NAME" = "push" ] && printf '%s' "$HEAD_MESSAGE" | grep -Fq '[skip deploy]'; then
-            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
-            echo "production_sha=unknown" >> "$GITHUB_OUTPUT"
-            echo "Deploy skipped explicitly by commit message."
+          EXPECTED_SHA="${WORKFLOW_RUN_SHA:-$GITHUB_SHA}"
+          echo "expected_sha=$EXPECTED_SHA" >> "$GITHUB_OUTPUT"
+
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            echo "production_sha=unchecked" >> "$GITHUB_OUTPUT"
+
+            if [ "$WORKFLOW_RUN_CONCLUSION" != "success" ]; then
+              echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+              echo "CI Build did not complete successfully; production deployment is blocked."
+              exit 0
+            fi
+
+            COMMIT_MESSAGE="$(curl --fail --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${EXPECTED_SHA}" \
+              | jq -r '.commit.message // ""')"
+
+            if printf '%s' "$COMMIT_MESSAGE" | grep -Fq '[skip deploy]'; then
+              echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+              echo "CI passed, but deploy was explicitly skipped by commit message."
+              exit 0
+            fi
+
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "CI passed for ${EXPECTED_SHA}; production deployment may proceed."
             exit 0
           fi
 
@@ -66,9 +94,9 @@ jobs:
             exit 0
           fi
 
-          echo "should_deploy=true" >> "$GITHUB_OUTPUT"
           echo "production_sha=unchecked" >> "$GITHUB_OUTPUT"
-          echo "Push/manual execution is eligible for deployment."
+          echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+          echo "Manual execution explicitly requested for ${EXPECTED_SHA}."
 
   deploy:
     needs: gate
@@ -77,6 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
+      DEPLOY_SHA: ${{ needs.gate.outputs.expected_sha }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_SCOPE: adm-wuazecoms-projects
       VERCEL_PROJECT_NAME: openai-ads
@@ -86,8 +115,10 @@ jobs:
       NEXT_TELEMETRY_DISABLED: "1"
 
     steps:
-      - name: Checkout repository
+      - name: Checkout CI-verified source revision
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.gate.outputs.expected_sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -106,8 +137,8 @@ jobs:
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -d "{\"state\":\"pending\",\"context\":\"deployment/vercel-cli\",\"description\":\"GitHub Actions is building production\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}"
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${DEPLOY_SHA}" \
+            -d "{\"state\":\"pending\",\"context\":\"deployment/vercel-cli\",\"description\":\"CI passed; GitHub Actions is building production\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}"
 
       - name: Validate Vercel token
         shell: bash
@@ -164,7 +195,7 @@ jobs:
 
       - name: Build production artifact inside GitHub Actions
         env:
-          PUBLIC_GIT_COMMIT_SHA: ${{ github.sha }}
+          PUBLIC_GIT_COMMIT_SHA: ${{ needs.gate.outputs.expected_sha }}
         run: vercel build --prod --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
 
       - name: Cooldown before production deploy
@@ -206,7 +237,7 @@ jobs:
         if: failure() && steps.deploy.outputs.quota_limited == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: vercel-prebuilt-${{ github.sha }}
+          name: vercel-prebuilt-${{ needs.gate.outputs.expected_sha }}
           path: |
             .vercel/output
             .vercel/project.json
@@ -216,7 +247,7 @@ jobs:
       - name: Verify source revision before production promotion
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
-          EXPECTED_GIT_COMMIT_SHA: ${{ github.sha }}
+          EXPECTED_GIT_COMMIT_SHA: ${{ needs.gate.outputs.expected_sha }}
         shell: bash
         run: |
           set -euo pipefail
@@ -348,7 +379,7 @@ jobs:
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${DEPLOY_SHA}" \
             -d "{\"state\":\"success\",\"context\":\"deployment/vercel-cli\",\"description\":\"Production deployed and verified\",\"target_url\":\"https://${VERCEL_PRODUCTION_DOMAIN}\"}"
 
       - name: Mark deployment failure
@@ -368,7 +399,7 @@ jobs:
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${DEPLOY_SHA}" \
             -d "{\"state\":\"failure\",\"context\":\"deployment/vercel-cli\",\"description\":\"${DESCRIPTION}\",\"target_url\":\"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}" || true
 
       - name: Publish production URLs
@@ -376,4 +407,5 @@ jobs:
         run: |
           echo "Vercel deployment URL -> ${{ steps.deploy.outputs.url }}"
           echo "Production domain -> https://${VERCEL_PRODUCTION_DOMAIN}"
+          echo "Source revision -> ${DEPLOY_SHA}"
           echo "GitHub authority attestation -> ${{ steps.authority_attestation.outputs.attestation-url }}"
