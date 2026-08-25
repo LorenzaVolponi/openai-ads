@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const BASE_URL = "https://openai-ads.volponi.tech";
-const LAST_REVIEW = new Date("2026-08-25T09:34:00-03:00");
+const LAST_REVIEW = new Date("2026-08-25T11:19:00-03:00");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -10,6 +10,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: LAST_REVIEW,
       changeFrequency: "weekly",
       priority: 1,
+    },
+    {
+      url: `${BASE_URL}/radar`,
+      lastModified: LAST_REVIEW,
+      changeFrequency: "daily",
+      priority: 0.95,
     },
     ...[
       "/chatgpt-ads-brasil",
@@ -23,6 +29,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.9,
     })),
+    {
+      url: `${BASE_URL}/imprensa`,
+      lastModified: LAST_REVIEW,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
     {
       url: `${BASE_URL}/metodologia`,
       lastModified: LAST_REVIEW,
