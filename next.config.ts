@@ -26,30 +26,10 @@ const machineOnlyHeaders = [
   { key: "Cache-Control", value: "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400" },
 ];
 
-const diagnosticHeaders = [
-  { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
-  { key: "Cache-Control", value: "no-store" },
-];
-
 const crawlerManifestHeaders = [
   {
     key: "Link",
     value: "</oai-crawlers.json>; rel=\"alternate\"; type=\"application/json\", </oai-crawlers.txt>; rel=\"alternate\"; type=\"text/plain\"",
-  },
-];
-
-const authorityDiscoveryHeaders = [
-  {
-    key: "Link",
-    value: [
-      `<${SITE_URL}/imprensa>; rel=\"author\"`,
-      `<${SITE_URL}/author.json>; rel=\"alternate\"; type=\"application/json\"`,
-      `<${SITE_URL}/citation.json>; rel=\"cite-as\"; type=\"application/json\"`,
-      `<${SITE_URL}/provenance.json>; rel=\"describedby\"; type=\"application/json\"`,
-      `<${SITE_URL}/data-catalog.json>; rel=\"describedby\"; type=\"application/json\"`,
-      `<${SITE_URL}/feed.xml>; rel=\"alternate\"; type=\"application/rss+xml\"`,
-      `<${SITE_URL}/feed.json>; rel=\"alternate\"; type=\"application/feed+json\"`,
-    ].join(", "),
   },
 ];
 
@@ -88,13 +68,11 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      { source: "/:path*", headers: securityHeaders },
-      { source: "/", headers: authorityDiscoveryHeaders },
-      { source: "/imprensa", headers: authorityDiscoveryHeaders },
-      { source: "/radar", headers: authorityDiscoveryHeaders },
-      { source: "/radar/:path*", headers: authorityDiscoveryHeaders },
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
       { source: "/oai-adsbot-searchbot", headers: crawlerManifestHeaders },
-      { source: "/api/oai-readiness", headers: diagnosticHeaders },
       { source: "/feed.xml", headers: machineOnlyHeaders },
       { source: "/feed.json", headers: machineOnlyHeaders },
       { source: "/knowledge.json", headers: machineOnlyHeaders },

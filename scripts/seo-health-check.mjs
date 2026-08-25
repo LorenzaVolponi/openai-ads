@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.3 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.2 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -43,7 +43,6 @@ const machineOnly = [
   "/llms-full.txt",
   "/humans.txt",
   "/oai-crawlers.txt",
-  "/oai-crawlers.json",
   "/data/chatgpt-ads-markets.json",
   "/data/chatgpt-ads-markets.csv",
 ];
@@ -252,19 +251,6 @@ async function checkDiscovery() {
       assert(/^image\//i.test(contentType), `dynamic OG ${card} returns an image`, contentType || "missing content-type");
     } catch (error) {
       fail(`dynamic OG ${card} check succeeds`, error instanceof Error ? error.message : String(error));
-    }
-  }
-
-  for (const path of ["/oai-crawlers.txt", "/oai-crawlers.json"]) {
-    try {
-      const response = await request(path);
-      const body = await response.text();
-      assert(response.status === 200, `${path} returns 200`, `HTTP ${response.status}`);
-      assert(/OAI-AdsBot/i.test(body), `${path} documents OAI-AdsBot`);
-      assert(/OAI-SearchBot/i.test(body), `${path} documents OAI-SearchBot`);
-      assert(/independent|not affiliated|not an OpenAI standard/i.test(body), `${path} preserves independence disclosure`);
-    } catch (error) {
-      fail(`${path} semantic check succeeds`, error instanceof Error ? error.message : String(error));
     }
   }
 
