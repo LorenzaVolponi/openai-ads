@@ -7,12 +7,13 @@ import {
 } from "@/lib/editorial-meta";
 import { createFreshnessHeaders } from "@/lib/http-freshness";
 import { RADAR_SOURCES } from "@/lib/radar-data";
+import { sourceRevision } from "@/lib/source-revision";
 
 export const dynamic = "force-static";
 
 export function GET() {
   const data = {
-    schema_version: "1.2",
+    schema_version: "1.3",
     project: "Volponi ChatGPT Ads Guide & Radar",
     canonical: SITE_URL,
     search_entity: {
@@ -36,6 +37,7 @@ export function GET() {
     editorial_independence:
       "Independent editorial project. Not affiliated with, sponsored by, endorsed by, certified by, operated by, or maintained by OpenAI.",
     last_editorial_review: LAST_EDITORIAL_REVIEW_DATE,
+    source_revision: sourceRevision,
     latest_radar_event: latestRadarEntry
       ? {
           date: latestRadarEntry.date,
@@ -62,8 +64,10 @@ export function GET() {
       root_sha256: EVIDENCE_LEDGER_ROOT_SHA256,
       construction:
         "Each normalized Radar record has a SHA-256 digest. Records are linked chronologically by hashing the previous chain digest plus the current record digest.",
+      source_anchor:
+        "The generated evidence artifact also publishes the exact Git commit used for the production build, and deployment promotion verifies that commit before attaching the production alias.",
       scope:
-        "Tamper-evident integrity for the published editorial record. This is not a digital signature and does not independently prove that a primary source was true at a given time.",
+        "Tamper-evident integrity and source-code provenance for the published editorial record. Neither the hash chain nor the Git revision independently proves that a primary source was true at a given time.",
     },
     indexing_policy: {
       html_authority_pages: "index, follow",
