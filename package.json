@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "seo:health": "node scripts/seo-health-check.mjs"
+    "seo:health": "node scripts/seo-health-check.mjs",
+    "evidence:health": "node scripts/evidence-health-check.mjs"
   },
   "dependencies": {
     "next": "^16.1.1",
