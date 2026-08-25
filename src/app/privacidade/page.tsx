@@ -16,7 +16,7 @@ export default function PrivacyPage() {
     <LegalDocument
       eyebrow="Privacidade e LGPD"
       title="Política de Privacidade"
-      description="Transparência sobre dados, infraestrutura, cookies, descoberta em buscadores e direitos dos titulares nesta versão do site."
+      description="Transparência sobre dados, infraestrutura, cookies, descoberta em buscadores, imagens oficiais de terceiros e direitos dos titulares nesta versão do site."
       updatedAt="25 de agosto de 2026"
     >
       <LegalSection title="1. Quem mantém este site">
@@ -31,8 +31,8 @@ export default function PrivacyPage() {
         <p>
           Na revisão técnica realizada em 25 de agosto de 2026, o código do site não contém formulário
           próprio de cadastro ou contato, login de usuário, pixel publicitário, plataforma própria de
-          analytics ou chamada remota do assistente “Raposa IA”. O assistente disponível na página
-          processa as perguntas localmente no navegador, usando o conteúdo embarcado no próprio site.
+          analytics ou chamada remota do assistente “Raposa IA”. O assistente e o módulo Volponi Ad Quality
+          Review processam o conteúdo localmente no navegador, usando regras e conteúdo embarcados no próprio site.
         </p>
         <p>
           A infraestrutura de hospedagem e segurança pode, contudo, tratar dados técnicos necessários à
@@ -63,7 +63,22 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="5. Descoberta em buscadores, Preferred Sources e IndexNow">
+      <LegalSection title="5. Capturas oficiais e entrega de imagens">
+        <p>
+          Algumas seções educacionais exibem capturas de tela oficiais publicadas pela OpenAI para explicar
+          visualmente como anúncios e o Ads Manager funcionam. Essas imagens não são geradas nem alteradas
+          pela volponi.tech e são identificadas como material oficial de terceiros com link para a fonte.
+        </p>
+        <p>
+          Para preservar fidelidade e evitar apresentar mockups como se fossem telas reais, essas imagens
+          podem ser carregadas diretamente do CDN usado nas páginas oficiais da OpenAI. Ao carregar um ativo
+          externo, o navegador pode transmitir ao respectivo provedor dados técnicos de rede inerentes à
+          requisição, como endereço IP, user-agent, horário e URL solicitada. O projeto não utiliza essa
+          requisição para perfilamento, remarketing ou venda de dados.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="6. Descoberta em buscadores, Preferred Sources e IndexNow">
         <p>
           O site publica sitemap, RSS e arquivos estruturados para facilitar descoberta e citação por
           mecanismos de busca e sistemas de IA. Também disponibiliza um link para a ferramenta oficial de
@@ -79,16 +94,16 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="6. Compartilhamento e transferências">
+      <LegalSection title="7. Compartilhamento e transferências">
         <p>
-          O projeto não vende dados pessoais. Dados técnicos de infraestrutura podem ser processados por
-          fornecedores essenciais de hospedagem, rede, segurança e entrega de conteúdo. Alguns desses
+          O projeto não vende dados pessoais. Dados técnicos de infraestrutura e entrega de conteúdo podem
+          ser processados por fornecedores essenciais de hospedagem, rede, segurança e CDN. Alguns desses
           fornecedores podem operar fora do Brasil; quando houver transferência internacional de dados,
           devem ser observados os requisitos aplicáveis da LGPD e da regulamentação da ANPD.
         </p>
       </LegalSection>
 
-      <LegalSection title="7. Retenção e segurança">
+      <LegalSection title="8. Retenção e segurança">
         <p>
           Dados pessoais eventualmente tratados devem ser mantidos somente pelo período necessário às
           finalidades informadas, ao cumprimento de obrigações legais e à defesa de direitos. São adotadas
@@ -97,7 +112,7 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="8. Direitos dos titulares">
+      <LegalSection title="9. Direitos dos titulares">
         <p>
           Nos termos da LGPD, o titular pode solicitar, conforme aplicável, confirmação e acesso aos dados,
           correção, anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em desacordo
@@ -111,7 +126,7 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="9. Links externos">
+      <LegalSection title="10. Links externos">
         <p>
           O guia contém links para sites de terceiros, inclusive fontes oficiais e ferramentas de busca.
           Ao sair deste domínio, passam a valer os termos, práticas de privacidade e controles do respectivo
@@ -119,7 +134,7 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="10. Alterações">
+      <LegalSection title="11. Alterações">
         <p>
           Esta política pode ser atualizada quando o código, a infraestrutura, a legislação ou as práticas
           de tratamento mudarem. A data exibida no topo identifica a versão vigente desta página.
