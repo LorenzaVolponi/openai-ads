@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "Se este observatório, Radar ou conjunto de dados apoiar seu trabalho, cite-o usando os metadados abaixo."
+title: "Volponi ChatGPT Ads Guide & Radar"
+type: dataset
+authors:
+  - family-names: "Volponi"
+    given-names: "Lorenza"
+version: "1.0.0"
+date-released: 2026-08-25
+url: "https://openai-ads.volponi.tech"
+repository-code: "https://github.com/LorenzaVolponi/openai-ads"
+abstract: "Observatório editorial independente em português brasileiro sobre ChatGPT Ads, Ads Manager, mercados, compra, mensuração, privacidade e evolução do produto, com fontes primárias, dados abertos e histórico auditável."
+keywords:
+  - "ChatGPT Ads"
+  - "OpenAI Ads"
+  - "Ads Manager"
+  - "advertising"
+  - "Brazil"
+  - "AI discovery"
+  - "GEO"
