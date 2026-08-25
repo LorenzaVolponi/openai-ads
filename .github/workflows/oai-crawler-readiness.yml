@@ -1,0 +1,52 @@
+name: OAI Crawler Readiness
+
+on:
+  workflow_run:
+    workflows:
+      - Vercel Production Deploy
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: oai-crawler-readiness
+  cancel-in-progress: true
+
+jobs:
+  readiness:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    name: Verify OpenAI crawler backend after production deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout deployed expectations
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || 'main' }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Verify production OAI crawler readiness
+        run: node scripts/oai-readiness-check.mjs https://openai-ads.volponi.tech
+
+      - name: Publish readiness summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### OpenAI crawler backend readiness"
+            echo "- Production: https://openai-ads.volponi.tech"
+            echo "- OAI-AdsBot: explicit robots allow + public fetch gate"
+            echo "- OAI-SearchBot: explicit robots allow + public fetch gate"
+            echo "- Machine manifests: dynamic JSON/TXT with ETag and Last-Modified"
+            echo "- Diagnostic API: /api/oai-readiness"
+            echo "- Trigger: production deploy or manual dispatch only; no scheduled polling"
+          } >> "$GITHUB_STEP_SUMMARY"

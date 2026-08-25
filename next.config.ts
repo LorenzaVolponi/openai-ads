@@ -26,6 +26,11 @@ const machineOnlyHeaders = [
   { key: "Cache-Control", value: "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400" },
 ];
 
+const diagnosticHeaders = [
+  { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+  { key: "Cache-Control", value: "no-store" },
+];
+
 const crawlerManifestHeaders = [
   {
     key: "Link",
@@ -89,6 +94,7 @@ const nextConfig: NextConfig = {
       { source: "/radar", headers: authorityDiscoveryHeaders },
       { source: "/radar/:path*", headers: authorityDiscoveryHeaders },
       { source: "/oai-adsbot-searchbot", headers: crawlerManifestHeaders },
+      { source: "/api/oai-readiness", headers: diagnosticHeaders },
       { source: "/feed.xml", headers: machineOnlyHeaders },
       { source: "/feed.json", headers: machineOnlyHeaders },
       { source: "/knowledge.json", headers: machineOnlyHeaders },

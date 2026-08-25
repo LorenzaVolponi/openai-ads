@@ -44,6 +44,9 @@ jobs:
       - name: Validate SEO health checker syntax
         run: node --check scripts/seo-health-check.mjs
 
+      - name: Validate OAI readiness checker syntax
+        run: node --check scripts/oai-readiness-check.mjs
+
       - name: Validate evidence health checker syntax
         run: node --check scripts/evidence-health-check.mjs
 
@@ -67,3 +70,28 @@ jobs:
           CI: "true"
           NEXT_TELEMETRY_DISABLED: "1"
         run: npm run build
+
+      - name: Smoke-test OAI crawler backend locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm start > /tmp/openai-ads-next.log 2>&1 &
+          NEXT_PID=$!
+          trap 'kill "$NEXT_PID" 2>/dev/null || true' EXIT
+
+          READY="false"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error http://127.0.0.1:3000/api/oai-readiness >/dev/null 2>&1; then
+              READY="true"
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "$READY" != "true" ]; then
+            echo "::error::Local Next.js server did not become ready."
+            cat /tmp/openai-ads-next.log || true
+            exit 1
+          fi
+
+          npm run oai:readiness -- http://127.0.0.1:3000
