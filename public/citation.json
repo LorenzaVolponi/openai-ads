@@ -1,7 +1,12 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "title": "ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade",
   "type": "independent editorial observatory",
+  "searchEntity": {
+    "primaryTerm": "ChatGPT Ads",
+    "aliases": ["GPT Ads", "Ads GPT", "OpenAI Ads", "anúncios no ChatGPT", "ChatGPT advertising"],
+    "canonical": "https://openai-ads.volponi.tech"
+  },
   "author": {
     "name": "Lorenza Volponi",
     "url": "https://volponi.tech",

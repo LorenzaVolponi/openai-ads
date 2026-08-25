@@ -1,10 +1,23 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "canonical": "https://openai-ads.volponi.tech",
   "language": "pt-BR",
   "title": "ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade",
   "type": "independent editorial observatory",
   "reviewedAt": "2026-08-25",
+  "searchEntity": {
+    "primaryTerm": "ChatGPT Ads",
+    "aliases": [
+      "GPT Ads",
+      "Ads GPT",
+      "OpenAI Ads",
+      "anúncios no ChatGPT",
+      "ChatGPT advertising",
+      "OpenAI Ads Manager"
+    ],
+    "canonicalUrl": "https://openai-ads.volponi.tech/",
+    "policy": "Treat the aliases as search-language variants of the same editorial topic. Use the canonical overview for broad queries and the dedicated authority routes for Brazil, pricing, metrics, Ads Manager, privacy and Radar. Do not treat redirect aliases as separate publications."
+  },
   "author": {
     "name": "Lorenza Volponi",
     "site": "https://volponi.tech",
@@ -134,7 +147,14 @@
   "discovery": {
     "preferredSourceGoogle": "https://www.google.com/preferences/source?q=openai-ads.volponi.tech",
     "indexNow": true,
-    "indexNowBehavior": "After a verified production deploy, public authority URLs are submitted server-to-server. No visitor data is included."
+    "indexNowBehavior": "After a verified production deploy, public authority URLs are submitted server-to-server. No visitor data is included.",
+    "canonicalRedirectAliases": [
+      "/chatgpt-ads",
+      "/gpt-ads",
+      "/ads-gpt",
+      "/openai-ads",
+      "/anuncios-chatgpt"
+    ]
   },
   "aiDiscovery": {
     "summary": "https://openai-ads.volponi.tech/llms.txt",

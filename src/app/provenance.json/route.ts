@@ -10,9 +10,22 @@ export const dynamic = "force-static";
 export function GET() {
   return Response.json(
     {
-      schema_version: "1.0",
+      schema_version: "1.1",
       project: "Volponi ChatGPT Ads Guide & Radar",
       canonical: SITE_URL,
+      search_entity: {
+        primary_term: "ChatGPT Ads",
+        aliases: [
+          "GPT Ads",
+          "Ads GPT",
+          "OpenAI Ads",
+          "anúncios no ChatGPT",
+          "ChatGPT advertising",
+          "OpenAI Ads Manager",
+        ],
+        canonical_policy:
+          "Broad aliases resolve to the canonical overview. Dedicated authority routes remain canonical for Brazil, pricing, metrics, Ads Manager, privacy and Radar intents.",
+      },
       publisher: "volponi.tech",
       author: {
         name: "Lorenza Volponi",
@@ -40,6 +53,20 @@ export function GET() {
           publisher: source.publisher,
           url: source.url,
         })),
+      },
+      indexing_policy: {
+        html_authority_pages: "index, follow",
+        machine_context_files: "crawlable, noindex",
+        aliases: "permanent redirects to canonical authority routes",
+        rationale:
+          "Keep structured context available to crawlers and agents without allowing feeds, datasets or machine files to compete with human-readable authority pages in traditional search results.",
+      },
+      audience_measurement: {
+        provider: "Vercel Web Analytics",
+        purpose: "aggregate audience measurement",
+        lead_capture: false,
+        remarketing: false,
+        custom_events_with_user_text: false,
       },
       discovery: {
         rss: `${SITE_URL}/feed.xml`,
