@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const SITE_URL = "https://openai-ads.volponi.tech";
+
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -28,6 +30,20 @@ const crawlerManifestHeaders = [
   {
     key: "Link",
     value: "</oai-crawlers.json>; rel=\"alternate\"; type=\"application/json\", </oai-crawlers.txt>; rel=\"alternate\"; type=\"text/plain\"",
+  },
+];
+
+const authorityDiscoveryHeaders = [
+  {
+    key: "Link",
+    value: [
+      `<${SITE_URL}/imprensa>; rel=\"author\"`,
+      `<${SITE_URL}/author.json>; rel=\"alternate\"; type=\"application/json\"`,
+      `<${SITE_URL}/citation.json>; rel=\"cite-as\"; type=\"application/json\"`,
+      `<${SITE_URL}/provenance.json>; rel=\"describedby\"; type=\"application/json\"`,
+      `<${SITE_URL}/feed.xml>; rel=\"alternate\"; type=\"application/rss+xml\"`,
+      `<${SITE_URL}/feed.json>; rel=\"alternate\"; type=\"application/feed+json\"`,
+    ].join(", "),
   },
 ];
 
@@ -70,6 +86,10 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      { source: "/", headers: authorityDiscoveryHeaders },
+      { source: "/imprensa", headers: authorityDiscoveryHeaders },
+      { source: "/radar", headers: authorityDiscoveryHeaders },
+      { source: "/radar/:path*", headers: authorityDiscoveryHeaders },
       { source: "/oai-adsbot-searchbot", headers: crawlerManifestHeaders },
       { source: "/feed.xml", headers: machineOnlyHeaders },
       { source: "/feed.json", headers: machineOnlyHeaders },
@@ -78,6 +98,7 @@ const nextConfig: NextConfig = {
       { source: "/provenance.json", headers: machineOnlyHeaders },
       { source: "/evidence.json", headers: machineOnlyHeaders },
       { source: "/press-kit.json", headers: machineOnlyHeaders },
+      { source: "/author.json", headers: machineOnlyHeaders },
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
       { source: "/oai-crawlers.txt", headers: machineOnlyHeaders },
