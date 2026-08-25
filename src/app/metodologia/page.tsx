@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { LegalDocument, LegalSection } from "@/components/legal-document";
+import { LAST_EDITORIAL_REVIEW_DATE } from "@/lib/editorial-meta";
 
 const URL = "https://openai-ads.volponi.tech/metodologia";
 
 export const metadata: Metadata = {
   title: "Metodologia Editorial e Fontes | Lorenza Volponi",
   description:
-    "Metodologia de auditoria factual, atualização, fontes primárias e critérios editoriais do guia independente sobre publicidade no ChatGPT.",
+    "Metodologia de auditoria factual, atualização, monitoramento de fontes primárias e critérios editoriais do guia independente sobre publicidade no ChatGPT.",
   alternates: { canonical: URL },
   robots: { index: true, follow: true },
 };
@@ -17,8 +18,16 @@ const sources = [
     href: "https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt",
   },
   {
+    label: "OpenAI Help Center — Ads Manager Availability",
+    href: "https://help.openai.com/en/articles/20001245-ads-manager-availability",
+  },
+  {
     label: "OpenAI — Testando anúncios no ChatGPT",
     href: "https://openai.com/pt-BR/index/testing-ads-in-chatgpt/",
+  },
+  {
+    label: "OpenAI — New ways to buy ChatGPT ads",
+    href: "https://openai.com/index/new-ways-to-buy-chatgpt-ads/",
   },
   {
     label: "OpenAI — Políticas de anúncios",
@@ -51,18 +60,17 @@ export default function MethodologyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="2. Estado factual em 25 de agosto de 2026">
+      <LegalSection title="2. Estado factual da revisão atual">
         <p>
-          A revisão atual registra que anúncios podem aparecer nos planos Free e Go; Plus, Pro, Business,
-          Enterprise e Edu permanecem sem anúncios. A OpenAI informa que anúncios não influenciam as
-          respostas, ficam separados da resposta do assistente e que conversas não são disponibilizadas aos
-          anunciantes nem dados de usuários são vendidos a anunciantes.
+          A revisão editorial registrada em {LAST_EDITORIAL_REVIEW_DATE} mantém cada afirmação sensível ao
+          tempo ligada a uma fonte primária e a uma data. Disponibilidade, mercados, recursos do Ads Manager,
+          modelos de compra, métricas e controles de privacidade podem mudar rapidamente e devem ser
+          rechecados antes de uma decisão operacional.
         </p>
         <p>
-          A OpenAI informou em 11 de agosto de 2026 que ChatGPT Ads havia sido lançado no Brasil, Reino
-          Unido, México, Japão e Coreia do Sul, além da expansão iniciada anteriormente nos Estados Unidos.
-          A disponibilidade de ferramentas para anunciantes continua sujeita a mercado, conta e estágio de
-          produto; por isso este guia não trata todo recurso comercial como universal.
+          O guia separa escala do ChatGPT de alcance publicitário, orientação de lance de benchmark de
+          performance e anúncio oficial de disponibilidade efetiva. Essa separação é parte da metodologia,
+          não apenas uma observação de rodapé.
         </p>
       </LegalSection>
 
@@ -75,20 +83,30 @@ export default function MethodologyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="4. Atualização e datação">
+      <LegalSection title="4. Monitoramento, revisão e publicação">
         <p>
-          Informações sensíveis ao tempo recebem data de revisão. Quando uma fonte oficial muda, a regra é
-          atualizar o conteúdo, a FAQ, o material para crawlers de IA e os metadados relacionados. Datas de
-          “última revisão” não devem ser alteradas sem revisão material correspondente.
+          Um workflow diário no repositório monitora assinaturas de trechos relevantes das principais fontes
+          oficiais usadas pelo Radar. Quando uma assinatura muda, o sistema abre ou atualiza uma pendência
+          editorial com a fonte, o fingerprint anterior, o novo fingerprint e um trecho para triagem.
+        </p>
+        <p className="font-medium text-foreground">
+          Detecção automática não significa publicação automática. Nenhum fato novo entra no Radar apenas
+          porque uma página mudou: a alteração precisa ser interpretada e revisada antes de virar conteúdo.
+        </p>
+        <p>
+          O RSS e o JSON Feed são gerados da mesma lista de eventos do Radar. A data de build do feed é
+          derivada do evento mais recente, em vez de avançar artificialmente todos os dias. Se nenhuma
+          mudança editorial for publicada, o feed não finge novidade.
         </p>
       </LegalSection>
 
       <LegalSection title="5. GEO / AI discovery responsável">
         <p>
-          O site disponibiliza conteúdo semântico, sitemap, robots, dados estruturados e arquivos llms.txt
-          para facilitar descoberta por mecanismos de busca e sistemas de IA. Esses mecanismos não são
-          usados para esconder autoria, criar autoridade falsa, keyword stuffing ou simular afiliação com
-          a OpenAI. A prioridade é tornar autoria, independência, fonte e data fáceis de verificar.
+          O site disponibiliza conteúdo semântico, sitemap, robots, dados estruturados, RSS, JSON Feed e
+          arquivos llms.txt para facilitar descoberta por mecanismos de busca, leitores de feed, agentes e
+          sistemas de IA. Esses mecanismos não são usados para esconder autoria, criar autoridade falsa,
+          keyword stuffing ou simular afiliação com a OpenAI. A prioridade é tornar autoria, independência,
+          fonte, data e ressalvas fáceis de verificar.
         </p>
       </LegalSection>
 
