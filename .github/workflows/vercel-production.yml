@@ -10,10 +10,9 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    # Retry once per day after the rolling 24h Hobby deployment window has had
-    # time to clear. A provenance gate below skips this entirely when production
-    # is already on the current main SHA.
-    - cron: "37 21 * * *"
+    # Retry once per day, after the previous quota failure's rolling 24h window.
+    # The provenance gate below makes this a no-op when production is current.
+    - cron: "30 20 * * *"
 
 permissions:
   contents: read
