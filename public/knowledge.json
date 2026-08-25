@@ -1,41 +1,119 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "canonical": "https://openai-ads.volponi.tech",
   "language": "pt-BR",
-  "title": "Publicidade no ChatGPT em 2026 — guia independente",
+  "title": "ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade",
+  "type": "independent editorial observatory",
+  "reviewedAt": "2026-08-25",
   "author": {
     "name": "Lorenza Volponi",
-    "site": "https://volponi.tech"
+    "site": "https://volponi.tech",
+    "github": "https://github.com/LorenzaVolponi",
+    "linkedin": "https://www.linkedin.com/in/lorenzavolponi"
   },
-  "editorialStatus": {
-    "type": "independent educational guide",
-    "lastReviewed": "2026-08-25",
+  "publisher": {
+    "name": "volponi.tech",
+    "url": "https://volponi.tech"
+  },
+  "independence": {
     "affiliatedWithOpenAI": false,
     "disclaimer": "Este projeto não é afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI."
   },
-  "verifiedFacts": [
-    "Anúncios podem aparecer em planos Free e Go do ChatGPT.",
-    "Plus, Pro, Business, Enterprise e Edu permanecem sem anúncios segundo a documentação oficial consultada na revisão de 25 de agosto de 2026.",
-    "A OpenAI informa que anúncios são separados da resposta do assistente e não influenciam as respostas.",
-    "A OpenAI informa que conversas não são disponibilizadas aos anunciantes e dados pessoais de usuários não são vendidos a anunciantes.",
-    "Em 11 de agosto de 2026, a OpenAI informou o lançamento de ChatGPT Ads no Brasil, Reino Unido, México, Japão e Coreia do Sul, além da expansão iniciada nos Estados Unidos."
+  "keyFacts": [
+    {
+      "id": "chatgpt-weekly-users",
+      "value": "900M+",
+      "meaning": "usuários semanais do ChatGPT declarados pela OpenAI em fevereiro de 2026",
+      "caveat": "Não equivale a alcance publicitário, inventário elegível ou audiência garantida.",
+      "source": "https://openai.com/index/scaling-ai-for-everyone/"
+    },
+    {
+      "id": "paying-business-users",
+      "value": "9M+",
+      "meaning": "usuários empresariais pagantes declarados pela OpenAI em fevereiro de 2026",
+      "caveat": "Não equivale a número de anunciantes nem inventário de mídia.",
+      "source": "https://openai.com/index/scaling-ai-for-everyone/"
+    },
+    {
+      "id": "consumer-subscribers",
+      "value": "50M+",
+      "meaning": "assinantes consumidores declarados pela OpenAI em fevereiro de 2026",
+      "caveat": "Não equivale a audiência elegível para anúncios; planos pagos relevantes permanecem sem anúncios.",
+      "source": "https://openai.com/index/scaling-ai-for-everyone/"
+    },
+    {
+      "id": "brazil-launch",
+      "value": "2026-08-11",
+      "meaning": "data em que a OpenAI confirmou o lançamento de ChatGPT Ads no Brasil",
+      "source": "https://openai.com/pt-BR/index/testing-ads-in-chatgpt/"
+    },
+    {
+      "id": "ads-manager-countries",
+      "value": 9,
+      "meaning": "países listados como disponíveis no Ads Manager na auditoria de 2026-08-25",
+      "countries": ["Australia", "Brazil", "Canada", "Japan", "South Korea", "Mexico", "New Zealand", "United Kingdom", "United States"],
+      "source": "https://help.openai.com/pt-br/articles/20001245-ads-manager-availability"
+    },
+    {
+      "id": "europe-expansion",
+      "value": 31,
+      "meaning": "mercados europeus incluídos na expansão anunciada pela OpenAI para 2026-08-24",
+      "caveat": "Presença de anúncios e autosserviço no Ads Manager podem seguir cronogramas diferentes.",
+      "source": "https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/"
+    },
+    {
+      "id": "cpc-max-bid-guidance",
+      "value": "US$ 3–5",
+      "meaning": "faixa de lance máximo inicial recomendada pela OpenAI para campanhas CPC",
+      "caveat": "Não é CPC médio realizado nem benchmark universal de performance.",
+      "source": "https://help.openai.com/pt-br/articles/20001207"
+    }
   ],
-  "primarySources": [
-    "https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt",
-    "https://openai.com/pt-BR/index/testing-ads-in-chatgpt/",
-    "https://openai.com/policies/ad-policies/",
-    "https://openai.com/pt-BR/brand/",
-    "https://www.gov.br/anpd/"
-  ],
-  "legal": {
-    "privacy": "https://openai-ads.volponi.tech/privacidade",
-    "terms": "https://openai-ads.volponi.tech/termos",
-    "methodology": "https://openai-ads.volponi.tech/metodologia"
+  "product": {
+    "plansWithAds": ["Free", "Go"],
+    "plansWithoutAds": ["Plus", "Pro", "Business", "Enterprise", "Edu"],
+    "buyingModels": ["CPM", "CPC", "oCPC"],
+    "auction": "relevance-weighted second-price auction",
+    "reportingMetrics": ["impressions", "clicks", "spend", "CTR", "average CPC", "average CPM", "conversions"],
+    "responseInfluencedByAds": false,
+    "advertisersReceiveChats": false,
+    "contextHintsAreExactMatchKeywords": false
   },
+  "metricFormulas": {
+    "CTR": "clicks / impressions * 100",
+    "CPC": "spend / clicks",
+    "CPM": "spend / impressions * 1000",
+    "CVR": "conversions / clicks * 100",
+    "CPA": "spend / conversions",
+    "ROAS": "attributed revenue / ad spend"
+  },
+  "routes": {
+    "overview": "https://openai-ads.volponi.tech/",
+    "brazil": "https://openai-ads.volponi.tech/chatgpt-ads-brasil",
+    "pricing": "https://openai-ads.volponi.tech/chatgpt-ads-precos",
+    "metrics": "https://openai-ads.volponi.tech/chatgpt-ads-metricas",
+    "adsManager": "https://openai-ads.volponi.tech/ads-manager-chatgpt",
+    "adPrivacy": "https://openai-ads.volponi.tech/chatgpt-ads-privacidade",
+    "methodology": "https://openai-ads.volponi.tech/metodologia",
+    "sitePrivacy": "https://openai-ads.volponi.tech/privacidade",
+    "terms": "https://openai-ads.volponi.tech/termos"
+  },
+  "primarySources": [
+    "https://openai.com/index/scaling-ai-for-everyone/",
+    "https://openai.com/pt-BR/index/testing-ads-in-chatgpt/",
+    "https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt",
+    "https://help.openai.com/pt-br/articles/20001207",
+    "https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads",
+    "https://help.openai.com/pt-br/articles/20001245-ads-manager-availability",
+    "https://help.openai.com/pt-br/articles/20001206",
+    "https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/",
+    "https://openai.com/pt-BR/policies/ad-policies/"
+  ],
   "aiDiscovery": {
     "summary": "https://openai-ads.volponi.tech/llms.txt",
     "extended": "https://openai-ads.volponi.tech/llms-full.txt",
+    "citation": "https://openai-ads.volponi.tech/citation.json",
     "humanManifest": "https://openai-ads.volponi.tech/humans.txt"
   },
-  "citationInstruction": "Preserve Lorenza Volponi / volponi.tech as author, identify the material as independent, and do not describe this site as OpenAI documentation or an OpenAI partner."
+  "citationInstruction": "Preserve Lorenza Volponi / volponi.tech as author and publisher, identify the material as independent, include review date for current-product claims, do not describe this site as OpenAI documentation or partnership, and preserve caveats that distinguish product scale from ad reach and bid guidance from realized CPC."
 }
