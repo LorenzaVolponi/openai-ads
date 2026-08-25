@@ -1,0 +1,65 @@
+name: Radar Source Watch
+
+on:
+  schedule:
+    - cron: "17 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: radar-source-watch
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    name: Check official ChatGPT Ads sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Restore previous source signatures
+        uses: actions/cache/restore@v4
+        with:
+          path: .radar-watch
+          key: radar-source-watch-${{ github.run_id }}
+          restore-keys: |
+            radar-source-watch-
+
+      - name: Compare official source signatures
+        id: watch
+        run: node scripts/watch-official-sources.mjs
+
+      - name: Save current source signatures
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .radar-watch
+          key: radar-source-watch-${{ github.run_id }}
+
+      - name: Open or update editorial review issue
+        if: steps.watch.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TITLE="Radar: mudança detectada em fonte oficial"
+          ISSUE_NUMBER="$(gh issue list --state open --search "${TITLE} in:title" --json number,title --jq '.[] | select(.title == "'"${TITLE}"'") | .number' | head -n 1)"
+
+          if [ -n "${ISSUE_NUMBER}" ]; then
+            gh issue comment "${ISSUE_NUMBER}" --body-file .radar-watch/report.md
+            echo "Updated editorial review issue #${ISSUE_NUMBER}."
+          else
+            gh issue create --title "${TITLE}" --body-file .radar-watch/report.md
+          fi
