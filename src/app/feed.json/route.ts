@@ -1,10 +1,11 @@
-import { SITE_URL } from "@/lib/editorial-meta";
+import { LATEST_RADAR_DATE_OBJECT, SITE_URL } from "@/lib/editorial-meta";
+import { createFreshnessHeaders } from "@/lib/http-freshness";
 import { radarEntries } from "@/lib/radar-data";
 
 export const dynamic = "force-static";
 
 export function GET() {
-  const body = {
+  const data = {
     version: "https://jsonfeed.org/version/1.1",
     title: "Volponi ChatGPT Ads Radar",
     home_page_url: `${SITE_URL}/radar`,
@@ -34,10 +35,13 @@ export function GET() {
       },
     })),
   };
+  const body = JSON.stringify(data);
 
-  return Response.json(body, {
-    headers: {
-      "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
-    },
+  return new Response(body, {
+    headers: createFreshnessHeaders({
+      body,
+      modifiedAt: LATEST_RADAR_DATE_OBJECT,
+      contentType: "application/feed+json; charset=utf-8",
+    }),
   });
 }
