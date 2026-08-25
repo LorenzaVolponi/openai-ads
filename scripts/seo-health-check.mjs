@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.1 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.3 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -8,6 +8,7 @@ const canonicalPages = [
   ["/chatgpt-ads-metricas", "/chatgpt-ads-metricas"],
   ["/ads-manager-chatgpt", "/ads-manager-chatgpt"],
   ["/chatgpt-ads-privacidade", "/chatgpt-ads-privacidade"],
+  ["/oai-adsbot-searchbot", "/oai-adsbot-searchbot"],
   ["/radar", "/radar"],
   ["/imprensa", "/imprensa"],
   ["/metodologia", "/metodologia"],
@@ -24,6 +25,10 @@ const aliases = [
   ["/chatgpt-ads-manager", "/ads-manager-chatgpt"],
   ["/quanto-custa-anunciar-no-chatgpt", "/chatgpt-ads-precos"],
   ["/metricas-chatgpt-ads", "/chatgpt-ads-metricas"],
+  ["/oai-adsbot", "/oai-adsbot-searchbot"],
+  ["/oai-searchbot", "/oai-adsbot-searchbot"],
+  ["/openai-crawlers", "/oai-adsbot-searchbot"],
+  ["/openai-adsbot", "/oai-adsbot-searchbot"],
 ];
 
 const machineOnly = [
@@ -32,6 +37,9 @@ const machineOnly = [
   "/knowledge.json",
   "/citation.json",
   "/provenance.json",
+  "/evidence.json",
+  "/press-kit.json",
+  "/oai-crawlers.txt",
   "/llms.txt",
   "/llms-full.txt",
   "/humans.txt",
@@ -43,6 +51,8 @@ const freshnessAssets = [
   "/feed.xml",
   "/feed.json",
   "/provenance.json",
+  "/evidence.json",
+  "/press-kit.json",
   "/data/chatgpt-ads-markets.json",
   "/data/chatgpt-ads-markets.csv",
 ];
@@ -54,6 +64,7 @@ const sitemapRequired = [
   "/chatgpt-ads-metricas",
   "/ads-manager-chatgpt",
   "/chatgpt-ads-privacidade",
+  "/oai-adsbot-searchbot",
   "/radar",
   "/imprensa",
   "/metodologia",
@@ -199,6 +210,7 @@ async function checkDiscovery() {
     assert(response.status === 200, "robots.txt returns 200", `HTTP ${response.status}`);
     assert(body.includes(`${BASE_URL}/sitemap.xml`), "robots.txt advertises canonical sitemap");
     assert(/OAI-SearchBot/i.test(body), "robots.txt allows OAI-SearchBot explicitly");
+    assert(/OAI-AdsBot/i.test(body), "robots.txt allows OAI-AdsBot explicitly");
     assert(/GPTBot/i.test(body), "robots.txt allows GPTBot explicitly");
   } catch (error) {
     fail("robots.txt check succeeds", error instanceof Error ? error.message : String(error));
@@ -228,13 +240,28 @@ async function checkDiscovery() {
   }
 
   try {
+    const response = await request("/oai-crawlers.txt");
+    const body = await response.text();
+    assert(response.status === 200, "oai-crawlers.txt returns 200", `HTTP ${response.status}`);
+    assert(/OAI-AdsBot/i.test(body), "oai-crawlers.txt documents OAI-AdsBot");
+    assert(/OAI-SearchBot/i.test(body), "oai-crawlers.txt documents OAI-SearchBot");
+    assert(/not affiliated|independent editorial/i.test(body), "oai-crawlers.txt preserves independence disclosure");
+  } catch (error) {
+    fail("oai-crawlers.txt semantic check succeeds", error instanceof Error ? error.message : String(error));
+  }
+
+  try {
     const response = await request("/knowledge.json");
     const data = await response.json();
-    const aliasesFromKnowledge = Array.isArray(data?.entity?.aliases) ? data.entity.aliases.map((value) => String(value).toLowerCase()) : [];
+    const rawAliases = data?.searchEntity?.aliases ?? data?.entity?.aliases ?? [];
+    const aliasesFromKnowledge = Array.isArray(rawAliases) ? rawAliases.map((value) => String(value).toLowerCase()) : [];
     assert(data?.canonical === BASE_URL, "knowledge.json canonical matches production", String(data?.canonical || "missing"));
     for (const term of ["chatgpt ads", "gpt ads", "ads gpt", "openai ads"]) {
       assert(aliasesFromKnowledge.includes(term), `knowledge.json maps alias: ${term}`);
     }
+    assert(data?.discovery?.openAICrawlers?.["OAI-SearchBot"]?.allowed === true, "knowledge.json declares OAI-SearchBot discovery policy");
+    assert(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.allowed === true, "knowledge.json declares OAI-AdsBot readiness policy");
+    assert(/not presented as an organic ranking signal/i.test(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.rankingCaveat || ""), "knowledge.json avoids overstating AdsBot as an SEO ranking signal");
   } catch (error) {
     fail("knowledge.json semantic check succeeds", error instanceof Error ? error.message : String(error));
   }
