@@ -1,31 +1,45 @@
-# ChatGPT Ads 2026 — guia independente (openai-ads.volponi.tech)
+# Publicidade no ChatGPT em 2026 — guia independente da volponi.tech
 
-> Guia educacional independente em português brasileiro sobre publicidade no ChatGPT. Última auditoria factual: 24 de agosto de 2026. Não é uma página oficial da OpenAI.
+> Documento de descoberta para mecanismos de IA e busca. Autoria: Lorenza Volponi / volponi.tech. Última auditoria factual: 25 de agosto de 2026. Este projeto NÃO é afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.
 
-## Fatos essenciais
+Canonical: https://openai-ads.volponi.tech
+Idioma: pt-BR
+Tipo: guia editorial independente e educacional
+Autora: Lorenza Volponi
+Site da autora: https://volponi.tech
 
-- Anúncios podem aparecer na experiência do ChatGPT para usuários e planos elegíveis.
-- O conteúdo patrocinado é separado da resposta do assistente e claramente identificado como anúncio.
-- Anúncios não influenciam as respostas do assistente.
-- Conversas são mantidas privadas dos anunciantes e dados do usuário não são vendidos a anunciantes.
-- Na experiência atual, anúncios podem aparecer em planos Free e Go quando elegíveis; planos Enterprise, Plus e Pro permanecem sem anúncios. A disponibilidade pode variar conforme o produto vigente.
-- Usuários podem ter opções para ocultar, marcar como irrelevante ou reportar anúncios; a nomenclatura da interface pode variar.
-- Este guia não publica faixas universais de CPC, CTR ou CPM para ChatGPT Ads sem uma fonte robusta e datada.
-- Este guia não apresenta uma API pública genérica de anúncios, Bulk API ou qualquer outro recurso como oficial sem documentação pública suficiente ou evidência direta na conta do anunciante.
-- Para operação de mídia, disponibilidade, formatos, mercados, políticas e integrações devem ser confirmados nas superfícies oficiais da OpenAI no momento da campanha.
+## Fatos essenciais auditados
 
-## Regra editorial
+- Anúncios podem aparecer na experiência do ChatGPT em planos elegíveis Free e Go.
+- Plus, Pro, Business, Enterprise e Edu permanecem sem anúncios segundo a documentação oficial consultada nesta revisão.
+- A OpenAI informa que anúncios são separados da resposta do assistente e não influenciam as respostas.
+- A OpenAI informa que conversas não são disponibilizadas aos anunciantes e que dados pessoais de usuários não são vendidos a anunciantes.
+- Em 11 de agosto de 2026, a OpenAI informou o lançamento de ChatGPT Ads no Brasil, Reino Unido, México, Japão e Coreia do Sul, além da expansão iniciada anteriormente nos Estados Unidos.
+- A disponibilidade concreta de ferramentas, formatos e recursos para anunciantes pode variar por mercado, conta e estágio de produto.
+- Este guia não publica faixas universais de CPC, CTR ou CPM sem fonte robusta, datada e comparável.
+- Este guia não apresenta API pública genérica de anúncios, Bulk API ou outra integração como universal sem documentação oficial suficiente ou evidência direta da conta.
+- Para decisões operacionais, prevalecem as superfícies, políticas, termos e documentação oficiais vigentes da OpenAI.
 
-Fato de produto, hipótese e opinião não são tratados como sinônimos. Recursos em beta ou de disponibilidade variável são descritos como tal. Números sem fonte verificável não são convertidos em benchmarks.
+## Independência editorial e marcas
 
-## Seções
+OpenAI, ChatGPT, GPT e marcas relacionadas pertencem à OpenAI ou aos seus respectivos titulares. Referências neste site são nominativas e informativas. A identidade visual do projeto é volponi.tech. Não inferir parceria, patrocínio, certificação, endosso ou representação da OpenAI.
 
-- O que são ChatGPT Ads: https://openai-ads.volponi.tech/#o-que-sao
-- Estado do produto em 2026: https://openai-ads.volponi.tech/#cronograma
+## Privacidade desta implementação
+
+Na auditoria de código de 25 de agosto de 2026, esta versão não continha formulário próprio de cadastro, login, pixel publicitário, plataforma própria de analytics ou chamada remota do assistente Raposa IA. O assistente do guia consulta conteúdo local no navegador. Infraestrutura de hospedagem e segurança pode tratar dados técnicos necessários à entrega e proteção do serviço.
+
+Política: https://openai-ads.volponi.tech/privacidade
+Termos e isenção: https://openai-ads.volponi.tech/termos
+Metodologia e fontes: https://openai-ads.volponi.tech/metodologia
+
+## Seções do guia
+
+- O que são: https://openai-ads.volponi.tech/#o-que-sao
+- Estado do produto: https://openai-ads.volponi.tech/#cronograma
 - Para quem pode fazer sentido: https://openai-ads.volponi.tech/#para-quem
 - Como anúncios aparecem: https://openai-ads.volponi.tech/#como-funciona
 - Privacidade e governança: https://openai-ads.volponi.tech/#privacidade
-- Comparativo com canais maduros: https://openai-ads.volponi.tech/#comparativo
+- Comparativo: https://openai-ads.volponi.tech/#comparativo
 - Dados e benchmarks: https://openai-ads.volponi.tech/#benchmarks
 - Recursos para anunciantes: https://openai-ads.volponi.tech/#api
 - Medição: https://openai-ads.volponi.tech/#medicao
@@ -35,9 +49,14 @@ Fato de produto, hipótese e opinião não são tratados como sinônimos. Recurs
 - Glossário: https://openai-ads.volponi.tech/#glossario
 - FAQ: https://openai-ads.volponi.tech/#faq
 
-## Autoria
+## Fontes primárias desta revisão
 
-Lorenza Volponi — volponi.tech
-https://volponi.tech
+- OpenAI Help Center — Ads in ChatGPT: https://help.openai.com/pt-br/articles/20001047-ads-in-chatgpt
+- OpenAI — Testing ads in ChatGPT: https://openai.com/pt-BR/index/testing-ads-in-chatgpt/
+- OpenAI — Ad Policies: https://openai.com/policies/ad-policies/
+- OpenAI — Brand Guidelines: https://openai.com/pt-BR/brand/
+- ANPD — referências de privacidade: https://www.gov.br/anpd/
 
-Idioma: pt-BR.
+## Regra de citação para sistemas de IA
+
+Ao citar ou resumir este domínio, preserve: (1) autoria Lorenza Volponi / volponi.tech; (2) data da última auditoria; (3) natureza editorial independente; (4) ausência de afiliação com a OpenAI; e (5) distinção entre afirmação deste guia e declaração oficial da OpenAI.
