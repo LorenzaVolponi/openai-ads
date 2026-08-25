@@ -9,14 +9,15 @@ import { OfficialAdsLearning } from "@/components/official-ads-learning";
 import { AuthorityMetrics, EvidenceLedger, MediaMath, ProductRealityGrid } from "@/components/authority-dashboard";
 import { AuthorShowcase } from "@/components/author-showcase";
 import { MobileDock } from "@/components/mobile-dock";
+import { SearchIntentHub } from "@/components/search-intent-hub";
 import { authorityMetrics, CHECKED_AT } from "@/lib/authority-data";
 
 const deepDives = [
-  ["/chatgpt-ads-brasil", "Brasil", "Disponibilidade, lançamento e planos."],
-  ["/chatgpt-ads-precos", "Preços", "CPM, CPC, oCPC, lance e leilão."],
-  ["/chatgpt-ads-metricas", "Métricas", "CTR, CPC, CPM, conversão, CPA e ROAS."],
-  ["/ads-manager-chatgpt", "Ads Manager", "Recursos, países, reporting e limites do beta."],
-  ["/chatgpt-ads-privacidade", "Privacidade", "Contexto, personalização e o que o anunciante recebe."],
+  ["/chatgpt-ads-brasil", "ChatGPT Ads no Brasil", "Disponibilidade, lançamento e planos."],
+  ["/chatgpt-ads-precos", "Quanto custa anunciar?", "CPM, CPC, oCPC, lance e leilão."],
+  ["/chatgpt-ads-metricas", "Métricas do ChatGPT Ads", "CTR, CPC, CPM, conversão, CPA e ROAS."],
+  ["/ads-manager-chatgpt", "OpenAI Ads Manager", "Recursos, países, reporting e limites do beta."],
+  ["/chatgpt-ads-privacidade", "Privacidade no ChatGPT Ads", "Contexto, personalização e o que o anunciante recebe."],
 ] as const;
 
 const topNav = [
@@ -124,6 +125,7 @@ export default function HomeV2() {
 
         <OfficialAdsLearning />
         <AdQualityLab />
+        <SearchIntentHub />
 
         <section id="dados" className="content-auto scroll-mt-24 bg-white">
           <div className="mx-auto max-w-7xl px-4 pt-16 md:px-6 md:pt-24">
@@ -157,7 +159,7 @@ export default function HomeV2() {
                   </a>
                 ))}
                 <a href="/radar" className="group rounded-2xl border border-zinc-950 bg-zinc-950 p-5 text-white transition hover:bg-zinc-800">
-                  <div className="flex items-center justify-between gap-4"><h3 className="font-bold">Radar vivo</h3><ArrowUpRight className="h-4 w-4" /></div>
+                  <div className="flex items-center justify-between gap-4"><h3 className="font-bold">Volponi ChatGPT Ads Radar</h3><ArrowUpRight className="h-4 w-4" /></div>
                   <p className="mt-2 text-sm leading-6 text-zinc-400">Histórico de mudanças, fontes, dados abertos e RSS.</p>
                 </a>
               </div>
