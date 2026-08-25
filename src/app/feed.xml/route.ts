@@ -22,6 +22,9 @@ export function GET() {
       <link>${escapeXml(url)}</link>
       <guid isPermaLink="true">${escapeXml(url)}</guid>
       <pubDate>${new Date(`${entry.date}T12:00:00Z`).toUTCString()}</pubDate>
+      <dc:creator>Lorenza Volponi</dc:creator>
+      <category>${escapeXml(entry.kind)}</category>
+      <category>${escapeXml(entry.market)}</category>
       <description>${escapeXml(`${entry.summary} Impacto: ${entry.impact}`)}</description>
       <source url="${escapeXml(entry.source.url)}">${escapeXml(entry.source.publisher)}</source>
     </item>`;
@@ -29,16 +32,17 @@ export function GET() {
     .join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>Volponi ChatGPT Ads Radar</title>
     <link>${SITE_URL}/radar</link>
     <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
     <description>Mudanças auditadas em ChatGPT Ads, Ads Manager, mercados, compra e mensuração.</description>
     <language>pt-BR</language>
+    <dc:creator>Lorenza Volponi</dc:creator>
+    <copyright>Lorenza Volponi / volponi.tech</copyright>
     <lastBuildDate>${LATEST_RADAR_DATE_OBJECT.toUTCString()}</lastBuildDate>
-    <ttl>1440</ttl>
-    <managingEditor>Lorenza Volponi — volponi.tech</managingEditor>${items}
+    <ttl>1440</ttl>${items}
   </channel>
 </rss>`;
 
