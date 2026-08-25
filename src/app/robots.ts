@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 
+import { OPENAI_CRAWLER_USER_AGENTS } from "@/lib/oai-crawler-readiness";
+
 // GEO (Generative Engine Optimization): explicitamente permite os principais
-// crawlers de IA/GEO — incluindo os crawlers oficiais da OpenAI para Search e Ads.
+// crawlers de IA/GEO. Os crawlers da OpenAI vêm de uma única fonte de verdade
+// compartilhada com os manifests e o endpoint de diagnóstico.
 const AI_CRAWLERS = [
-  "GPTBot", // OpenAI — treinamento
-  "OAI-SearchBot", // OpenAI — ChatGPT Search / descoberta publica
-  "OAI-AdsBot", // OpenAI — validacao de landing pages de ChatGPT Ads
+  ...OPENAI_CRAWLER_USER_AGENTS,
   "ChatGPT-User", // OpenAI — respostas em tempo real
   "ClaudeBot", // Anthropic
   "Claude-Web", // Anthropic — web
