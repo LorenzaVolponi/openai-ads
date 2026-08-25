@@ -4,9 +4,24 @@ Observatório editorial independente em português brasileiro sobre **ChatGPT Ad
 
 **Autoria e curadoria:** Lorenza Volponi — https://volponi.tech  
 **Observatório:** https://openai-ads.volponi.tech  
-**Radar:** https://openai-ads.volponi.tech/radar
+**Radar:** https://openai-ads.volponi.tech/radar  
+**Fonte para imprensa / Media Source Room:** https://openai-ads.volponi.tech/imprensa  
+**Press kit estruturado:** https://openai-ads.volponi.tech/press-kit.json
 
 > Projeto independente. Não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI. OpenAI, ChatGPT, GPT e marcas relacionadas pertencem aos respectivos titulares.
+
+## Fonte para imprensa
+
+Lorenza Volponi é **AI Systems Strategist & Builder**, autora do Volponi ChatGPT Ads Radar e fonte para entrevistas e comentários de contexto sobre:
+
+- ChatGPT Ads e OpenAI Ads Manager;
+- publicidade conversacional;
+- GEO / Generative Engine Optimization e AI discovery;
+- sistemas de IA e automação;
+- métricas, mensuração e limites de atribuição;
+- leitura de mudanças de produto com fontes primárias e dados auditáveis.
+
+A página `/imprensa` concentra bio curta, pautas, últimas mudanças, forma de citação, dados e canais públicos. O `press-kit.json` oferece a mesma identidade em formato estruturado para redações, ferramentas e agentes.
 
 ## O que este projeto faz
 
@@ -74,9 +89,13 @@ O observatório mantém uma camada editorial viva sem auto-publicação factual 
 - `/radar` — histórico auditado de mudanças;
 - `/feed.xml` — RSS derivado do evento mais recente do Radar;
 - `/feed.json` — JSON Feed para agentes e automações;
-- `/provenance.json` — autoria, independência, fontes monitoradas e última revisão;
+- `/news-sitemap.xml` — somente registros recentes elegíveis pela janela temporal de notícias;
+- `/provenance.json` — autoria, independência, fontes monitoradas, commit de origem e política de atestação;
+- `/evidence.json` — cadeia SHA-256 dos registros editoriais;
 - `/data/chatgpt-ads-markets.json` e `.csv` — dados abertos do snapshot de disponibilidade;
 - `Radar Source Watch` — checagem diária de fontes oficiais com sinal editorial quando uma mudança material é detectada.
+
+O deployment publica o commit de origem nos artefatos de evidência e recusa a promoção do alias se o SHA do artefato não corresponder ao commit que a GitHub Actions está publicando. O pipeline também tenta gerar GitHub Artifact Attestations / Sigstore para os bytes de evidência efetivamente servidos pelo deployment.
 
 Detecção automática não equivale a publicação automática: mudanças factuais continuam sujeitas a revisão editorial antes de alterar o Radar.
 
@@ -86,13 +105,16 @@ O projeto mantém uma arquitetura canônica e de proveniência para busca tradic
 
 - metadata canonical e Open Graph por intenção;
 - redirects permanentes para variantes de busca sem duplicar conteúdo;
-- `robots.txt` e `sitemap.xml` restrito às páginas canônicas indexáveis;
-- dados estruturados Schema.org para site, autoria, artigos técnicos, conteúdo didático, HowTo e aplicação web;
+- `robots.txt`, `sitemap.xml` e sitemap temporal de notícias;
+- dados estruturados Schema.org para site, organização editora, autoria, `ProfilePage`, `NewsArticle`/`TechArticle`, conteúdo didático, HowTo e aplicação web;
+- autoria dos artigos ligada à página de imprensa de Lorenza Volponi;
+- múltiplas proporções de imagem de alta resolução para registros do Radar;
 - `public/llms.txt` e `public/llms-full.txt`;
 - `public/knowledge.json`;
 - `public/citation.json`;
 - `public/humans.txt`;
-- `/provenance.json`;
+- `/press-kit.json`;
+- `/provenance.json` e `/evidence.json`;
 - autoria Lorenza Volponi / volponi.tech, independência, revisão e fontes explícitas;
 - arquivos machine-readable crawláveis, mas fora do índice tradicional para não competir com páginas HTML.
 
