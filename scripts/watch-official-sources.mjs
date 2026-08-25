@@ -19,6 +19,12 @@ const sources = [
     markers: ["Ads Manager", "benchmark", "campaign", "measurement", "reporting"],
   },
   {
+    id: "crawler-guidance",
+    label: "Advertiser Guidance for OpenAI Web Crawlers",
+    url: "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers",
+    markers: ["OAI-AdsBot", "OAI-SearchBot", "adsbot.json", "robots.txt", "landing page"],
+  },
+  {
     id: "testing-ads",
     label: "Testing ads in ChatGPT",
     url: "https://openai.com/index/testing-ads-in-chatgpt/",
