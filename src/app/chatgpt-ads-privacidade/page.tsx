@@ -2,19 +2,28 @@ import type { Metadata } from "next";
 
 import { TopicArticle } from "@/components/topic-article";
 import { SOURCES } from "@/lib/authority-data";
+import { socialImageForPath } from "@/lib/seo";
 
 const URL = "https://openai-ads.volponi.tech/chatgpt-ads-privacidade";
+const SOCIAL_IMAGE = socialImageForPath("/chatgpt-ads-privacidade");
 
 export const metadata: Metadata = {
-  title: "ChatGPT Ads privacidade 2026: conversas, personalização e anunciantes | Lorenza Volponi",
+  title: "ChatGPT Ads e privacidade: o que anunciantes recebem (2026)",
   description:
-    "Como funciona a privacidade no ChatGPT Ads: anúncios separados das respostas, anunciantes sem acesso a chats e memórias, personalização e controles do usuário.",
+    "Entenda a privacidade no ChatGPT Ads: anúncios separados das respostas, anunciantes sem acesso a chats e memórias, personalização e dados agregados.",
   alternates: { canonical: URL },
   openGraph: {
-    title: "ChatGPT Ads e privacidade — o que anunciantes veem e não veem",
+    title: "ChatGPT Ads e privacidade: o que anunciantes recebem",
     description: "Conversas, memória, personalização, dados agregados e separação entre anúncio e resposta.",
     url: URL,
     type: "article",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "ChatGPT Ads e privacidade: o que anunciantes recebem" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChatGPT Ads e privacidade: o que anunciantes recebem",
+    description: "Chats, memória, personalização e dados agregados explicados com fonte oficial.",
+    images: [SOCIAL_IMAGE],
   },
 };
 
