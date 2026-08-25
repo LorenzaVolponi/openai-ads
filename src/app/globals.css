@@ -44,70 +44,70 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Tema claro legível — volponi.tech / guia editorial independente
-   Identidade: raposa âmbar (#F8A528) sobre preto; página branca quente,
-   gold escuro para texto/ação com contraste forte. */
+/* Identidade global volponi.tech: branco, preto e escala de cinza.
+   Status e hierarquia usam forma, tipografia e ícones — não uma segunda paleta. */
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.985 0.005 85);
-  --foreground: oklch(0.19 0.012 75);
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.18 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.19 0.012 75);
+  --card-foreground: oklch(0.18 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.19 0.012 75);
-  --primary: oklch(0.58 0.13 65);
-  --primary-foreground: oklch(0.99 0.005 85);
-  --secondary: oklch(0.955 0.008 85);
-  --secondary-foreground: oklch(0.19 0.012 75);
-  --muted: oklch(0.955 0.008 85);
-  --muted-foreground: oklch(0.46 0.015 75);
-  --accent: oklch(0.94 0.035 85);
-  --accent-foreground: oklch(0.25 0.05 70);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.25 0.02 75 / 14%);
-  --input: oklch(0.25 0.02 75 / 18%);
-  --ring: oklch(0.58 0.13 65);
-  --signal: oklch(0.82 0.16 78);
-  --chart-1: oklch(0.82 0.16 78);
-  --chart-2: oklch(0.7 0.14 70);
-  --chart-3: oklch(0.696 0.17 162.48);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --popover-foreground: oklch(0.18 0 0);
+  --primary: oklch(0.18 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0 0);
+  --secondary-foreground: oklch(0.18 0 0);
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.46 0 0);
+  --accent: oklch(0.94 0 0);
+  --accent-foreground: oklch(0.18 0 0);
+  --destructive: oklch(0.42 0 0);
+  --border: oklch(0.22 0 0 / 14%);
+  --input: oklch(0.22 0 0 / 18%);
+  --ring: oklch(0.18 0 0);
+  --signal: oklch(0.18 0 0);
+  --chart-1: oklch(0.18 0 0);
+  --chart-2: oklch(0.32 0 0);
+  --chart-3: oklch(0.46 0 0);
+  --chart-4: oklch(0.62 0 0);
+  --chart-5: oklch(0.78 0 0);
   --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.19 0.012 75);
-  --sidebar-primary: oklch(0.58 0.13 65);
-  --sidebar-primary-foreground: oklch(0.99 0.005 85);
-  --sidebar-accent: oklch(0.94 0.035 85);
-  --sidebar-accent-foreground: oklch(0.25 0.05 70);
-  --sidebar-border: oklch(0.25 0.02 75 / 14%);
-  --sidebar-ring: oklch(0.58 0.13 65);
+  --sidebar-foreground: oklch(0.18 0 0);
+  --sidebar-primary: oklch(0.18 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.94 0 0);
+  --sidebar-accent-foreground: oklch(0.18 0 0);
+  --sidebar-border: oklch(0.22 0 0 / 14%);
+  --sidebar-ring: oklch(0.18 0 0);
 }
 
 .dark {
-  --background: oklch(0.07 0.005 285);
-  --foreground: oklch(0.95 0 0);
-  --card: oklch(0.12 0.005 285);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.12 0.005 285);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.82 0.16 78);
+  --background: oklch(0.08 0 0);
+  --foreground: oklch(0.96 0 0);
+  --card: oklch(0.12 0 0);
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.12 0 0);
+  --popover-foreground: oklch(0.96 0 0);
+  --primary: oklch(0.96 0 0);
   --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.16 0.005 285);
+  --secondary: oklch(0.16 0 0);
   --secondary-foreground: oklch(0.95 0 0);
-  --muted: oklch(0.16 0.005 285);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.18 0.02 75);
+  --muted: oklch(0.16 0 0);
+  --muted-foreground: oklch(0.68 0 0);
+  --accent: oklch(0.2 0 0);
   --accent-foreground: oklch(0.95 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 10%);
-  --ring: oklch(0.82 0.16 78);
-  --signal: oklch(0.82 0.16 78);
+  --destructive: oklch(0.72 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.95 0 0);
+  --signal: oklch(0.95 0 0);
 }
 
 html {
   scroll-behavior: smooth;
   color-scheme: light;
+  text-rendering: optimizeLegibility;
 }
 
 @layer base {
@@ -119,9 +119,38 @@ html {
   }
 }
 
+:focus-visible {
+  outline: 2px solid oklch(0.18 0 0);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 0.75rem;
+  z-index: 100;
+  transform: translateY(-180%);
+  border-radius: 9999px;
+  background: #18181b;
+  color: #fff;
+  padding: 0.7rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
 ::selection {
-  background: oklch(0.88 0.09 85);
-  color: oklch(0.25 0.05 70);
+  background: oklch(0.82 0 0);
+  color: oklch(0.12 0 0);
 }
 
 ::-webkit-scrollbar {
@@ -129,15 +158,15 @@ html {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: oklch(0.965 0.005 85);
+  background: oklch(0.96 0 0);
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.82 0.05 80);
+  background: oklch(0.72 0 0);
   border-radius: 9999px;
-  border: 2px solid oklch(0.965 0.005 85);
+  border: 2px solid oklch(0.96 0 0);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.68 0.1 72);
+  background: oklch(0.58 0 0);
 }
 
 .scrollbar-none {
@@ -149,12 +178,8 @@ html {
 }
 
 @keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 .animate-marquee {
   animation: marquee 40s linear infinite;
@@ -164,41 +189,21 @@ html {
 }
 
 @keyframes float-a {
-  0%, 100% {
-    transform: translate(-50%, 0) scale(1);
-  }
-  50% {
-    transform: translate(-48%, 2.5%) scale(1.06);
-  }
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(-48%, 2.5%) scale(1.06); }
 }
 @keyframes float-b {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-28px, 34px) scale(1.08);
-  }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-28px, 34px) scale(1.08); }
 }
 @keyframes float-c {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(26px, -30px) scale(1.05);
-  }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(26px, -30px) scale(1.05); }
 }
-.animate-float-a {
-  animation: float-a 18s ease-in-out infinite;
-}
-.animate-float-b {
-  animation: float-b 14s ease-in-out infinite;
-}
-.animate-float-c {
-  animation: float-c 22s ease-in-out infinite;
-}
+.animate-float-a { animation: float-a 18s ease-in-out infinite; }
+.animate-float-b { animation: float-b 14s ease-in-out infinite; }
+.animate-float-c { animation: float-c 22s ease-in-out infinite; }
 
-/* Marca d'água editorial volponi.tech: usa o ativo real já versionado no projeto.
-   Mantém baixa opacidade, não intercepta clique e cobre todas as rotas/documentos. */
 .brand-watermark {
   position: fixed;
   inset: 0;
@@ -209,7 +214,7 @@ html {
   background-repeat: repeat;
   background-size: 190px 190px;
   background-position: 24px 24px;
-  opacity: 0.026;
+  opacity: 0.024;
   mix-blend-mode: multiply;
 }
 
@@ -240,7 +245,14 @@ a,
   .brand-watermark {
     background-size: 140px 140px;
     background-position: 12px 12px;
-    opacity: 0.022;
+    opacity: 0.02;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border: oklch(0.2 0 0 / 30%);
+    --muted-foreground: oklch(0.34 0 0);
   }
 }
 
@@ -252,6 +264,11 @@ a,
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
   .animate-marquee,
   .animate-float-a,
   .animate-float-b,
