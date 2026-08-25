@@ -50,6 +50,9 @@ jobs:
       - name: Validate media authority health checker syntax
         run: node --check scripts/media-authority-health-check.mjs
 
+      - name: Validate OpenAI crawler health checker syntax
+        run: node --check scripts/openai-crawler-health-check.mjs
+
       - name: Validate SEO insights syntax
         run: node --check scripts/seo-authority-insights.mjs
 
