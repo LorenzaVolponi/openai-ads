@@ -1,0 +1,66 @@
+name: Search Console Ranking Hunt
+
+on:
+  schedule:
+    - cron: "15 13 * * 1,4"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Search Console lookback window in days"
+        required: false
+        default: "28"
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: search-console-ranking-hunt
+  cancel-in-progress: true
+
+jobs:
+  ranking-hunt:
+    name: Turn real queries into ranking priorities
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GSC_CLIENT_EMAIL: ${{ secrets.GSC_CLIENT_EMAIL }}
+      GSC_PRIVATE_KEY: ${{ secrets.GSC_PRIVATE_KEY }}
+      GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:openai-ads.volponi.tech' }}
+      GSC_DAYS: ${{ inputs.days || '28' }}
+      GSC_OUTPUT: /tmp/search-console-ranking-hunt.md
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Build ranking hunt from Search Console
+        run: node scripts/search-console-ranking-hunt.mjs
+
+      - name: Publish ranking hunt issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TITLE="Search Console ranking hunt"
+          ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
+          if [ -n "$ISSUE_NUMBER" ]; then
+            gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$GSC_OUTPUT"
+            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Ranking hunt refreshed from real Search Console data: $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file "$GSC_OUTPUT"
+          fi
+
+      - name: Job summary
+        shell: bash
+        run: cat "$GSC_OUTPUT" >> "$GITHUB_STEP_SUMMARY"
