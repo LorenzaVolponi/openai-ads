@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.3 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.4 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -88,6 +88,13 @@ function normalizeUrl(value) {
 
 function expectedUrl(path) {
   return normalizeUrl(`${BASE_URL}${path}`);
+}
+
+function sitemapLocations(xml) {
+  return [...xml.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)]
+    .map((match) => match[1]?.trim())
+    .filter(Boolean)
+    .map((value) => normalizeUrl(value));
 }
 
 function pass(label, detail = "") {
@@ -251,12 +258,13 @@ async function checkDiscovery() {
   try {
     const response = await request("/sitemap.xml");
     const body = await response.text();
+    const locations = new Set(sitemapLocations(body));
     assert(response.status === 200, "sitemap.xml returns 200", `HTTP ${response.status}`);
     for (const path of sitemapRequired) {
-      assert(body.includes(expectedUrl(path)), `sitemap contains ${path}`);
+      assert(locations.has(expectedUrl(path)), `sitemap contains exact ${path}`);
     }
     for (const path of sitemapForbidden) {
-      assert(!body.includes(expectedUrl(path)), `sitemap excludes ${path}`);
+      assert(!locations.has(expectedUrl(path)), `sitemap excludes exact ${path}`);
     }
   } catch (error) {
     fail("sitemap.xml check succeeds", error instanceof Error ? error.message : String(error));
@@ -276,12 +284,14 @@ async function checkDiscovery() {
   try {
     const response = await request("/knowledge.json");
     const data = await response.json();
+    const primaryTerm = String(data?.searchEntity?.primaryTerm || "").toLowerCase();
     const aliasesFromKnowledge = Array.isArray(data?.searchEntity?.aliases)
       ? data.searchEntity.aliases.map((value) => String(value).toLowerCase())
       : [];
     assert(Number(data?.schemaVersion) >= 7, "knowledge.json schema includes crawler authority v7+", String(data?.schemaVersion || "missing"));
     assert(data?.canonical === BASE_URL, "knowledge.json canonical matches production", String(data?.canonical || "missing"));
-    for (const term of ["chatgpt ads", "gpt ads", "ads gpt", "openai ads"]) {
+    assert(primaryTerm === "chatgpt ads", "knowledge.json preserves primary search entity", primaryTerm || "missing");
+    for (const term of ["gpt ads", "ads gpt", "openai ads"]) {
       assert(aliasesFromKnowledge.includes(term), `knowledge.json maps alias: ${term}`);
     }
     assert(data?.discovery?.openAICrawlers?.["OAI-SearchBot"]?.allowed === true, "knowledge.json declares OAI-SearchBot discovery policy");
