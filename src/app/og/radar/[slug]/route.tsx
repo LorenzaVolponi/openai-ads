@@ -30,6 +30,10 @@ export async function GET(
   const square = variant === "1x1";
   const tall = square || variant === "4x3";
 
+  const titleSize = square ? 58 : tall ? 61 : 64;
+  const subtitleSize = square ? 23 : 22;
+  const padding = square ? "68px" : tall ? "62px 70px" : "56px 70px";
+
   return new ImageResponse(
     (
       <div
@@ -41,45 +45,27 @@ export async function GET(
           justifyContent: "space-between",
           background: "#111111",
           color: "#ffffff",
-          padding: square ? "70px" : tall ? "64px 72px" : "58px 72px",
+          padding,
           fontFamily: "Arial, Helvetica, sans-serif",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: 17,
-                background: "#ffffff",
-                color: "#111111",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 26,
-                fontWeight: 800,
-              }}
-            >
-              V
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <div style={{ fontSize: square ? 19 : 21, fontWeight: 800 }}>Volponi ChatGPT Ads Radar</div>
-              <div style={{ fontSize: 13, letterSpacing: 2, color: "#a1a1aa" }}>CHANGE LEDGER · PRIMARY SOURCES</div>
-            </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            <div style={{ fontSize: square ? 21 : 22, fontWeight: 800 }}>Volponi ChatGPT Ads Radar</div>
+            <div style={{ fontSize: 13, letterSpacing: 2.1, color: "#a1a1aa" }}>CHANGE LEDGER · PRIMARY SOURCES</div>
           </div>
-          {!square && <div style={{ fontSize: 16, color: "#a1a1aa" }}>{entry.date}</div>}
+          <div style={{ fontSize: 15, color: "#a1a1aa" }}>{entry.date}</div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", maxWidth: square ? 890 : 1040 }}>
-          <div style={{ fontSize: square ? 16 : 17, letterSpacing: 2.2, color: "#d4d4d8", marginBottom: 20 }}>
-            {entry.market.toUpperCase()} · {entry.kind.toUpperCase()} · {entry.date}
+        <div style={{ display: "flex", flexDirection: "column", maxWidth: square ? 900 : 1040 }}>
+          <div style={{ fontSize: 16, letterSpacing: 2.1, color: "#d4d4d8", marginBottom: 22 }}>
+            {entry.market.toUpperCase()} · {entry.kind.toUpperCase()}
           </div>
           <div
             style={{
-              fontSize: square ? 58 : tall ? 62 : 66,
-              lineHeight: 1.02,
-              letterSpacing: square ? -2.4 : -3.1,
+              fontSize: titleSize,
+              lineHeight: 1.03,
+              letterSpacing: square ? -2.3 : -2.8,
               fontWeight: 800,
             }}
           >
@@ -88,19 +74,19 @@ export async function GET(
           <div
             style={{
               marginTop: 26,
-              fontSize: square ? 22 : 23,
+              fontSize: subtitleSize,
               lineHeight: 1.35,
               color: "#d4d4d8",
-              maxWidth: square ? 860 : 970,
+              maxWidth: square ? 880 : 960,
             }}
           >
-            {entry.summary}
+            {entry.currentState}
           </div>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #3f3f46", paddingTop: 22 }}>
           <div style={{ fontSize: 17, fontWeight: 700 }}>Lorenza Volponi · volponi.tech</div>
-          {!square && <div style={{ fontSize: 14, color: "#a1a1aa" }}>estado observado · impacto · fonte primária</div>}
+          <div style={{ fontSize: 14, color: "#a1a1aa" }}>{entry.source.publisher} · fonte primária</div>
         </div>
       </div>
     ),
