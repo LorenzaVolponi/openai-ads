@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { radarEntries } from "@/lib/radar-data";
+import { getRadarOgCard } from "@/lib/radar-og-data";
 
 export const runtime = "nodejs";
 
@@ -16,7 +16,7 @@ type ImageVariant = keyof typeof IMAGE_VARIANTS;
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const slug = url.searchParams.get("slug") || "";
-  const entry = radarEntries.find((item) => item.slug === slug);
+  const entry = getRadarOgCard(slug);
 
   if (!entry) {
     return new Response("Not found", { status: 404 });
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #3f3f46", paddingTop: 22 }}>
           <div style={{ fontSize: 17, fontWeight: 700 }}>Lorenza Volponi · volponi.tech</div>
-          <div style={{ fontSize: 14, color: "#a1a1aa" }}>{entry.source.publisher} · fonte primária</div>
+          <div style={{ fontSize: 14, color: "#a1a1aa" }}>{entry.publisher} · fonte primária</div>
         </div>
       </div>
     ),
