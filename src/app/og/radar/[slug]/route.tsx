@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { radarEntries } from "@/lib/radar-data";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const IMAGE_VARIANTS = {
   "1x1": { width: 1080, height: 1080 },
