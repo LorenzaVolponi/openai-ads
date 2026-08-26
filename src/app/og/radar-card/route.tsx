@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { getRadarOgCard } from "@/lib/radar-og-data";
+import { RADAR_OG_CARDS, type RadarOgCardKey } from "@/lib/radar-og-data";
 
 export const runtime = "nodejs";
 
@@ -16,12 +16,13 @@ type ImageVariant = keyof typeof IMAGE_VARIANTS;
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const slug = url.searchParams.get("slug") || "";
-  const entry = getRadarOgCard(slug);
+  const cardKey = (slug in RADAR_OG_CARDS ? slug : null) as RadarOgCardKey | null;
 
-  if (!entry) {
+  if (!cardKey) {
     return new Response("Not found", { status: 404 });
   }
 
+  const entry = RADAR_OG_CARDS[cardKey];
   const ratio = url.searchParams.get("ratio") as ImageVariant | null;
   const variant: ImageVariant = ratio && ratio in IMAGE_VARIANTS ? ratio : "social";
   const { width, height } = IMAGE_VARIANTS[variant];
