@@ -5,7 +5,7 @@ const BASE_URL = (
 ).replace(/\/$/, "");
 
 const TEST_USER_AGENT =
-  "VolponiOAIReadiness/1.1 (+https://openai-ads.volponi.tech/oai-adsbot-searchbot)";
+  "VolponiOAIReadiness/1.2 (+https://openai-ads.volponi.tech/oai-adsbot-searchbot)";
 const CRAWLERS = ["OAI-AdsBot", "OAI-SearchBot", "GPTBot"];
 const REVIEWED_AT = "2026-08-26";
 
@@ -51,6 +51,23 @@ function hasCrawlerAllowRule(robots, crawler) {
   ).test(robots);
 }
 
+function assertCachePolicy(response, label) {
+  const browserCache = response.headers.get("cache-control") || "";
+  const cdnCache = response.headers.get("cdn-cache-control") || "";
+
+  assert(
+    /max-age=300/i.test(browserCache),
+    `${label} exposes browser-cache policy`,
+    browserCache || "missing",
+  );
+  assert(
+    /max-age=3600/i.test(cdnCache) &&
+      /stale-while-revalidate=86400/i.test(cdnCache),
+    `${label} exposes CDN shared-cache policy`,
+    cdnCache || "missing",
+  );
+}
+
 async function checkRobots() {
   try {
     const response = await request("/robots.txt");
@@ -73,7 +90,6 @@ async function checkManifestJson() {
     const robots = response.headers.get("x-robots-tag") || "";
     const etag = response.headers.get("etag") || "";
     const lastModified = response.headers.get("last-modified") || "";
-    const cacheControl = response.headers.get("cache-control") || "";
     const link = response.headers.get("link") || "";
     const data = await response.json();
 
@@ -82,7 +98,7 @@ async function checkManifestJson() {
     assert(/noindex/i.test(robots) && /follow/i.test(robots), "crawler JSON is crawlable but noindex", robots);
     assert(Boolean(etag), "crawler JSON exposes deterministic ETag", etag || "missing");
     assert(Boolean(lastModified) && !Number.isNaN(Date.parse(lastModified)), "crawler JSON exposes valid Last-Modified", lastModified || "missing");
-    assert(/s-maxage=/i.test(cacheControl), "crawler JSON exposes shared-cache policy", cacheControl || "missing");
+    assertCachePolicy(response, "crawler JSON");
     assert(link.includes("/oai-adsbot-searchbot"), "crawler JSON points to human canonical", link || "missing");
     assert(Number(data?.schemaVersion) >= 2, "crawler JSON schema is backend v2+", String(data?.schemaVersion || "missing"));
     assert(data?.reviewedAt === REVIEWED_AT, "crawler JSON publishes current technical review date", String(data?.reviewedAt || "missing"));
@@ -143,6 +159,7 @@ async function checkManifestText() {
     assert(body.includes("utm_source=chatgpt.com"), "crawler text exposes ChatGPT referral signal");
     assert(Boolean(etag), "crawler text exposes deterministic ETag", etag || "missing");
     assert(Boolean(lastModified) && !Number.isNaN(Date.parse(lastModified)), "crawler text exposes valid Last-Modified", lastModified || "missing");
+    assertCachePolicy(response, "crawler text");
   } catch (error) {
     fail("crawler text readiness check succeeds", error instanceof Error ? error.message : String(error));
   }
