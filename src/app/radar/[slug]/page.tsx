@@ -31,9 +31,9 @@ export async function generateMetadata({
   if (!entry) return {};
 
   const url = `${BASE_URL}/${entry.slug}`;
-  const socialImage = `${SITE_URL}/og/radar/${entry.slug}`;
+  const socialImage = `${SITE_URL}/og/radar-${entry.slug}`;
   return {
-    title: `${entry.title} | ChatGPT Ads Radar` ,
+    title: `${entry.title} | ChatGPT Ads Radar`,
     description: entry.summary,
     authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
     alternates: { canonical: url },
@@ -66,11 +66,7 @@ export default async function RadarEntryPage({
   if (!entry) notFound();
 
   const url = `${BASE_URL}/${entry.slug}`;
-  const articleImages = [
-    `${SITE_URL}/og/radar/${entry.slug}?ratio=1x1`,
-    `${SITE_URL}/og/radar/${entry.slug}?ratio=4x3`,
-    `${SITE_URL}/og/radar/${entry.slug}?ratio=16x9`,
-  ];
+  const articleImage = `${SITE_URL}/og/radar-${entry.slug}`;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -79,7 +75,7 @@ export default async function RadarEntryPage({
         "@id": `${url}/#article`,
         headline: entry.title,
         description: entry.summary,
-        image: articleImages,
+        image: articleImage,
         datePublished: `${entry.date}T12:00:00Z`,
         dateModified: `${entry.date}T12:00:00Z`,
         inLanguage: "pt-BR",
