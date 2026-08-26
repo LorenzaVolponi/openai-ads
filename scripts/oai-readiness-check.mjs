@@ -51,6 +51,9 @@ function hasCrawlerAllowRule(robots, crawler) {
   ).test(robots);
 }
 
+// Vercel consumes s-maxage/SWR from Cache-Control before forwarding the
+// response. CDN-Cache-Control remains externally observable and is therefore
+// the production invariant for shared-cache policy.
 function assertCachePolicy(response, label) {
   const browserCache = response.headers.get("cache-control") || "";
   const cdnCache = response.headers.get("cdn-cache-control") || "";
