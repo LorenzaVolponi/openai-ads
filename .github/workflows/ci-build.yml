@@ -71,7 +71,7 @@ jobs:
           NEXT_TELEMETRY_DISABLED: "1"
         run: npm run build
 
-      - name: Smoke-test OAI crawler backend locally
+      - name: Smoke-test OAI backend and Radar OG routes locally
         shell: bash
         run: |
           set -euo pipefail
@@ -95,3 +95,34 @@ jobs:
           fi
 
           npm run oai:readiness -- http://127.0.0.1:3000
+
+          for ratio in 1x1 4x3 16x9; do
+            HEADERS="/tmp/radar-${ratio}.headers"
+            OUTPUT="/tmp/radar-${ratio}.bin"
+            HTTP_CODE="$(curl --silent --show-error \
+              -D "$HEADERS" \
+              -o "$OUTPUT" \
+              -w '%{http_code}' \
+              "http://127.0.0.1:3000/og/radar/ads-manager-nine-markets?ratio=${ratio}")"
+
+            if [ "$HTTP_CODE" != "200" ]; then
+              echo "::error::Radar ${ratio} OG route returned HTTP ${HTTP_CODE}."
+              cat "$HEADERS" || true
+              cat /tmp/openai-ads-next.log || true
+              exit 1
+            fi
+
+            if ! grep -Eiq '^content-type:[[:space:]]*image/' "$HEADERS"; then
+              echo "::error::Radar ${ratio} OG route did not return an image content type."
+              cat "$HEADERS" || true
+              exit 1
+            fi
+
+            IMAGE_BYTES="$(wc -c < "$OUTPUT" | tr -d ' ')"
+            if [ "$IMAGE_BYTES" -lt 1000 ]; then
+              echo "::error::Radar ${ratio} OG image was unexpectedly small (${IMAGE_BYTES} bytes)."
+              exit 1
+            fi
+
+            echo "Radar ${ratio} OG smoke passed (${IMAGE_BYTES} bytes)."
+          done
