@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { SOCIAL_CARDS, type SocialCardKey } from "@/lib/seo";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 const SIZE = { width: 1200, height: 630 };
 
