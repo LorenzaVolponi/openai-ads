@@ -20,8 +20,9 @@ function headers() {
   return new Headers({
     "Content-Type": "application/json; charset=utf-8",
     "Content-Language": "pt-BR",
-    "Cache-Control":
-      "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
+    "Cache-Control": "public, max-age=300",
+    "CDN-Cache-Control":
+      "public, max-age=3600, stale-while-revalidate=86400",
     "X-Robots-Tag": "noindex, follow",
     "X-Content-Type-Options": "nosniff",
     ETag: ETAG,
