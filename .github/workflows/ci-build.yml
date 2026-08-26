@@ -71,7 +71,7 @@ jobs:
           NEXT_TELEMETRY_DISABLED: "1"
         run: npm run build
 
-      - name: Smoke-test OAI backend and Radar OG routes locally
+      - name: Smoke-test OAI backend and dynamic OG routes locally
         shell: bash
         run: |
           set -euo pipefail
@@ -94,23 +94,23 @@ jobs:
             exit 1
           fi
 
-          npm run oai:readiness -- http://127.0.0.1:3000
-
-          for ratio in 1x1 4x3 16x9; do
-            HEADERS="/tmp/radar-${ratio}.headers"
-            OUTPUT="/tmp/radar-${ratio}.bin"
+          assert_image_route() {
+            NAME="$1"
+            URL="$2"
+            HEADERS="/tmp/${NAME}.headers"
+            OUTPUT="/tmp/${NAME}.bin"
 
             set +e
             HTTP_CODE="$(curl --silent --show-error \
               -D "$HEADERS" \
               -o "$OUTPUT" \
               -w '%{http_code}' \
-              "http://127.0.0.1:3000/og/radar/ads-manager-nine-markets?ratio=${ratio}")"
+              "$URL")"
             CURL_EXIT=$?
             set -e
 
             if [ "$CURL_EXIT" -ne 0 ] || [ "$HTTP_CODE" != "200" ]; then
-              echo "::error::Radar ${ratio} OG request failed (curl ${CURL_EXIT}, HTTP ${HTTP_CODE:-unknown})."
+              echo "::error::${NAME} OG request failed (curl ${CURL_EXIT}, HTTP ${HTTP_CODE:-unknown})."
               cat "$HEADERS" 2>/dev/null || true
               echo "----- Next.js server log -----"
               cat /tmp/openai-ads-next.log || true
@@ -118,16 +118,28 @@ jobs:
             fi
 
             if ! grep -Eiq '^content-type:[[:space:]]*image/' "$HEADERS"; then
-              echo "::error::Radar ${ratio} OG route did not return an image content type."
+              echo "::error::${NAME} OG route did not return an image content type."
               cat "$HEADERS" || true
               exit 1
             fi
 
             IMAGE_BYTES="$(wc -c < "$OUTPUT" | tr -d ' ')"
             if [ "$IMAGE_BYTES" -lt 1000 ]; then
-              echo "::error::Radar ${ratio} OG image was unexpectedly small (${IMAGE_BYTES} bytes)."
+              echo "::error::${NAME} OG image was unexpectedly small (${IMAGE_BYTES} bytes)."
               exit 1
             fi
 
-            echo "Radar ${ratio} OG smoke passed (${IMAGE_BYTES} bytes)."
+            echo "${NAME} OG smoke passed (${IMAGE_BYTES} bytes)."
+          }
+
+          # Control the generic authority-card renderer before exercising the
+          # OAI backend and the multi-ratio Radar image family.
+          assert_image_route "authority-home" "http://127.0.0.1:3000/og/home"
+
+          npm run oai:readiness -- http://127.0.0.1:3000
+
+          for ratio in 1x1 4x3 16x9; do
+            assert_image_route \
+              "radar-${ratio}" \
+              "http://127.0.0.1:3000/og/radar/ads-manager-nine-markets?ratio=${ratio}"
           done
