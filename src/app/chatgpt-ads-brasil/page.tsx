@@ -65,6 +65,13 @@ export default function ChatGPTAdsBrasilPage() {
           ],
         },
         {
+          title: "Disponibilidade de mídia não elimina a camada técnica da landing page",
+          paragraphs: [
+            "Para anunciantes, disponibilidade no Brasil e acesso ao Ads Manager são só parte da prontidão operacional. A orientação oficial da OpenAI para web crawlers diz que OAI-AdsBot deve conseguir acessar landing pages submetidas como anúncios para o fluxo documentado de validação e revisão; a mesma orientação recomenda permitir também OAI-SearchBot.",
+            "Na prática, robots.txt é apenas a primeira camada. WAF, CDN, bot mitigation, geoblocking, CAPTCHA, desafios de JavaScript e rate limiting também podem impedir a leitura real da página. Este observatório mantém um guia técnico separado para OAI-AdsBot e OAI-SearchBot, sem apresentar acesso de crawler como garantia de aprovação, ranking ou entrega de mídia.",
+          ],
+        },
+        {
           title: "O que o anunciante não deve concluir",
           paragraphs: [
             "Estar disponível no Brasil não significa ter qualquer volume garantido, CPC previsível ou benchmark universal. Também não significa que todos os recursos liberados em outro mercado estejam automaticamente disponíveis na mesma configuração para toda conta brasileira.",
@@ -76,11 +83,13 @@ export default function ChatGPTAdsBrasilPage() {
         SOURCES.adsLaunch,
         SOURCES.availability,
         SOURCES.generalAds,
+        { label: "OpenAI web crawlers for advertisers", url: "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers", publisher: "OpenAI Help Center" },
       ]}
       related={[
         { label: "Preços e modelos de compra", href: "/chatgpt-ads-precos" },
         { label: "Métricas e fórmulas", href: "/chatgpt-ads-metricas" },
         { label: "Ads Manager", href: "/ads-manager-chatgpt" },
+        { label: "Crawler readiness: OAI-AdsBot + OAI-SearchBot", href: "/oai-adsbot-searchbot" },
         { label: "Privacidade", href: "/chatgpt-ads-privacidade" },
       ]}
     />
