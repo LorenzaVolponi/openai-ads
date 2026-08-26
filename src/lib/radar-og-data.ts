@@ -1,5 +1,4 @@
 export type RadarOgCard = {
-  slug: string;
   date: string;
   kind: string;
   market: string;
@@ -8,12 +7,11 @@ export type RadarOgCard = {
   publisher: string;
 };
 
-// Deliberately minimal media manifest. The full editorial Radar model includes
-// datasets and additional derived structures that are unnecessary inside the
-// ImageResponse renderer. Keep this projection synchronized with radar-data.ts.
-export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
-  {
-    slug: "ads-manager-nine-markets",
+// Deliberately minimal media manifest. Keep this projection synchronized with
+// radar-data.ts. The object shape mirrors the proven SOCIAL_CARDS lookup path
+// used by the stable generic OG renderer: direct key access, no array scan.
+export const RADAR_OG_CARDS = {
+  "ads-manager-nine-markets": {
     date: "2026-08-25",
     kind: "availability",
     market: "Global / self-serve",
@@ -21,8 +19,7 @@ export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
     currentState: "9 mercados Available no snapshot auditado em 25/08/2026.",
     publisher: "OpenAI Help Center",
   },
-  {
-    slug: "chatgpt-ads-europe-31-markets",
+  "chatgpt-ads-europe-31-markets": {
     date: "2026-08-24",
     kind: "expansion",
     market: "Europa",
@@ -30,8 +27,7 @@ export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
     currentState: "31 mercados europeus com expansão anunciada e entrada em vigor em 24/08/2026.",
     publisher: "OpenAI",
   },
-  {
-    slug: "chatgpt-ads-brasil-launch",
+  "chatgpt-ads-brasil-launch": {
     date: "2026-08-11",
     kind: "launch",
     market: "Brasil, Reino Unido, México, Japão e Coreia do Sul",
@@ -39,8 +35,7 @@ export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
     currentState: "Brasil e quatro novos mercados oficialmente lançados.",
     publisher: "OpenAI",
   },
-  {
-    slug: "brazil-expansion-announced",
+  "brazil-expansion-announced": {
     date: "2026-05-07",
     kind: "expansion",
     market: "Brasil, Reino Unido, México, Japão e Coreia do Sul",
@@ -48,8 +43,7 @@ export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
     currentState: "Brasil incluído formalmente no roadmap de expansão.",
     publisher: "OpenAI",
   },
-  {
-    slug: "ads-manager-cpc-measurement",
+  "ads-manager-cpc-measurement": {
     date: "2026-05-05",
     kind: "platform",
     market: "Plataforma",
@@ -57,8 +51,7 @@ export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
     currentState: "Autosserviço beta, CPC e mensuração ampliada entram na plataforma.",
     publisher: "OpenAI",
   },
-  {
-    slug: "canada-australia-new-zealand-expansion",
+  "canada-australia-new-zealand-expansion": {
     date: "2026-03-26",
     kind: "expansion",
     market: "Canadá, Austrália e Nova Zelândia",
@@ -66,8 +59,7 @@ export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
     currentState: "Primeira expansão internacional anunciada.",
     publisher: "OpenAI",
   },
-  {
-    slug: "us-pilot-starts",
+  "us-pilot-starts": {
     date: "2026-02-09",
     kind: "launch",
     market: "Estados Unidos",
@@ -75,8 +67,6 @@ export const RADAR_OG_CARDS: readonly RadarOgCard[] = [
     currentState: "Piloto iniciado nos EUA para parte dos usuários Free e Go.",
     publisher: "OpenAI",
   },
-] as const;
+} as const satisfies Record<string, RadarOgCard>;
 
-export function getRadarOgCard(slug: string) {
-  return RADAR_OG_CARDS.find((entry) => entry.slug === slug) ?? null;
-}
+export type RadarOgCardKey = keyof typeof RADAR_OG_CARDS;
