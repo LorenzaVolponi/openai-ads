@@ -1,6 +1,6 @@
 import { SITE_URL } from "@/lib/editorial-meta";
 
-export const OAI_READINESS_REVIEWED_AT = "2026-08-25";
+export const OAI_READINESS_REVIEWED_AT = "2026-08-26";
 export const OAI_CRAWLER_GUIDE_URL = `${SITE_URL}/oai-adsbot-searchbot`;
 export const OAI_ADVERTISER_GUIDE_URL =
   "https://help.openai.com/pt-br/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers";
@@ -43,7 +43,8 @@ export const OPENAI_CRAWLERS = [
     advertiserPriority: "separate control",
     robotsExample: "User-agent: GPTBot\nAllow: /",
     documentedUses: [
-      "must not be treated as interchangeable with OAI-AdsBot or OAI-SearchBot",
+      "publishers can disallow GPTBot on sites or pages they wish to exclude from potential training",
+      "GPTBot must not be treated as interchangeable with OAI-AdsBot or OAI-SearchBot",
     ],
     officialSource: OAI_PUBLISHER_FAQ_URL,
   },
@@ -67,6 +68,7 @@ export const OAI_INFRASTRUCTURE_CHECKS = [
 export const OAI_READINESS_LIMITS = [
   "Crawler access does not guarantee ChatGPT Search ranking, citation, indexing or ad delivery.",
   "Allowing OAI-AdsBot is a technical prerequisite for the documented ads-review flow, not a guarantee of ad approval.",
+  "GPTBot is a separate potential-training control and does not substitute for OAI-SearchBot discovery or OAI-AdsBot ads readiness.",
   "Official crawler behavior and IP ranges may change; operational decisions should re-check OpenAI primary sources.",
 ] as const;
 
@@ -135,6 +137,9 @@ export function buildOaiCrawlerTextManifest() {
     }
     if ("referralSignal" in crawler && crawler.referralSignal) {
       lines.push(`Referral signal: ${crawler.referralSignal}`);
+    }
+    for (const documentedUse of crawler.documentedUses) {
+      lines.push(`Documented note: ${documentedUse}.`);
     }
     lines.push(`Official source: ${crawler.officialSource}`);
     lines.push("");
