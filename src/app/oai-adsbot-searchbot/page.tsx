@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   keywords: [
     "OAI-AdsBot",
     "OAI-SearchBot",
+    "GPTBot",
     "OpenAI crawler",
     "OpenAI crawlers",
     "ChatGPT Ads crawler",
@@ -74,6 +75,10 @@ const faq = [
     a: "Não. OAI-SearchBot está ligado à descoberta e às experiências de busca. A própria documentação separa esse controle de GPTBot, que é o user-agent associado à exclusão de conteúdo de potencial treinamento.",
   },
   {
+    q: "Liberar GPTBot melhora ChatGPT Search ou ChatGPT Ads?",
+    a: "Não há base oficial para tratar GPTBot como sinal de ranking ou requisito de ads readiness. GPTBot é um controle separado de potencial treinamento; OAI-SearchBot governa a descoberta pública documentada e OAI-AdsBot é o crawler exigido no fluxo documentado de revisão de landing pages de anúncios.",
+  },
+  {
     q: "robots.txt é suficiente?",
     a: "Não. Além do robots.txt, WAF, CDN, mitigação de bots, autenticação, CAPTCHA, desafios JavaScript, regras geográficas e rate limiting podem bloquear crawlers legítimos e gerar erros 403 ou 429.",
   },
@@ -98,7 +103,7 @@ const structuredData = {
       inLanguage: "pt-BR",
       isAccessibleForFree: true,
       datePublished: "2026-08-25T16:48:00-03:00",
-      dateModified: "2026-08-25T17:10:00-03:00",
+      dateModified: "2026-08-26T10:05:00-03:00",
       author: { "@id": `${SITE_URL}/#author` },
       publisher: { "@id": `${SITE_URL}/#publisher` },
       citation: [
@@ -110,6 +115,7 @@ const structuredData = {
       about: [
         { "@type": "Thing", name: "OAI-AdsBot" },
         { "@type": "Thing", name: "OAI-SearchBot" },
+        { "@type": "Thing", name: "GPTBot" },
         { "@type": "Thing", name: "ChatGPT Ads" },
         { "@type": "Thing", name: "ChatGPT Search" },
         { "@type": "Thing", name: "robots.txt" },
@@ -117,6 +123,7 @@ const structuredData = {
       keywords: [
         "OAI-AdsBot",
         "OAI-SearchBot",
+        "GPTBot",
         "OpenAI crawlers",
         "ChatGPT Ads landing page validation",
         "ChatGPT Search discovery",
@@ -172,7 +179,7 @@ export default function OaiBotsPage() {
       <section className="border-b border-zinc-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-16 md:px-6 md:py-24">
           <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-600">
-            <Bot className="h-3.5 w-3.5" /> OpenAI crawler readiness · revisão 25/08/2026
+            <Bot className="h-3.5 w-3.5" /> OpenAI crawler readiness · revisão 26/08/2026
           </div>
           <h1 className="geo-answer mt-7 max-w-4xl font-serif text-5xl leading-[0.94] tracking-[-0.05em] md:text-7xl">
             OAI-AdsBot + OAI-SearchBot: a camada invisível do ChatGPT Ads.
