@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  statuses: read
 
 concurrency:
   group: oai-crawler-readiness
@@ -34,8 +35,43 @@ jobs:
           node-version: "24"
           package-manager-cache: false
 
+      - name: Resolve production revision gate
+        id: deployment
+        if: github.event_name == 'workflow_run'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED_SHA="$(git rev-parse HEAD)"
+          STATUS_JSON="$(curl --fail-with-body -sS \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${EXPECTED_SHA}/statuses?per_page=100")"
+          DEPLOY_STATUS="$(printf '%s' "$STATUS_JSON" | jq -c '[.[] | select(.context == "deployment/vercel-cli")][0] // null')"
+          STATE="$(printf '%s' "$DEPLOY_STATUS" | jq -r 'if . == null then "missing" else .state end')"
+          DESCRIPTION="$(printf '%s' "$DEPLOY_STATUS" | jq -r 'if . == null then "no successful deployment status on expected source commit" else (.description // "") end')"
+          echo "state=$STATE" >> "$GITHUB_OUTPUT"
+          echo "description=$DESCRIPTION" >> "$GITHUB_OUTPUT"
+          echo "Production crawler gate: $STATE - $DESCRIPTION"
+
       - name: Verify production OAI crawler readiness
+        if: github.event_name == 'workflow_dispatch' || steps.deployment.outputs.state == 'success'
         run: node scripts/oai-readiness-check.mjs https://openai-ads.volponi.tech
+
+      - name: Note deferred readiness check
+        if: github.event_name == 'workflow_run' && steps.deployment.outputs.state != 'success'
+        shell: bash
+        run: |
+          {
+            echo "### OpenAI crawler readiness deferred"
+            echo "- The production workflow completed, but this exact source commit is not marked as successfully deployed."
+            echo "- Expected source commit: $(git rev-parse HEAD)"
+            echo "- Deployment state: ${{ steps.deployment.outputs.state }}"
+            echo "- Deployment status: ${{ steps.deployment.outputs.description }}"
+            echo "- Skipped or quota-blocked promotion is deployment lag, not crawler regression."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publish readiness summary
         if: always()
@@ -46,7 +82,8 @@ jobs:
             echo "- Production: https://openai-ads.volponi.tech"
             echo "- OAI-AdsBot: explicit robots allow + public fetch gate"
             echo "- OAI-SearchBot: explicit robots allow + public fetch gate"
+            echo "- GPTBot: separate policy + explicit robots/public fetch gate"
             echo "- Machine manifests: dynamic JSON/TXT with ETag and Last-Modified"
             echo "- Diagnostic API: /api/oai-readiness"
-            echo "- Trigger: production deploy or manual dispatch only; no scheduled polling"
+            echo "- Trigger: production deploy or manual dispatch only; skipped/quota-blocked promotion is deferred"
           } >> "$GITHUB_STEP_SUMMARY"
