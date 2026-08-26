@@ -66,6 +66,13 @@ export default function AdsManagerChatGPTPage() {
           ],
         },
         {
+          title: "Landing page também faz parte da operação",
+          paragraphs: [
+            "O Ads Manager é a superfície de compra, mas a landing page continua fazendo parte do sistema de mídia. A orientação oficial da OpenAI diz que OAI-AdsBot deve poder acessar páginas submetidas como anúncios para validação de segurança e políticas, e que o conteúdo da landing page também pode participar da avaliação de relevância do anúncio.",
+            "Por isso, readiness não termina no dashboard: robots.txt, WAF, CDN, bot mitigation, CAPTCHA, geoblocking e rate limiting podem decidir se a landing page é realmente alcançável pelo crawler. O observatório mantém um guia técnico dedicado para testar OAI-AdsBot e OAI-SearchBot sem confundir acesso técnico com garantia de aprovação ou entrega.",
+          ],
+        },
+        {
           title: "Por que o status beta importa",
           paragraphs: [
             "Beta não significa improvisado; significa mutável. Sistemas de veiculação, inventário, formatos, compra, gestão e mensuração podem ser ajustados enquanto a plataforma aprende com uso real.",
@@ -84,11 +91,13 @@ export default function AdsManagerChatGPTPage() {
         SOURCES.availability,
         { label: "Visão geral do Ads Manager Beta", url: "https://help.openai.com/pt-br/articles/20001206", publisher: "OpenAI Help Center" },
         SOURCES.campaignSetup,
+        { label: "OpenAI web crawlers for advertisers", url: "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers", publisher: "OpenAI Help Center" },
       ]}
       related={[
         { label: "ChatGPT Ads no Brasil", href: "/chatgpt-ads-brasil" },
         { label: "Preços e leilão", href: "/chatgpt-ads-precos" },
         { label: "Métricas", href: "/chatgpt-ads-metricas" },
+        { label: "Crawler readiness: OAI-AdsBot + OAI-SearchBot", href: "/oai-adsbot-searchbot" },
         { label: "Privacidade", href: "/chatgpt-ads-privacidade" },
       ]}
     />
