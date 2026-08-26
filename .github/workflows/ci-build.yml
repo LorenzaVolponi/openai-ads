@@ -132,9 +132,10 @@ jobs:
             echo "${NAME} OG smoke passed (${IMAGE_BYTES} bytes)."
           }
 
-          # Control the generic authority-card renderer before exercising the
-          # OAI backend and the multi-ratio Radar image family.
+          # Establish two pre-OAI controls at the same 1200x630 size: one from
+          # the generic authority renderer and one from the Radar renderer.
           assert_image_route "authority-home" "http://127.0.0.1:3000/og/home"
+          assert_image_route "radar-social" "http://127.0.0.1:3000/og/radar/ads-manager-nine-markets"
 
           npm run oai:readiness -- http://127.0.0.1:3000
 
