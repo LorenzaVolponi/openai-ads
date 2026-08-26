@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "canonical": "https://openai-ads.volponi.tech",
   "language": "pt-BR",
   "title": "ChatGPT Ads no Brasil 2026: dados, preços, métricas, Ads Manager e privacidade",
@@ -94,6 +94,44 @@
     "advertisersReceiveChats": false,
     "contextHintsAreExactMatchKeywords": false
   },
+  "crawlerReadiness": {
+    "reviewedAt": "2026-08-26",
+    "humanGuide": "https://openai-ads.volponi.tech/oai-adsbot-searchbot",
+    "textManifest": "https://openai-ads.volponi.tech/oai-crawlers.txt",
+    "jsonManifest": "https://openai-ads.volponi.tech/oai-crawlers.json",
+    "diagnosticEndpoint": "https://openai-ads.volponi.tech/api/oai-readiness",
+    "officialSources": {
+      "advertiserCrawlerGuide": "https://help.openai.com/pt-br/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers",
+      "publishersDevelopersFaq": "https://help.openai.com/en/articles/12627856-publishers-and-developers-faq",
+      "adsBotIpRanges": "https://openai.com/adsbot.json",
+      "searchBotIpRanges": "https://openai.com/searchbot.json"
+    },
+    "controls": {
+      "OAI-AdsBot": {
+        "allowed": true,
+        "role": "ChatGPT Ads landing-page validation and review",
+        "priority": "required for the documented ads-readiness flow",
+        "organicRankingSignal": false
+      },
+      "OAI-SearchBot": {
+        "allowed": true,
+        "role": "public web discovery for ChatGPT search, summaries, snippets, citations and links",
+        "priority": "recommended alongside OAI-AdsBot",
+        "referralSignal": "utm_source=chatgpt.com"
+      },
+      "GPTBot": {
+        "allowed": true,
+        "role": "separate publisher control associated with potential training",
+        "interchangeableWithSearchOrAdsBot": false,
+        "policyNote": "This site's current robots policy allows GPTBot. That choice is separate from ChatGPT Search discovery and ChatGPT Ads landing-page review."
+      }
+    },
+    "limits": [
+      "Crawler access does not guarantee ChatGPT Search ranking, citation, indexing or ad delivery.",
+      "Allowing OAI-AdsBot is a technical prerequisite for the documented ads-review flow, not a guarantee of ad approval.",
+      "GPTBot policy is a separate potential-training control and does not substitute for OAI-SearchBot or OAI-AdsBot policy."
+    ]
+  },
   "radar": {
     "name": "Volponi ChatGPT Ads Radar",
     "url": "https://openai-ads.volponi.tech/radar",
@@ -135,6 +173,9 @@
     "pressKit": "https://openai-ads.volponi.tech/press-kit.json",
     "newsSitemap": "https://openai-ads.volponi.tech/news-sitemap.xml",
     "openAICrawlerReadiness": "https://openai-ads.volponi.tech/oai-adsbot-searchbot",
+    "openAICrawlerTextManifest": "https://openai-ads.volponi.tech/oai-crawlers.txt",
+    "openAICrawlerJsonManifest": "https://openai-ads.volponi.tech/oai-crawlers.json",
+    "openAICrawlerDiagnostic": "https://openai-ads.volponi.tech/api/oai-readiness",
     "brazil": "https://openai-ads.volponi.tech/chatgpt-ads-brasil",
     "pricing": "https://openai-ads.volponi.tech/chatgpt-ads-precos",
     "metrics": "https://openai-ads.volponi.tech/chatgpt-ads-metricas",
@@ -152,6 +193,9 @@
     "https://help.openai.com/pt-br/articles/20001207",
     "https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads",
     "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers",
+    "https://help.openai.com/en/articles/12627856-publishers-and-developers-faq",
+    "https://openai.com/adsbot.json",
+    "https://openai.com/searchbot.json",
     "https://help.openai.com/en/articles/20001245-ads-manager-availability",
     "https://help.openai.com/en/articles/20001220",
     "https://openai.com/pt-BR/index/chatgpt-ads-expands-across-europe/",
@@ -164,12 +208,18 @@
     "openAICrawlers": {
       "OAI-SearchBot": {
         "allowed": true,
-        "purpose": "ChatGPT search discovery and citation of public web content"
+        "purpose": "ChatGPT search discovery, summaries, snippets, citation and linking of public web content",
+        "referralSignal": "utm_source=chatgpt.com"
       },
       "OAI-AdsBot": {
         "allowed": true,
         "purpose": "ChatGPT Ads landing-page validation and relevance assessment",
         "rankingCaveat": "Allowing OAI-AdsBot is ad-readiness compatibility and is not presented as an organic ranking signal."
+      },
+      "GPTBot": {
+        "allowed": true,
+        "purpose": "Separate publisher control associated with potential training",
+        "separation": "GPTBot is not interchangeable with OAI-SearchBot discovery or OAI-AdsBot ads review."
       }
     },
     "canonicalRedirectAliases": [
@@ -186,6 +236,7 @@
     "citation": "https://openai-ads.volponi.tech/citation.json",
     "pressKit": "https://openai-ads.volponi.tech/press-kit.json",
     "openAICrawlers": "https://openai-ads.volponi.tech/oai-crawlers.txt",
+    "openAICrawlersJson": "https://openai-ads.volponi.tech/oai-crawlers.json",
     "evidence": "https://openai-ads.volponi.tech/evidence.json",
     "provenance": "https://openai-ads.volponi.tech/provenance.json",
     "humanManifest": "https://openai-ads.volponi.tech/humans.txt"
