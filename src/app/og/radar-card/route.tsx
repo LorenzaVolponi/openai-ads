@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-import { RADAR_OG_CARDS, type RadarOgCardKey } from "@/lib/radar-og-data";
-
 export const runtime = "nodejs";
 
 const IMAGE_VARIANTS = {
@@ -11,7 +9,67 @@ const IMAGE_VARIANTS = {
   social: { width: 1200, height: 630 },
 } as const;
 
+const RADAR_OG_CARDS = {
+  "ads-manager-nine-markets": {
+    date: "2026-08-25",
+    kind: "availability",
+    market: "Global / self-serve",
+    title: "Ads Manager aparece disponível em nove países",
+    currentState: "9 mercados Available no snapshot auditado em 25/08/2026.",
+    publisher: "OpenAI Help Center",
+  },
+  "chatgpt-ads-europe-31-markets": {
+    date: "2026-08-24",
+    kind: "expansion",
+    market: "Europa",
+    title: "ChatGPT Ads chega a 31 mercados europeus",
+    currentState: "31 mercados europeus com expansão anunciada e entrada em vigor em 24/08/2026.",
+    publisher: "OpenAI",
+  },
+  "chatgpt-ads-brasil-launch": {
+    date: "2026-08-11",
+    kind: "launch",
+    market: "Brasil, Reino Unido, México, Japão e Coreia do Sul",
+    title: "ChatGPT Ads é lançado no Brasil e em quatro novos mercados",
+    currentState: "Brasil e quatro novos mercados oficialmente lançados.",
+    publisher: "OpenAI",
+  },
+  "brazil-expansion-announced": {
+    date: "2026-05-07",
+    kind: "expansion",
+    market: "Brasil, Reino Unido, México, Japão e Coreia do Sul",
+    title: "OpenAI anuncia próxima onda internacional de Ads",
+    currentState: "Brasil incluído formalmente no roadmap de expansão.",
+    publisher: "OpenAI",
+  },
+  "ads-manager-cpc-measurement": {
+    date: "2026-05-05",
+    kind: "platform",
+    market: "Plataforma",
+    title: "Ads Manager beta e CPC ampliam a infraestrutura publicitária",
+    currentState: "Autosserviço beta, CPC e mensuração ampliada entram na plataforma.",
+    publisher: "OpenAI",
+  },
+  "canada-australia-new-zealand-expansion": {
+    date: "2026-03-26",
+    kind: "expansion",
+    market: "Canadá, Austrália e Nova Zelândia",
+    title: "Piloto começa a sair dos Estados Unidos",
+    currentState: "Primeira expansão internacional anunciada.",
+    publisher: "OpenAI",
+  },
+  "us-pilot-starts": {
+    date: "2026-02-09",
+    kind: "launch",
+    market: "Estados Unidos",
+    title: "Começa o teste de anúncios no ChatGPT",
+    currentState: "Piloto iniciado nos EUA para parte dos usuários Free e Go.",
+    publisher: "OpenAI",
+  },
+} as const;
+
 type ImageVariant = keyof typeof IMAGE_VARIANTS;
+type RadarOgCardKey = keyof typeof RADAR_OG_CARDS;
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
