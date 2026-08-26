@@ -1,5 +1,15 @@
 const BASE_URL = (process.argv[2] || process.env.MEDIA_AUTHORITY_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiMediaAuthorityHealth/1.1 (+https://openai-ads.volponi.tech/imprensa)";
+const USER_AGENT = "VolponiMediaAuthorityHealth/1.2 (+https://openai-ads.volponi.tech/imprensa)";
+
+const RADAR_SLUGS = [
+  "ads-manager-nine-markets",
+  "chatgpt-ads-europe-31-markets",
+  "chatgpt-ads-brasil-launch",
+  "brazil-expansion-announced",
+  "ads-manager-cpc-measurement",
+  "canada-australia-new-zealand-expansion",
+  "us-pilot-starts",
+];
 
 let failures = 0;
 const pass = (label) => console.log(`✓ ${label}`);
@@ -126,19 +136,26 @@ async function checkLatestRadarArticle() {
   assert(/TechArticle/i.test(html), "latest Radar article preserves TechArticle semantics");
   assert(/rel="author"/i.test(html), "latest Radar article exposes a visible author relationship");
   assert(/\/imprensa/i.test(html), "latest Radar article links author to press profile");
-  for (const ratio of ["1x1", "4x3", "16x9"]) {
-    assert(html.includes(`ratio=${ratio}`) || html.includes(`ratio%3D${ratio}`), `latest Radar article advertises ${ratio} article image`);
+  assert(html.includes(`/og/radar-${RADAR_SLUGS[0]}`), "latest Radar article advertises its unique stable social image");
+}
+
+async function checkRadarImages() {
+  for (const slug of RADAR_SLUGS) {
+    const response = await request(`/og/radar-${slug}`, "image/*");
+    const contentType = response.headers.get("content-type") || "";
+    const bytes = (await response.arrayBuffer()).byteLength;
+    assert(response.status === 200, `Radar image ${slug} returns 200`, `HTTP ${response.status}`);
+    assert(/^image\//i.test(contentType), `Radar image ${slug} returns image content`, contentType || "missing content-type");
+    assert(bytes >= 1000, `Radar image ${slug} is substantive`, `${bytes} bytes`);
   }
 }
 
-async function checkImageVariants() {
-  const slug = "ads-manager-nine-markets";
-  for (const ratio of ["1x1", "4x3", "16x9"]) {
-    const response = await request(`/og/radar/${slug}?ratio=${ratio}`, "image/*");
-    const contentType = response.headers.get("content-type") || "";
-    assert(response.status === 200, `Radar ${ratio} image returns 200`, `HTTP ${response.status}`);
-    assert(/^image\//i.test(contentType), `Radar ${ratio} route returns an image`, contentType || "missing content-type");
-  }
+async function checkLegacyRadarImageRedirect() {
+  const slug = RADAR_SLUGS[0];
+  const response = await request(`/og/radar/${slug}?ratio=1x1`, "image/*");
+  const contentType = response.headers.get("content-type") || "";
+  assert(response.status === 200, "legacy Radar OG URL resolves through compatibility redirect", `HTTP ${response.status}`);
+  assert(/^image\//i.test(contentType), "legacy Radar OG URL resolves to a real image", contentType || "missing content-type");
 }
 
 await checkAuthorityLinkHeaders("/");
@@ -149,7 +166,8 @@ await checkDataCatalog();
 await checkPressKit();
 await checkNewsSitemap();
 await checkLatestRadarArticle();
-await checkImageVariants();
+await checkRadarImages();
+await checkLegacyRadarImageRedirect();
 
 console.log(`\nMedia authority health: ${failures === 0 ? "green" : `${failures} failure(s)`}.`);
 if (failures) process.exit(1);

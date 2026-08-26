@@ -41,6 +41,41 @@ export const SOCIAL_CARDS = {
     title: "Mudanças, países e disponibilidade em um registro vivo",
     subtitle: "Histórico auditado com fonte primária, estado anterior, estado atual e impacto.",
   },
+  "radar-ads-manager-nine-markets": {
+    eyebrow: "RADAR · GLOBAL / SELF-SERVE · 25/08/2026",
+    title: "Ads Manager aparece disponível em nove países",
+    subtitle: "9 mercados Available no snapshot auditado em 25/08/2026 · fonte primária OpenAI Help Center.",
+  },
+  "radar-chatgpt-ads-europe-31-markets": {
+    eyebrow: "RADAR · EUROPA · 24/08/2026",
+    title: "ChatGPT Ads chega a 31 mercados europeus",
+    subtitle: "Expansão europeia registrada com data, impacto e fonte primária OpenAI.",
+  },
+  "radar-chatgpt-ads-brasil-launch": {
+    eyebrow: "RADAR · BRASIL · 11/08/2026",
+    title: "ChatGPT Ads é lançado no Brasil e em quatro novos mercados",
+    subtitle: "Lançamento oficial registrado com estado observado e fonte primária OpenAI.",
+  },
+  "radar-brazil-expansion-announced": {
+    eyebrow: "RADAR · BRASIL · 07/05/2026",
+    title: "OpenAI anuncia próxima onda internacional de Ads",
+    subtitle: "Brasil entra formalmente no roadmap de expansão internacional do ChatGPT Ads.",
+  },
+  "radar-ads-manager-cpc-measurement": {
+    eyebrow: "RADAR · PLATAFORMA · 05/05/2026",
+    title: "Ads Manager beta e CPC ampliam a infraestrutura publicitária",
+    subtitle: "Autosserviço beta, CPC e mensuração ampliada registrados com fonte primária.",
+  },
+  "radar-canada-australia-new-zealand-expansion": {
+    eyebrow: "RADAR · EXPANSÃO · 26/03/2026",
+    title: "Piloto começa a sair dos Estados Unidos",
+    subtitle: "Canadá, Austrália e Nova Zelândia entram na primeira expansão internacional registrada.",
+  },
+  "radar-us-pilot-starts": {
+    eyebrow: "RADAR · ESTADOS UNIDOS · 09/02/2026",
+    title: "Começa o teste de anúncios no ChatGPT",
+    subtitle: "Início do piloto nos EUA para parte dos usuários Free e Go, com fonte primária OpenAI.",
+  },
   imprensa: {
     eyebrow: "MEDIA SOURCE ROOM · LORENZA VOLPONI",
     title: "IA, GEO e publicidade conversacional com evidência",

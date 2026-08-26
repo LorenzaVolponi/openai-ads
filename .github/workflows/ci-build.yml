@@ -71,7 +71,7 @@ jobs:
           NEXT_TELEMETRY_DISABLED: "1"
         run: npm run build
 
-      - name: Smoke-test OAI crawler backend locally
+      - name: Smoke-test OAI backend and Radar social images locally
         shell: bash
         run: |
           set -euo pipefail
@@ -93,5 +93,63 @@ jobs:
             cat /tmp/openai-ads-next.log || true
             exit 1
           fi
+
+          assert_image_route() {
+            NAME="$1"
+            URL="$2"
+            HEADERS="/tmp/${NAME}.headers"
+            OUTPUT="/tmp/${NAME}.bin"
+
+            set +e
+            HTTP_CODE="$(curl --silent --show-error --location \
+              -D "$HEADERS" \
+              -o "$OUTPUT" \
+              -w '%{http_code}' \
+              "$URL")"
+            CURL_EXIT=$?
+            set -e
+
+            if [ "$CURL_EXIT" -ne 0 ] || [ "$HTTP_CODE" != "200" ]; then
+              echo "::error::${NAME} image request failed (curl ${CURL_EXIT}, HTTP ${HTTP_CODE:-unknown})."
+              cat "$HEADERS" 2>/dev/null || true
+              echo "----- Next.js server log -----"
+              cat /tmp/openai-ads-next.log || true
+              exit 1
+            fi
+
+            if ! grep -Eiq '^content-type:[[:space:]]*image/' "$HEADERS"; then
+              echo "::error::${NAME} did not return an image content type."
+              cat "$HEADERS" || true
+              exit 1
+            fi
+
+            IMAGE_BYTES="$(wc -c < "$OUTPUT" | tr -d ' ')"
+            if [ "$IMAGE_BYTES" -lt 1000 ]; then
+              echo "::error::${NAME} image was unexpectedly small (${IMAGE_BYTES} bytes)."
+              exit 1
+            fi
+
+            echo "${NAME} image smoke passed (${IMAGE_BYTES} bytes)."
+          }
+
+          assert_image_route "authority-home-first" "http://127.0.0.1:3000/og/home"
+          assert_image_route "authority-home-second" "http://127.0.0.1:3000/og/home"
+
+          for slug in \
+            ads-manager-nine-markets \
+            chatgpt-ads-europe-31-markets \
+            chatgpt-ads-brasil-launch \
+            brazil-expansion-announced \
+            ads-manager-cpc-measurement \
+            canada-australia-new-zealand-expansion \
+            us-pilot-starts; do
+            assert_image_route \
+              "radar-${slug}" \
+              "http://127.0.0.1:3000/og/radar-${slug}"
+          done
+
+          assert_image_route \
+            "radar-legacy-redirect" \
+            "http://127.0.0.1:3000/og/radar/ads-manager-nine-markets?ratio=1x1"
 
           npm run oai:readiness -- http://127.0.0.1:3000
