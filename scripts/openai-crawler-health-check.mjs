@@ -4,11 +4,15 @@ const MIN_HTML_BYTES = 1000;
 const crawlers = [
   {
     name: "OAI-SearchBot",
-    purpose: "ChatGPT search discovery and citation",
+    purpose: "ChatGPT search discovery, snippets, citations and links",
   },
   {
     name: "OAI-AdsBot",
     purpose: "ChatGPT Ads landing-page validation and relevance assessment",
+  },
+  {
+    name: "GPTBot",
+    purpose: "separate publisher control associated with potential training",
   },
 ];
 
@@ -28,7 +32,7 @@ function assert(condition, message) {
 }
 
 const robotsResponse = await fetch(`${BASE_URL}/robots.txt`, {
-  headers: { "user-agent": "VolponiOpenAICrawlerHealth/1.0" },
+  headers: { "user-agent": "VolponiOpenAICrawlerHealth/1.1" },
   signal: AbortSignal.timeout(15000),
 });
 const robots = await robotsResponse.text();
@@ -69,4 +73,4 @@ if (failures > 0) {
   process.exit(1);
 }
 
-console.log("\nOpenAI crawler access is healthy for search discovery and ads-readiness validation.");
+console.log("\nOpenAI crawler access is healthy for search discovery, ads readiness and the site's separate GPTBot policy.");

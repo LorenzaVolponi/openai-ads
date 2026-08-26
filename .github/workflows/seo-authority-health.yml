@@ -7,8 +7,8 @@ on:
     types:
       - completed
   schedule:
-    # Daily backstop. Scheduled checks only compare production against main
-    # after the current main commit has a verified successful deployment.
+    # Daily backstop. Checks only compare production against main after the
+    # exact source commit has a verified successful Vercel CLI deployment.
     - cron: "15 19 * * *"
   workflow_dispatch:
 
@@ -40,30 +40,30 @@ jobs:
           node-version: "24"
           package-manager-cache: false
 
-      - name: Resolve scheduled production gate
+      - name: Resolve production revision gate
         id: deployment
-        if: github.event_name == 'schedule'
+        if: github.event_name != 'workflow_dispatch'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          MAIN_SHA="$(git rev-parse HEAD)"
+          EXPECTED_SHA="$(git rev-parse HEAD)"
           STATUS_JSON="$(curl --fail-with-body -sS \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${MAIN_SHA}/statuses?per_page=100")"
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${EXPECTED_SHA}/statuses?per_page=100")"
           DEPLOY_STATUS="$(printf '%s' "$STATUS_JSON" | jq -c '[.[] | select(.context == "deployment/vercel-cli")][0] // null')"
           STATE="$(printf '%s' "$DEPLOY_STATUS" | jq -r 'if . == null then "missing" else .state end')"
-          DESCRIPTION="$(printf '%s' "$DEPLOY_STATUS" | jq -r 'if . == null then "no deployment status on current main" else (.description // "") end')"
+          DESCRIPTION="$(printf '%s' "$DEPLOY_STATUS" | jq -r 'if . == null then "no successful deployment status on expected source commit" else (.description // "") end')"
           echo "state=$STATE" >> "$GITHUB_OUTPUT"
           echo "description=$DESCRIPTION" >> "$GITHUB_OUTPUT"
-          echo "Scheduled SEO health gate: $STATE - $DESCRIPTION"
+          echo "Production revision gate: $STATE - $DESCRIPTION"
 
       - name: Check production SEO authority
         id: seo
-        if: github.event_name != 'schedule' || steps.deployment.outputs.state == 'success'
+        if: github.event_name == 'workflow_dispatch' || steps.deployment.outputs.state == 'success'
         continue-on-error: true
         shell: bash
         run: |
@@ -72,7 +72,7 @@ jobs:
 
       - name: Check evidence ledger integrity and source revision
         id: evidence
-        if: github.event_name != 'schedule' || steps.deployment.outputs.state == 'success'
+        if: github.event_name == 'workflow_dispatch' || steps.deployment.outputs.state == 'success'
         continue-on-error: true
         shell: bash
         run: |
@@ -82,7 +82,7 @@ jobs:
 
       - name: Check media authority and news discovery
         id: media
-        if: github.event_name != 'schedule' || steps.deployment.outputs.state == 'success'
+        if: github.event_name == 'workflow_dispatch' || steps.deployment.outputs.state == 'success'
         continue-on-error: true
         shell: bash
         run: |
@@ -91,23 +91,24 @@ jobs:
 
       - name: Check OpenAI crawler access
         id: crawlers
-        if: github.event_name != 'schedule' || steps.deployment.outputs.state == 'success'
+        if: github.event_name == 'workflow_dispatch' || steps.deployment.outputs.state == 'success'
         continue-on-error: true
         shell: bash
         run: |
           set -o pipefail
           node scripts/openai-crawler-health-check.mjs https://openai-ads.volponi.tech 2>&1 | tee /tmp/openai-crawler-health.log
 
-      - name: Note deferred scheduled check
-        if: github.event_name == 'schedule' && steps.deployment.outputs.state != 'success'
+      - name: Note deferred production check
+        if: github.event_name != 'workflow_dispatch' && steps.deployment.outputs.state != 'success'
         shell: bash
         run: |
           {
             echo "### SEO authority health deferred"
-            echo "- Production was not compared with the latest main because that main commit is not yet marked as successfully deployed."
-            echo "- Current deployment state: ${{ steps.deployment.outputs.state }}"
-            echo "- Current status: ${{ steps.deployment.outputs.description }}"
-            echo "- This avoids reporting expected deployment lag as an SEO regression."
+            echo "- Production was not compared with the expected source commit because that exact commit is not marked as successfully deployed."
+            echo "- Expected source commit: $(git rev-parse HEAD)"
+            echo "- Deployment state: ${{ steps.deployment.outputs.state }}"
+            echo "- Deployment status: ${{ steps.deployment.outputs.description }}"
+            echo "- A skipped, quota-blocked or still-pending deployment is deployment lag, not an SEO regression."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Open or refresh authority regression issue
@@ -199,10 +200,10 @@ jobs:
             echo "- Evidence result: ${{ steps.evidence.outcome }}"
             echo "- Media authority result: ${{ steps.media.outcome }}"
             echo "- OpenAI crawler result: ${{ steps.crawlers.outcome }}"
-            echo "- SEO checks: canonicals, aliases, machine noindex, freshness headers, robots, sitemap, OG and entity aliases"
+            echo "- SEO checks: canonicals, aliases, machine noindex, freshness headers, robots, sitemap, OG, entity aliases and machine crawler semantics"
             echo "- Evidence checks: source Git revision, X-Source-Commit, SHA-256 record hashes, chain links, root hash, OpenAI primary-source hosts and proof caveats"
             echo "- Media checks: press ProfilePage, press kit, NewsArticle linkage, temporal news sitemap and multi-ratio article images"
-            echo "- Crawler checks: explicit robots allowance and real HTTP access for OAI-SearchBot and OAI-AdsBot"
+            echo "- Crawler checks: explicit robots allowance and real HTTP access for OAI-SearchBot, OAI-AdsBot and the separate GPTBot policy"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail when authority invariants fail

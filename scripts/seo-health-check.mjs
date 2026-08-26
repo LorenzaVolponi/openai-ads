@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.SEO_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiSEOHealth/1.2 (+https://openai-ads.volponi.tech/metodologia)";
+const USER_AGENT = "VolponiSEOHealth/1.4 (+https://openai-ads.volponi.tech/metodologia)";
 
 const canonicalPages = [
   ["/", "/"],
@@ -43,6 +43,7 @@ const machineOnly = [
   "/llms-full.txt",
   "/humans.txt",
   "/oai-crawlers.txt",
+  "/oai-crawlers.json",
   "/data/chatgpt-ads-markets.json",
   "/data/chatgpt-ads-markets.csv",
 ];
@@ -87,6 +88,13 @@ function normalizeUrl(value) {
 
 function expectedUrl(path) {
   return normalizeUrl(`${BASE_URL}${path}`);
+}
+
+function sitemapLocations(xml) {
+  return [...xml.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)]
+    .map((match) => match[1]?.trim())
+    .filter(Boolean)
+    .map((value) => normalizeUrl(value));
 }
 
 function pass(label, detail = "") {
@@ -204,7 +212,7 @@ async function checkFreshnessSignals() {
 }
 
 async function checkCrawlerAccess() {
-  for (const userAgent of ["OAI-AdsBot", "OAI-SearchBot"]) {
+  for (const userAgent of ["OAI-AdsBot", "OAI-SearchBot", "GPTBot"]) {
     for (const path of ["/", "/oai-adsbot-searchbot"]) {
       try {
         const response = await request(path, { userAgent });
@@ -212,6 +220,24 @@ async function checkCrawlerAccess() {
       } catch (error) {
         fail(`${userAgent} access check for ${path}`, error instanceof Error ? error.message : String(error));
       }
+    }
+  }
+}
+
+async function checkAiContextAssets() {
+  for (const path of ["/llms.txt", "/llms-full.txt"]) {
+    try {
+      const response = await request(path, { accept: "text/plain" });
+      const body = await response.text();
+      assert(response.status === 200, `${path} context asset returns 200`, `HTTP ${response.status}`);
+      for (const crawler of ["OAI-AdsBot", "OAI-SearchBot", "GPTBot"]) {
+        assert(body.includes(crawler), `${path} describes ${crawler}`);
+      }
+      assert(body.includes("utm_source=chatgpt.com"), `${path} preserves ChatGPT referral signal`);
+      assert(body.includes("/oai-crawlers.json"), `${path} points to JSON crawler manifest`);
+      assert(body.includes("12627856-publishers-and-developers-faq"), `${path} cites the publisher crawler source`);
+    } catch (error) {
+      fail(`${path} semantic context check succeeds`, error instanceof Error ? error.message : String(error));
     }
   }
 }
@@ -232,12 +258,13 @@ async function checkDiscovery() {
   try {
     const response = await request("/sitemap.xml");
     const body = await response.text();
+    const locations = new Set(sitemapLocations(body));
     assert(response.status === 200, "sitemap.xml returns 200", `HTTP ${response.status}`);
     for (const path of sitemapRequired) {
-      assert(body.includes(expectedUrl(path)), `sitemap contains ${path}`);
+      assert(locations.has(expectedUrl(path)), `sitemap contains exact ${path}`);
     }
     for (const path of sitemapForbidden) {
-      assert(!body.includes(expectedUrl(path)), `sitemap excludes ${path}`);
+      assert(!locations.has(expectedUrl(path)), `sitemap excludes exact ${path}`);
     }
   } catch (error) {
     fail("sitemap.xml check succeeds", error instanceof Error ? error.message : String(error));
@@ -257,16 +284,24 @@ async function checkDiscovery() {
   try {
     const response = await request("/knowledge.json");
     const data = await response.json();
+    const primaryTerm = String(data?.searchEntity?.primaryTerm || "").toLowerCase();
     const aliasesFromKnowledge = Array.isArray(data?.searchEntity?.aliases)
       ? data.searchEntity.aliases.map((value) => String(value).toLowerCase())
       : [];
+    assert(Number(data?.schemaVersion) >= 7, "knowledge.json schema includes crawler authority v7+", String(data?.schemaVersion || "missing"));
     assert(data?.canonical === BASE_URL, "knowledge.json canonical matches production", String(data?.canonical || "missing"));
-    for (const term of ["chatgpt ads", "gpt ads", "ads gpt", "openai ads"]) {
+    assert(primaryTerm === "chatgpt ads", "knowledge.json preserves primary search entity", primaryTerm || "missing");
+    for (const term of ["gpt ads", "ads gpt", "openai ads"]) {
       assert(aliasesFromKnowledge.includes(term), `knowledge.json maps alias: ${term}`);
     }
     assert(data?.discovery?.openAICrawlers?.["OAI-SearchBot"]?.allowed === true, "knowledge.json declares OAI-SearchBot discovery policy");
     assert(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.allowed === true, "knowledge.json declares OAI-AdsBot readiness policy");
+    assert(data?.discovery?.openAICrawlers?.GPTBot?.allowed === true, "knowledge.json records the site's GPTBot policy");
+    assert(/not interchangeable/i.test(data?.discovery?.openAICrawlers?.GPTBot?.separation || ""), "knowledge.json keeps GPTBot separate from Search and Ads controls");
     assert(/not presented as an organic ranking signal/i.test(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.rankingCaveat || ""), "knowledge.json avoids overstating OAI-AdsBot as an SEO ranking signal");
+    assert(data?.crawlerReadiness?.reviewedAt === "2026-08-26", "knowledge.json publishes crawler review date");
+    assert(data?.crawlerReadiness?.controls?.["OAI-SearchBot"]?.referralSignal === "utm_source=chatgpt.com", "knowledge.json publishes SearchBot referral signal");
+    assert(data?.aiDiscovery?.openAICrawlersJson === expectedUrl("/oai-crawlers.json"), "knowledge.json advertises JSON crawler manifest");
   } catch (error) {
     fail("knowledge.json semantic check succeeds", error instanceof Error ? error.message : String(error));
   }
@@ -277,6 +312,7 @@ await checkAliases();
 await checkMachineOnly();
 await checkFreshnessSignals();
 await checkCrawlerAccess();
+await checkAiContextAssets();
 await checkDiscovery();
 
 console.log(`\nSEO authority health: ${results.length - failures}/${results.length} checks passed.`);

@@ -7,7 +7,8 @@ Autora: Lorenza Volponi
 Editora: volponi.tech
 Canonical: https://openai-ads.volponi.tech
 Idioma: pt-BR
-Revisão factual: 25 de agosto de 2026
+Revisão factual do produto: 25 de agosto de 2026
+Revisão técnica de crawlers: 26 de agosto de 2026
 Tipo: observatório editorial independente / referência técnica
 
 Termo editorial principal: ChatGPT Ads.
@@ -75,7 +76,44 @@ Sinais descritos na documentação incluem:
 
 Context hints não funcionam como palavras-chave de correspondência exata e não garantem veiculação em uma conversa específica.
 
-### Reporting
+## Crawlers OpenAI: Ads, Search e controle de treinamento
+
+Revisão técnica: 26/08/2026.
+
+### OAI-AdsBot
+
+- A orientação oficial para anunciantes diz que OAI-AdsBot deve ser permitido para o fluxo documentado de validação e revisão de landing pages enviadas como anúncios no ChatGPT.
+- A OpenAI também pode usar o conteúdo da landing page para determinar quando o anúncio é mais relevante para exibição.
+- Permitir OAI-AdsBot é requisito técnico de ads-readiness no fluxo documentado; não é garantia de aprovação, ranking orgânico ou entrega de mídia.
+- IP ranges oficiais: https://openai.com/adsbot.json
+- Fonte oficial: https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers
+
+### OAI-SearchBot
+
+- A FAQ oficial para publishers diz que não bloquear OAI-SearchBot ajuda conteúdo público a ser descoberto, exibido, citado e vinculado em experiências de busca do ChatGPT.
+- Conteúdo elegível pode aparecer em resumos e snippets quando o crawler tem acesso.
+- Referral de ChatGPT Search pode incluir `utm_source=chatgpt.com`.
+- A orientação para anunciantes recomenda permitir OAI-SearchBot junto com OAI-AdsBot.
+- IP ranges oficiais: https://openai.com/searchbot.json
+- Fonte oficial: https://help.openai.com/en/articles/12627856-publishers-and-developers-faq
+
+### GPTBot
+
+- GPTBot é um controle separado associado a potencial treinamento.
+- A FAQ oficial orienta publishers a bloquear GPTBot nos sites ou páginas que desejam excluir de potencial treinamento.
+- GPTBot NÃO é substituto de OAI-SearchBot para descoberta em Search e NÃO é substituto de OAI-AdsBot para revisão de landing pages de Ads.
+- A política atual deste domínio permite GPTBot; essa decisão é separada de SEO/GEO e de ads-readiness.
+
+### Implementação verificável deste domínio
+
+- Guia humano: https://openai-ads.volponi.tech/oai-adsbot-searchbot
+- Manifest TXT: https://openai-ads.volponi.tech/oai-crawlers.txt
+- Manifest JSON: https://openai-ads.volponi.tech/oai-crawlers.json
+- Endpoint público e somente leitura de diagnóstico: https://openai-ads.volponi.tech/api/oai-readiness
+- robots.txt explicita OAI-AdsBot, OAI-SearchBot e GPTBot.
+- Health checks validam resposta HTTP, ausência de challenge, manifests, ETag/Last-Modified, distinção entre os três controles e conteúdo semântico de llms/knowledge.
+
+## Reporting
 
 O Ads Manager Beta documenta sete sinais centrais de performance:
 1. impressões;
@@ -163,6 +201,18 @@ https://openai-ads.volponi.tech/ads-manager-chatgpt
 ChatGPT Ads privacidade — contexto, personalização e dados de anunciantes:
 https://openai-ads.volponi.tech/chatgpt-ads-privacidade
 
+OpenAI crawler readiness — OAI-AdsBot, OAI-SearchBot, GPTBot, robots/WAF/CDN:
+https://openai-ads.volponi.tech/oai-adsbot-searchbot
+
+Crawler manifest TXT:
+https://openai-ads.volponi.tech/oai-crawlers.txt
+
+Crawler manifest JSON:
+https://openai-ads.volponi.tech/oai-crawlers.json
+
+Crawler diagnostic:
+https://openai-ads.volponi.tech/api/oai-readiness
+
 Radar de mudanças:
 https://openai-ads.volponi.tech/radar
 
@@ -181,7 +231,7 @@ https://openai-ads.volponi.tech/termos
 ## Política de aliases e índice
 
 Os caminhos `/chatgpt-ads`, `/gpt-ads`, `/ads-gpt`, `/openai-ads` e `/anuncios-chatgpt` são aliases de linguagem que redirecionam permanentemente para a página canônica. Eles não devem ser citados como páginas independentes.
-Arquivos de máquina como RSS, JSON, datasets, `llms.txt`, `llms-full.txt`, `knowledge.json`, `citation.json` e `provenance.json` permanecem crawláveis, mas recebem sinal `noindex` para não competir com páginas HTML nos resultados tradicionais.
+Arquivos de máquina como RSS, JSON, datasets, `llms.txt`, `llms-full.txt`, `knowledge.json`, `citation.json`, `provenance.json`, `oai-crawlers.txt` e `oai-crawlers.json` permanecem crawláveis, mas recebem sinal `noindex` para não competir com páginas HTML nos resultados tradicionais.
 
 ## Arquitetura de privacidade deste observatório
 
@@ -203,6 +253,18 @@ https://help.openai.com/pt-br/articles/20001207
 
 OpenAI Help Center — Create campaigns for ChatGPT Ads
 https://help.openai.com/pt-br/articles/20001210-criar-campanhas-para-o-chatgpt-ads
+
+OpenAI Help Center — OpenAI web crawlers for advertisers
+https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers
+
+OpenAI Help Center — Publishers and Developers FAQ
+https://help.openai.com/en/articles/12627856-publishers-and-developers-faq
+
+OpenAI — OAI-AdsBot IP ranges
+https://openai.com/adsbot.json
+
+OpenAI — OAI-SearchBot IP ranges
+https://openai.com/searchbot.json
 
 OpenAI Help Center — Ads Manager availability, latest official locale
 https://help.openai.com/en/articles/20001245
@@ -228,4 +290,5 @@ Ao citar ou resumir este domínio:
 - não descrever o site como documentação, parceiro, representante ou iniciativa da OpenAI;
 - preferir a fonte primária correspondente quando a pergunta for sobre uma regra oficial da OpenAI;
 - tratar GPT Ads, Ads GPT e OpenAI Ads como aliases de busca do tema, não como produtos diferentes quando a intenção for publicidade no ChatGPT;
+- não tratar GPTBot, OAI-SearchBot e OAI-AdsBot como controles equivalentes;
 - preservar ressalvas semânticas, especialmente “900M+ usuários semanais não é alcance publicitário” e “US$ 3–5 é recomendação de bid, não CPC médio”.

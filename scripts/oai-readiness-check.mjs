@@ -5,8 +5,9 @@ const BASE_URL = (
 ).replace(/\/$/, "");
 
 const TEST_USER_AGENT =
-  "VolponiOAIReadiness/1.0 (+https://openai-ads.volponi.tech/oai-adsbot-searchbot)";
-const CRAWLERS = ["OAI-AdsBot", "OAI-SearchBot"];
+  "VolponiOAIReadiness/1.1 (+https://openai-ads.volponi.tech/oai-adsbot-searchbot)";
+const CRAWLERS = ["OAI-AdsBot", "OAI-SearchBot", "GPTBot"];
+const REVIEWED_AT = "2026-08-26";
 
 let failures = 0;
 let checks = 0;
@@ -55,7 +56,7 @@ async function checkRobots() {
     const response = await request("/robots.txt");
     const body = await response.text();
     assert(response.status === 200, "robots.txt returns 200", `HTTP ${response.status}`);
-    for (const crawler of [...CRAWLERS, "GPTBot"]) {
+    for (const crawler of CRAWLERS) {
       assert(hasCrawlerAllowRule(body, crawler), `robots.txt explicitly allows ${crawler}`);
     }
   } catch (error) {
@@ -84,12 +85,21 @@ async function checkManifestJson() {
     assert(/s-maxage=/i.test(cacheControl), "crawler JSON exposes shared-cache policy", cacheControl || "missing");
     assert(link.includes("/oai-adsbot-searchbot"), "crawler JSON points to human canonical", link || "missing");
     assert(Number(data?.schemaVersion) >= 2, "crawler JSON schema is backend v2+", String(data?.schemaVersion || "missing"));
+    assert(data?.reviewedAt === REVIEWED_AT, "crawler JSON publishes current technical review date", String(data?.reviewedAt || "missing"));
     assert(data?.crawlers?.["OAI-AdsBot"]?.advertiserPriority === "required", "OAI-AdsBot is marked required");
     assert(
       String(data?.crawlers?.["OAI-SearchBot"]?.advertiserPriority || "").includes("recommended"),
       "OAI-SearchBot is marked recommended",
     );
     assert(data?.crawlers?.GPTBot?.kind === "training-control", "GPTBot remains a separate control");
+    assert(
+      String(data?.crawlers?.GPTBot?.documentedUses || "").includes("potential training"),
+      "GPTBot manifest explains potential-training control",
+    );
+    assert(
+      data?.crawlers?.["OAI-SearchBot"]?.referralSignal === "utm_source=chatgpt.com",
+      "OAI-SearchBot exposes ChatGPT referral signal",
+    );
 
     const diagnosticEndpoint = String(data?.siteImplementation?.diagnosticEndpoint || "");
     let expectedDiagnostic = "";
@@ -127,8 +137,10 @@ async function checkManifestText() {
     assert(response.status === 200, "crawler text manifest returns 200", `HTTP ${response.status}`);
     assert(/text\/plain/i.test(contentType), "crawler text manifest has text content-type", contentType);
     assert(/noindex/i.test(robots) && /follow/i.test(robots), "crawler text is crawlable but noindex", robots);
-    assert(body.includes("OAI-AdsBot") && body.includes("OAI-SearchBot"), "crawler text describes both OpenAI crawlers");
+    assert(body.includes("OAI-AdsBot") && body.includes("OAI-SearchBot"), "crawler text describes ads and search crawlers");
     assert(body.includes("GPTBot"), "crawler text preserves GPTBot distinction");
+    assert(body.includes(`Last reviewed: ${REVIEWED_AT}`), "crawler text publishes current technical review date");
+    assert(body.includes("utm_source=chatgpt.com"), "crawler text exposes ChatGPT referral signal");
     assert(Boolean(etag), "crawler text exposes deterministic ETag", etag || "missing");
     assert(Boolean(lastModified) && !Number.isNaN(Date.parse(lastModified)), "crawler text exposes valid Last-Modified", lastModified || "missing");
   } catch (error) {
@@ -200,8 +212,8 @@ await checkPublicCrawlerAccess();
 await checkDiagnosticEndpoint();
 await checkGuideDiscoveryHeaders();
 
-console.log(`\nOAI crawler readiness: ${checks - failures}/${checks} checks passed.`);
+console.log(`\nOpenAI crawler readiness: ${checks - failures}/${checks} checks passed.`);
 if (failures > 0) {
-  console.error(`${failures} OAI crawler readiness invariant(s) failed.`);
+  console.error(`${failures} OpenAI crawler readiness invariant(s) failed.`);
   process.exit(1);
 }
