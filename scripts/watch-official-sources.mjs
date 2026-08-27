@@ -19,6 +19,12 @@ const sources = [
     markers: ["Ads Manager", "benchmark", "campaign", "measurement", "reporting"],
   },
   {
+    id: "campaign-setup",
+    label: "Create Campaigns for ChatGPT Ads",
+    url: "https://help.openai.com/en/articles/20001210-create-campaigns-for-chatgpt",
+    markers: ["Brazil", "40 BRL", "CPM", "CPC", "oCPC", "iOS", "Android", "Web"],
+  },
+  {
     id: "crawler-guidance",
     label: "Advertiser Guidance for OpenAI Web Crawlers",
     url: "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers",
