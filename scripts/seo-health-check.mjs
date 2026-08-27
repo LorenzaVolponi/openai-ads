@@ -3,6 +3,7 @@ const USER_AGENT = "VolponiSEOHealth/1.4 (+https://openai-ads.volponi.tech/metod
 
 const canonicalPages = [
   ["/", "/"],
+  ["/como-anunciar-no-chatgpt", "/como-anunciar-no-chatgpt"],
   ["/chatgpt-ads-brasil", "/chatgpt-ads-brasil"],
   ["/chatgpt-ads-precos", "/chatgpt-ads-precos"],
   ["/chatgpt-ads-metricas", "/chatgpt-ads-metricas"],
@@ -60,6 +61,7 @@ const freshnessAssets = [
 
 const sitemapRequired = [
   "/",
+  "/como-anunciar-no-chatgpt",
   "/chatgpt-ads-brasil",
   "/chatgpt-ads-precos",
   "/chatgpt-ads-metricas",
@@ -270,7 +272,7 @@ async function checkDiscovery() {
     fail("sitemap.xml check succeeds", error instanceof Error ? error.message : String(error));
   }
 
-  for (const card of ["home", "crawlers"]) {
+  for (const card of ["home", "comoAnunciar", "crawlers"]) {
     try {
       const response = await request(`/og/${card}`);
       const contentType = response.headers.get("content-type") || "";
