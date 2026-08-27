@@ -1,6 +1,12 @@
 name: Search Console Ranking Hunt
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/search-console-ranking-hunt.yml"
+      - "scripts/search-console-ranking-hunt.mjs"
   schedule:
     - cron: "15 13 * * 1,4"
   workflow_dispatch:
