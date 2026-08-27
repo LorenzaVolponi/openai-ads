@@ -31,6 +31,7 @@ export default function AdsManagerChatGPTPage() {
   return (
     <TopicArticle
       canonical={URL}
+      dateModified="2026-08-27T12:00:00-03:00"
       eyebrow="Ads Manager Beta · atualização 27/08/2026"
       title="OpenAI Ads Manager: já é uma plataforma operável — e ainda é beta."
       description="A ferramenta já cria, lança, mede e gerencia campanhas. O que exige cuidado é transformar uma plataforma em evolução numa lista de recursos permanentes sem data e sem verificação."
@@ -108,6 +109,7 @@ export default function AdsManagerChatGPTPage() {
         { label: "OpenAI web crawlers for advertisers", url: "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers", publisher: "OpenAI Help Center" },
       ]}
       related={[
+        { label: "Como anunciar no ChatGPT: passo a passo", href: "/como-anunciar-no-chatgpt" },
         { label: "ChatGPT Ads no Brasil", href: "/chatgpt-ads-brasil" },
         { label: "Preços e leilão", href: "/chatgpt-ads-precos" },
         { label: "Métricas", href: "/chatgpt-ads-metricas" },
