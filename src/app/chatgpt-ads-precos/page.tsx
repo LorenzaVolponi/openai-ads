@@ -8,20 +8,20 @@ const URL = "https://openai-ads.volponi.tech/chatgpt-ads-precos";
 const SOCIAL_IMAGE = socialImageForPath("/chatgpt-ads-precos");
 
 export const metadata: Metadata = {
-  title: "Quanto custa anunciar no ChatGPT? CPC, CPM e oCPC (2026)",
+  title: "Quanto custa anunciar no ChatGPT? Mínimo R$ 40/dia (2026)",
   description:
     "Veja como funciona o preço do ChatGPT Ads: CPC, CPM, oCPC, mínimo diário de 40 BRL no Brasil, leilão de segundo preço e lance CPC inicial de US$ 3–5.",
   alternates: { canonical: URL },
   openGraph: {
-    title: "Quanto custa anunciar no ChatGPT? CPC, CPM e oCPC (2026)",
+    title: "Quanto custa anunciar no ChatGPT? Mínimo R$ 40/dia (2026)",
     description: "Modelos de compra oficiais, mínimo diário no Brasil, leilão e orientação de lance explicados sem benchmark inventado.",
     url: URL,
     type: "article",
-    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Quanto custa anunciar no ChatGPT: CPC, CPM e oCPC" }],
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Quanto custa anunciar no ChatGPT: mínimo diário, CPC, CPM e oCPC" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Quanto custa anunciar no ChatGPT?",
+    title: "Quanto custa anunciar no ChatGPT? Mínimo R$ 40/dia",
     description: "CPC, CPM, oCPC, mínimo diário no Brasil, leilão e lance inicial com fonte primária.",
     images: [SOCIAL_IMAGE],
   },
