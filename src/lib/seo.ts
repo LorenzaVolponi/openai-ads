@@ -6,6 +6,11 @@ export const SOCIAL_CARDS = {
     title: "ChatGPT Ads: como anunciar, preços e métricas",
     subtitle: "Prints oficiais · dados auditados · Radar vivo · volponi.tech",
   },
+  comoAnunciar: {
+    eyebrow: "COMO ANUNCIAR · CHATGPT ADS",
+    title: "Como anunciar no ChatGPT Ads no Brasil",
+    subtitle: "Ads Manager · R$ 40/dia · CPM/CPC/oCPC · iOS/Android/Web · landing page",
+  },
   brasil: {
     eyebrow: "CHATGPT ADS · BRASIL",
     title: "ChatGPT Ads no Brasil: disponibilidade e lançamento",
@@ -87,6 +92,7 @@ export type SocialCardKey = keyof typeof SOCIAL_CARDS;
 
 const PATH_TO_CARD: Record<string, SocialCardKey> = {
   "/": "home",
+  "/como-anunciar-no-chatgpt": "comoAnunciar",
   "/chatgpt-ads-brasil": "brasil",
   "/chatgpt-ads-precos": "precos",
   "/chatgpt-ads-metricas": "metricas",
@@ -113,9 +119,9 @@ export function socialImageForCanonical(canonical: string) {
 export const searchIntentAnswers = [
   {
     q: "Como anunciar no ChatGPT?",
-    a: "Comece entendendo como a unidade patrocinada aparece, defina objetivo e mensagem, mantenha a promessa coerente com a landing page e só então meça o resultado.",
-    href: "/#como-aparece",
-    linkLabel: "Ver o anúncio por dentro",
+    a: "No Brasil, o fluxo atual passa pelo OpenAI Ads Manager: configure a conta, escolha CPM, CPC ou oCPC, defina orçamento e segmentação, crie anúncios, valide a landing page e lance. A documentação atual lista mínimo diário de R$ 40 e plataformas iOS, Android e Web.",
+    href: "/como-anunciar-no-chatgpt",
+    linkLabel: "Ver o passo a passo completo",
   },
   {
     q: "ChatGPT Ads está disponível no Brasil?",
@@ -125,7 +131,7 @@ export const searchIntentAnswers = [
   },
   {
     q: "Quanto custa anunciar no ChatGPT?",
-    a: "Não existe um CPC médio universal responsável. A documentação atual descreve CPM, CPC e oCPC e recomenda US$ 3–5 como lance máximo inicial para CPC — não como CPC médio realizado.",
+    a: "Não existe um CPC médio universal responsável. A documentação atual descreve CPM, CPC e oCPC e lista R$ 40 como mínimo diário de campanha no Brasil; a orientação de US$ 3–5 é um lance máximo inicial para CPC, não CPC médio realizado.",
     href: "/chatgpt-ads-precos",
     linkLabel: "Entender preços e leilão",
   },

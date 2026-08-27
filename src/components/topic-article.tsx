@@ -23,6 +23,11 @@ export type TopicSource = {
   publisher: string;
 };
 
+function formatReviewDate(value: string) {
+  const [year, month, day] = value.slice(0, 10).split("-");
+  return year && month && day ? `${day}/${month}/${year}` : value;
+}
+
 export function TopicArticle({
   canonical,
   eyebrow,
@@ -33,6 +38,7 @@ export function TopicArticle({
   sections,
   sources,
   related,
+  dateModified = LAST_EDITORIAL_REVIEW_ISO,
 }: {
   canonical: string;
   eyebrow: string;
@@ -43,8 +49,10 @@ export function TopicArticle({
   sections: TopicSection[];
   sources: TopicSource[];
   related: { label: string; href: string }[];
+  dateModified?: string;
 }) {
   const socialImage = socialImageForCanonical(canonical);
+  const reviewedAt = formatReviewDate(dateModified);
   const topicStructuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -58,7 +66,7 @@ export function TopicArticle({
         thumbnailUrl: socialImage,
         author: { "@id": "https://openai-ads.volponi.tech/#author" },
         publisher: { "@id": "https://openai-ads.volponi.tech/#author" },
-        dateModified: LAST_EDITORIAL_REVIEW_ISO,
+        dateModified,
         inLanguage: "pt-BR",
         isAccessibleForFree: true,
         citation: sources.map((source) => source.url),
@@ -191,7 +199,7 @@ export function TopicArticle({
             </div>
 
             <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5 text-xs leading-5 text-muted-foreground">
-              Revisão factual: 25/08/2026. Projeto independente de Lorenza Volponi / volponi.tech. Não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.
+              Revisão factual: {reviewedAt}. Projeto independente de Lorenza Volponi / volponi.tech. Não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.
             </div>
           </aside>
         </section>

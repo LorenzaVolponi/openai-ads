@@ -31,6 +31,7 @@ export default function ChatGPTAdsPrecosPage() {
   return (
     <TopicArticle
       canonical={URL}
+      dateModified="2026-08-27T12:00:00-03:00"
       eyebrow="Preço e leilão · atualização 27/08/2026"
       title="ChatGPT Ads tem CPC, CPM e oCPC. O que ele não tem é um benchmark mágico universal."
       description="A documentação já é específica o suficiente para explicar como a compra funciona. O erro começa quando orçamento mínimo vira ‘CPC médio’, recomendação de lance vira benchmark ou um resultado isolado vira promessa de mercado."
@@ -96,6 +97,7 @@ export default function ChatGPTAdsPrecosPage() {
         { label: "Criar campanhas para o ChatGPT Ads", url: "https://help.openai.com/pt-br/articles/20001210-create-campaigns-for-chatgpt", publisher: "OpenAI Help Center" },
       ]}
       related={[
+        { label: "Como anunciar no ChatGPT: passo a passo", href: "/como-anunciar-no-chatgpt" },
         { label: "ChatGPT Ads no Brasil", href: "/chatgpt-ads-brasil" },
         { label: "Métricas e fórmulas", href: "/chatgpt-ads-metricas" },
         { label: "Ads Manager", href: "/ads-manager-chatgpt" },

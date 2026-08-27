@@ -338,6 +338,7 @@ jobs:
               "https://${VERCEL_PRODUCTION_DOMAIN}/radar/ads-manager-nine-markets",
               "https://${VERCEL_PRODUCTION_DOMAIN}/radar/chatgpt-ads-europe-31-markets",
               "https://${VERCEL_PRODUCTION_DOMAIN}/radar/chatgpt-ads-brasil-launch",
+              "https://${VERCEL_PRODUCTION_DOMAIN}/como-anunciar-no-chatgpt",
               "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-brasil",
               "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-precos",
               "https://${VERCEL_PRODUCTION_DOMAIN}/chatgpt-ads-metricas",

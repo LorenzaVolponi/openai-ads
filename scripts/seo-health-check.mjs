@@ -3,6 +3,7 @@ const USER_AGENT = "VolponiSEOHealth/1.4 (+https://openai-ads.volponi.tech/metod
 
 const canonicalPages = [
   ["/", "/"],
+  ["/como-anunciar-no-chatgpt", "/como-anunciar-no-chatgpt"],
   ["/chatgpt-ads-brasil", "/chatgpt-ads-brasil"],
   ["/chatgpt-ads-precos", "/chatgpt-ads-precos"],
   ["/chatgpt-ads-metricas", "/chatgpt-ads-metricas"],
@@ -60,6 +61,7 @@ const freshnessAssets = [
 
 const sitemapRequired = [
   "/",
+  "/como-anunciar-no-chatgpt",
   "/chatgpt-ads-brasil",
   "/chatgpt-ads-precos",
   "/chatgpt-ads-metricas",
@@ -236,6 +238,8 @@ async function checkAiContextAssets() {
       assert(body.includes("utm_source=chatgpt.com"), `${path} preserves ChatGPT referral signal`);
       assert(body.includes("/oai-crawlers.json"), `${path} points to JSON crawler manifest`);
       assert(body.includes("12627856-publishers-and-developers-faq"), `${path} cites the publisher crawler source`);
+      assert(body.includes("/como-anunciar-no-chatgpt"), `${path} advertises canonical how-to route`);
+      assert(body.includes("40 BRL"), `${path} preserves Brazil campaign minimum context`);
     } catch (error) {
       fail(`${path} semantic context check succeeds`, error instanceof Error ? error.message : String(error));
     }
@@ -270,7 +274,7 @@ async function checkDiscovery() {
     fail("sitemap.xml check succeeds", error instanceof Error ? error.message : String(error));
   }
 
-  for (const card of ["home", "crawlers"]) {
+  for (const card of ["home", "comoAnunciar", "crawlers"]) {
     try {
       const response = await request(`/og/${card}`);
       const contentType = response.headers.get("content-type") || "";
@@ -288,12 +292,16 @@ async function checkDiscovery() {
     const aliasesFromKnowledge = Array.isArray(data?.searchEntity?.aliases)
       ? data.searchEntity.aliases.map((value) => String(value).toLowerCase())
       : [];
-    assert(Number(data?.schemaVersion) >= 7, "knowledge.json schema includes crawler authority v7+", String(data?.schemaVersion || "missing"));
+    assert(Number(data?.schemaVersion) >= 8, "knowledge.json schema includes how-to campaign authority v8+", String(data?.schemaVersion || "missing"));
     assert(data?.canonical === BASE_URL, "knowledge.json canonical matches production", String(data?.canonical || "missing"));
     assert(primaryTerm === "chatgpt ads", "knowledge.json preserves primary search entity", primaryTerm || "missing");
     for (const term of ["gpt ads", "ads gpt", "openai ads"]) {
       assert(aliasesFromKnowledge.includes(term), `knowledge.json maps alias: ${term}`);
     }
+    assert(data?.routes?.howToAdvertise === expectedUrl("/como-anunciar-no-chatgpt"), "knowledge.json advertises canonical how-to route");
+    assert(data?.campaignSetup?.reviewedAt === "2026-08-27", "knowledge.json publishes campaign setup review date");
+    assert(data?.campaignSetup?.brazilMinimumDailySpend === "40 BRL", "knowledge.json publishes Brazil campaign minimum");
+    assert(Array.isArray(data?.campaignSetup?.platformTargeting) && data.campaignSetup.platformTargeting.length === 3, "knowledge.json publishes campaign platform targeting");
     assert(data?.discovery?.openAICrawlers?.["OAI-SearchBot"]?.allowed === true, "knowledge.json declares OAI-SearchBot discovery policy");
     assert(data?.discovery?.openAICrawlers?.["OAI-AdsBot"]?.allowed === true, "knowledge.json declares OAI-AdsBot readiness policy");
     assert(data?.discovery?.openAICrawlers?.GPTBot?.allowed === true, "knowledge.json records the site's GPTBot policy");

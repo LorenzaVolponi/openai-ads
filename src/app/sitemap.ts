@@ -35,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.78,
     })),
     ...[
+      "/como-anunciar-no-chatgpt",
       "/chatgpt-ads-brasil",
       "/chatgpt-ads-precos",
       "/chatgpt-ads-metricas",
@@ -42,7 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       "/chatgpt-ads-privacidade",
     ].map((path) => ({
       url: `${SITE_URL}${path}`,
-      lastModified: LAST_REVIEW,
+      lastModified: path === "/como-anunciar-no-chatgpt" ? new Date("2026-08-27T12:00:00-03:00") : LAST_REVIEW,
       changeFrequency: "weekly" as const,
       priority: 0.9,
     })),
