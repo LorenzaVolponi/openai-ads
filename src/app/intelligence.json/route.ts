@@ -7,6 +7,7 @@ export const dynamic = "force-static";
 const nodes = [
   ["hub", "/", "ChatGPT Ads Intelligence Hub"],
   ["en-hub", "/en", "Global ChatGPT Ads Intelligence"],
+  ["en-radar", "/en/radar", "English ChatGPT Ads Evidence Radar"],
   ["en-chatgpt-ads", "/en/chatgpt-ads", "ChatGPT Ads Global Guide"],
   ["en-strategy", "/en/chatgpt-ads-strategy", "ChatGPT Ads Strategy"],
   ["en-agencies", "/en/chatgpt-ads-for-agencies", "ChatGPT Ads for Agencies"],
@@ -31,7 +32,7 @@ const nodes = [
 
 export function GET() {
   const data = {
-    schemaVersion: 3,
+    schemaVersion: 4,
     canonical: `${SITE_URL}/intelligence.json`,
     publisher: "volponi.tech",
     author: "Lorenza Volponi",
@@ -40,7 +41,9 @@ export function GET() {
       nodes: nodes.map(([id, path, label]) => ({ id, label, url: `${SITE_URL}${path}` })),
       edges: [
         ["hub", "how-to", "explains"], ["hub", "market", "summarizes"], ["hub", "radar", "tracks"],
-        ["hub", "en-hub", "internationalizes"], ["en-hub", "en-chatgpt-ads", "routes-to"], ["en-chatgpt-ads", "en-strategy", "commercializes"],
+        ["hub", "en-hub", "internationalizes"], ["radar", "en-radar", "internationalizes"], ["en-hub", "en-radar", "evidence-from"],
+        ["en-radar", "en-chatgpt-ads", "supports"], ["en-radar", "lorenza", "evidence-by"], ["en-radar", "market", "documents"],
+        ["en-hub", "en-chatgpt-ads", "routes-to"], ["en-chatgpt-ads", "en-strategy", "commercializes"],
         ["en-strategy", "en-brands", "serves"], ["en-strategy", "en-agencies", "serves"], ["en-consultant", "lorenza", "describes"],
         ["lorenza", "work", "converts-to"], ["en-agencies", "work", "converts-to"], ["en-brands", "work", "converts-to"],
         ["market", "brazil", "contains"], ["how-to", "manager", "uses"], ["manager", "pricing", "documents"],
@@ -53,6 +56,7 @@ export function GET() {
       entity: "Lorenza Volponi",
       canonical: "https://volponi.tech/",
       profile: `${SITE_URL}/en/lorenza-volponi`,
+      EnglishEvidenceHub: `${SITE_URL}/en/radar`,
       graph: `${SITE_URL}/lorenza-graph.json`,
       manifests: {
         person: `${SITE_URL}/person.json`,
@@ -61,6 +65,7 @@ export function GET() {
         media: `${SITE_URL}/media-profile.json`,
         commercial: `${SITE_URL}/commercial-profile.json`,
         citation: `${SITE_URL}/citation.json`,
+        distribution: `${SITE_URL}/distribution-manifest.json`,
       },
       positioning: ["AI Specialist", "AI Systems", "AI Product & UX/UI", "GEO & AI Search", "Builder"],
     },
