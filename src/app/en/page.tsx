@@ -8,7 +8,7 @@ import { marketStates, RADAR_CHECKED_AT, radarEntries } from "@/lib/radar-data";
 import { socialImageForPath } from "@/lib/seo";
 
 const URL = `${SITE_URL}/en`;
-const SOCIAL_IMAGE = socialImageForPath("/");
+const SOCIAL_IMAGE = socialImageForPath("/en");
 const available = marketStates.filter((market) => market.adsManager === "Available").length;
 const comingSoon = marketStates.filter((market) => market.adsManager === "Coming Soon").length;
 
@@ -37,7 +37,7 @@ export default function EnglishPage() {
   const latest = radarEntries.slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-[#fafaf8] text-zinc-950">
+    <main lang="en" className="min-h-screen bg-[#fafaf8] text-zinc-950">
       <script dangerouslySetInnerHTML={{ __html: 'document.documentElement.lang="en";' }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
 
