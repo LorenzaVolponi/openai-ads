@@ -21,7 +21,7 @@ const latest = radarEntries.slice(0, 3);
 
 export function IntelligenceHub() {
   return (
-    <section className="border-y border-zinc-200 bg-[#f4f4f1]">
+    <section id="intelligence" className="scroll-mt-24 border-y border-zinc-200 bg-[#f4f4f1]">
       <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="grid gap-8 lg:grid-cols-[0.42fr_0.58fr] lg:items-end">
           <div>
