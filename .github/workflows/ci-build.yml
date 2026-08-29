@@ -44,6 +44,9 @@ jobs:
       - name: Validate SEO health checker syntax
         run: node --check scripts/seo-health-check.mjs
 
+      - name: Validate intelligence health checker syntax
+        run: node --check scripts/intelligence-health-check.mjs
+
       - name: Validate OAI readiness checker syntax
         run: node --check scripts/oai-readiness-check.mjs
 
@@ -71,7 +74,7 @@ jobs:
           NEXT_TELEMETRY_DISABLED: "1"
         run: npm run build
 
-      - name: Smoke-test OAI backend and Radar social images locally
+      - name: Smoke-test OAI, intelligence and social images locally
         shell: bash
         run: |
           set -euo pipefail
@@ -153,3 +156,4 @@ jobs:
             "http://127.0.0.1:3000/og/radar/ads-manager-nine-markets?ratio=1x1"
 
           npm run oai:readiness -- http://127.0.0.1:3000
+          npm run intelligence:health -- http://127.0.0.1:3000

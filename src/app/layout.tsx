@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { SiteComplianceStrip, SiteWatermark } from "@/components/site-compliance";
 import {
   LAST_EDITORIAL_REVIEW_DATE,
@@ -31,7 +32,7 @@ const geistMono = Geist_Mono({
 const SITE_NAME = "volponi.tech";
 const TITLE = "ChatGPT Ads Brasil 2026: como anunciar, preços e métricas | volponi.tech";
 const DESCRIPTION =
-  "Aprenda como anunciar no ChatGPT no Brasil em 2026: exemplos oficiais, Ads Manager, CPC/CPM/oCPC, métricas, privacidade e Radar com fontes primárias.";
+  "Aprenda como anunciar no ChatGPT no Brasil em 2026: exemplos oficiais, Ads Manager, CPC/CPM/oCPC, métricas, privacidade, mercados e Radar com fontes primárias.";
 const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 const SOCIAL_IMAGE = socialImageForPath("/");
 const SEARCH_ALIASES = [
@@ -42,6 +43,9 @@ const SEARCH_ALIASES = [
   "anúncios no ChatGPT",
   "ChatGPT advertising",
   "OpenAI Ads Manager",
+  "ChatGPT Ads market",
+  "ChatGPT Ads vs Google Ads",
+  "ChatGPT Ads vs Meta Ads",
 ];
 
 const globalStructuredData = {
@@ -54,17 +58,22 @@ const globalStructuredData = {
       name: SITE_NAME,
       alternateName: [
         "ChatGPT Ads no Brasil 2026 — Observatório independente",
-        "Volponi ChatGPT Ads Guide",
+        "Volponi ChatGPT Ads Intelligence",
         "Volponi ChatGPT Ads Radar",
       ],
       description: DESCRIPTION,
-      inLanguage: "pt-BR",
+      inLanguage: ["pt-BR", "en"],
       dateModified: LAST_EDITORIAL_REVIEW_DATE,
       publisher: { "@id": PUBLISHER_ID },
       copyrightHolder: { "@id": AUTHOR_ID },
       copyrightYear: 2026,
       about: SEARCH_ALIASES.map((name) => ({ "@type": "Thing", name })),
       author: { "@id": AUTHOR_ID },
+      hasPart: [
+        { "@type": "WebPage", url: `${SITE_URL}/chatgpt-ads-market`, name: "ChatGPT Ads Market Snapshot" },
+        { "@type": "CollectionPage", url: `${SITE_URL}/radar`, name: "Volponi ChatGPT Ads Radar" },
+        { "@type": "WebPage", url: `${SITE_URL}/en`, name: "ChatGPT Ads Intelligence — English edition", inLanguage: "en" },
+      ],
     },
     {
       ...mediaAuthorStructuredData,
@@ -103,6 +112,9 @@ export const metadata: Metadata = {
     "anúncios no ChatGPT",
     "ChatGPT Ads preços",
     "ChatGPT Ads métricas",
+    "ChatGPT Ads mercados",
+    "ChatGPT Ads vs Google Ads",
+    "ChatGPT Ads vs Meta Ads",
   ],
   verification: GOOGLE_SITE_VERIFICATION ? { google: GOOGLE_SITE_VERIFICATION } : undefined,
   icons: {
@@ -114,6 +126,7 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
     languages: {
       "pt-BR": SITE_URL,
+      en: `${SITE_URL}/en`,
       "x-default": SITE_URL,
     },
     types: {
@@ -130,6 +143,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     type: "article",
     locale: "pt_BR",
+    alternateLocale: ["en_US"],
     publishedTime: "2026-08-24T09:00:00-03:00",
     modifiedTime: LAST_EDITORIAL_REVIEW_ISO,
     section: "Inteligência Artificial e Publicidade",
@@ -139,14 +153,14 @@ export const metadata: Metadata = {
         url: SOCIAL_IMAGE,
         width: 1200,
         height: 630,
-        alt: "ChatGPT Ads Brasil 2026 — como anunciar, preços e métricas por volponi.tech",
+        alt: "ChatGPT Ads Brasil 2026 — como anunciar, preços, mercados e métricas por volponi.tech",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "ChatGPT Ads Brasil 2026: como anunciar, preços e métricas",
-    description: "Exemplos oficiais, Ads Manager, CPC/CPM/oCPC, métricas e Radar com fontes primárias.",
+    description: "Exemplos oficiais, Ads Manager, mercados, CPC/CPM/oCPC, métricas e Radar com fontes primárias.",
     images: [SOCIAL_IMAGE],
   },
   robots: {
@@ -168,15 +182,19 @@ export const metadata: Metadata = {
     "dcterms.modified": LAST_EDITORIAL_REVIEW_DATE,
     "content-status": "independent editorial observatory; facts reviewed against primary sources",
     "independence-disclosure": "not affiliated with, sponsored by, endorsed by, certified by, operated by, or maintained by OpenAI",
-    "ai-discovery": "llms.txt, llms-full.txt and knowledge.json available; preserve Lorenza Volponi authorship and independence",
+    "ai-discovery": "llms.txt, llms-full.txt, knowledge.json and intelligence.json available; preserve Lorenza Volponi authorship and independence",
     "search-aliases": SEARCH_ALIASES.join(", "),
     "radar-feed": `${SITE_URL}/feed.xml`,
     "radar-feed-json": `${SITE_URL}/feed.json`,
     "news-sitemap": `${SITE_URL}/news-sitemap.xml`,
     "open-data-json": `${SITE_URL}/data/chatgpt-ads-markets.json`,
     "open-data-csv": `${SITE_URL}/data/chatgpt-ads-markets.csv`,
+    "market-snapshot": `${SITE_URL}/chatgpt-ads-market`,
+    "intelligence-graph": `${SITE_URL}/intelligence.json`,
+    "media-facts": `${SITE_URL}/media-facts.json`,
     "press-room": `${SITE_URL}/imprensa`,
     "press-kit": `${SITE_URL}/press-kit.json`,
+    "english-edition": `${SITE_URL}/en`,
     "last-reviewed": LAST_EDITORIAL_REVIEW_DATE,
     "source-monitoring": "official-source changes are monitored; publication remains editorially reviewed",
   },
@@ -198,6 +216,7 @@ export default function RootLayout({
         />
         <SiteWatermark />
         {children}
+        <LanguageSwitcher />
         <Analytics />
         <SiteComplianceStrip />
       </body>

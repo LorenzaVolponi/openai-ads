@@ -7,14 +7,33 @@ import {
 import { radarEntries } from "@/lib/radar-data";
 
 const LAST_REVIEW = new Date(LAST_EDITORIAL_REVIEW_ISO);
+const INTELLIGENCE_REVIEW = new Date("2026-08-28T15:45:00-03:00");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: SITE_URL,
-      lastModified: LAST_REVIEW,
+      lastModified: INTELLIGENCE_REVIEW,
       changeFrequency: "weekly",
       priority: 1,
+      alternates: {
+        languages: {
+          "pt-BR": SITE_URL,
+          en: `${SITE_URL}/en`,
+        },
+      },
+    },
+    {
+      url: `${SITE_URL}/en`,
+      lastModified: INTELLIGENCE_REVIEW,
+      changeFrequency: "weekly",
+      priority: 0.92,
+      alternates: {
+        languages: {
+          "pt-BR": SITE_URL,
+          en: `${SITE_URL}/en`,
+        },
+      },
     },
     {
       url: `${SITE_URL}/radar`,
@@ -47,11 +66,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.9,
     })),
+    ...[
+      "/chatgpt-ads-market",
+      "/chatgpt-ads-vs-google-ads",
+      "/chatgpt-ads-vs-meta-ads",
+      "/chatgpt-ads-para-agencias",
+    ].map((path) => ({
+      url: `${SITE_URL}${path}`,
+      lastModified: INTELLIGENCE_REVIEW,
+      changeFrequency: "weekly" as const,
+      priority: path === "/chatgpt-ads-market" ? 0.94 : 0.88,
+    })),
     {
       url: `${SITE_URL}/imprensa`,
       lastModified: LAST_REVIEW,
       changeFrequency: "weekly",
-      priority: 0.8,
+      priority: 0.82,
+    },
+    {
+      url: `${SITE_URL}/imprensa/dados`,
+      lastModified: INTELLIGENCE_REVIEW,
+      changeFrequency: "weekly",
+      priority: 0.84,
     },
     {
       url: `${SITE_URL}/metodologia`,

@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "seo:health": "node scripts/seo-health-check.mjs",
     "seo:ranking-hunt": "node scripts/search-console-ranking-hunt.mjs",
+    "intelligence:health": "node scripts/intelligence-health-check.mjs",
     "oai:readiness": "node scripts/oai-readiness-check.mjs",
     "evidence:health": "node scripts/evidence-health-check.mjs",
     "media:health": "node scripts/media-authority-health-check.mjs"
