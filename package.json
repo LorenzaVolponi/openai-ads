@@ -13,6 +13,8 @@
     "seo:ranking-hunt": "node scripts/search-console-ranking-hunt.mjs",
     "intelligence:health": "node scripts/intelligence-health-check.mjs",
     "authority:observe": "node scripts/authority-observatory.mjs",
+    "authority:citations": "node scripts/verify-authority-citations.mjs",
+    "authority:health": "npm run authority:observe && npm run authority:citations",
     "oai:readiness": "node scripts/oai-readiness-check.mjs",
     "evidence:health": "node scripts/evidence-health-check.mjs",
     "media:health": "node scripts/media-authority-health-check.mjs"

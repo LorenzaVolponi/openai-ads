@@ -7,25 +7,105 @@ on:
 
 permissions:
   contents: read
+  issues: write
+
+concurrency:
+  group: authority-citation-observatory
+  cancel-in-progress: true
 
 jobs:
   observe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      GSC_CLIENT_EMAIL: ${{ secrets.GSC_CLIENT_EMAIL }}
+      GSC_PRIVATE_KEY: ${{ secrets.GSC_PRIVATE_KEY }}
+      GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:openai-ads.volponi.tech' }}
+      GSC_DAYS: "28"
+      GSC_OUTPUT: authority-search-console.md
+      AUTHORITY_REPORT: authority-observatory.md
+      AUTHORITY_CITATION_REPORT: authority-citations-report.md
+      AUTHORITY_CITATION_JSON: authority-citations-report.json
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
         with:
           node-version: 24
-      - name: Validate authority surfaces and citation portfolio
+          package-manager-cache: false
+
+      - name: Validate owned authority surfaces
         run: npm run authority:observe
+
+      - name: Verify declared external citation evidence
+        run: npm run authority:citations
+
+      - name: Pull real Search Console signals
+        if: ${{ env.GSC_CLIENT_EMAIL != '' && env.GSC_PRIVATE_KEY != '' }}
+        run: npm run seo:ranking-hunt
+
+      - name: Record Search Console configuration boundary
+        if: ${{ env.GSC_CLIENT_EMAIL == '' || env.GSC_PRIVATE_KEY == '' }}
+        shell: bash
+        run: |
+          cat > authority-search-console.md <<'EOF'
+          # Search Console authority evidence
+
+          Search Console credentials are not configured for this workflow run.
+
+          No ranking, impression, CTR or click claim was generated. Configure `GSC_CLIENT_EMAIL` and `GSC_PRIVATE_KEY` to activate verified organic-search evidence.
+          EOF
+
+      - name: Build executive authority report
+        shell: bash
+        run: |
+          {
+            echo "# Volponi Authority Engine"
+            echo
+            echo "Generated: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo
+            cat "$AUTHORITY_REPORT"
+            echo
+            cat "$AUTHORITY_CITATION_REPORT"
+            echo
+            cat "$GSC_OUTPUT"
+            echo
+            echo "## Decision rule"
+            echo
+            echo "Detection is automatic. Publication of factual claims remains editorially gated. External authority only counts when evidence is verifiable."
+          } > authority-engine-report.md
+
+      - name: Publish or refresh Authority Engine issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TITLE="Authority Engine — verified signals"
+          ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
+          if [ -n "$ISSUE_NUMBER" ]; then
+            gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file authority-engine-report.md
+            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Authority Engine refreshed: $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file authority-engine-report.md
+          fi
+
       - name: Publish observatory summary
         if: always()
-        run: cat authority-observatory.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Upload observatory report
+        run: cat authority-engine-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload authority evidence bundle
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: authority-citation-observatory
-          path: authority-observatory.md
+          name: authority-engine-evidence
+          path: |
+            authority-observatory.md
+            authority-citations-report.md
+            authority-citations-report.json
+            authority-search-console.md
+            authority-engine-report.md
           retention-days: 30

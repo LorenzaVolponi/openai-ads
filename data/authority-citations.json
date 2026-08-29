@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": null,
+  "records": [],
+  "policy": {
+    "acceptedKinds": ["backlink", "press", "academic", "industry", "ai-citation"],
+    "verificationRule": "A record only becomes verified when its source URL and evidence are manually reviewable and the automated checker can confirm at least one declared marker or backlink on the cited source.",
+    "noFabrication": true
+  }
+}

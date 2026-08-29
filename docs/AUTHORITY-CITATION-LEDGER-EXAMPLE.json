@@ -1,0 +1,13 @@
+{
+  "id": "example-press-citation-001",
+  "kind": "press",
+  "sourceUrl": "https://example.com/article",
+  "title": "Example article citing the observatory",
+  "observedAt": "2026-08-29",
+  "markers": [
+    "openai-ads.volponi.tech",
+    "Lorenza Volponi"
+  ],
+  "status": "candidate",
+  "evidenceNote": "Replace this example with a real, manually reviewable source before marking it verified."
+}

@@ -8,6 +8,7 @@ import { radarEntries } from "@/lib/radar-data";
 
 const LAST_REVIEW = new Date(LAST_EDITORIAL_REVIEW_ISO);
 const INTELLIGENCE_REVIEW = new Date("2026-08-28T15:45:00-03:00");
+const AUTHORITY_REVIEW = new Date("2026-08-29T14:30:00-03:00");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -77,6 +78,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: path === "/chatgpt-ads-market" ? 0.94 : 0.88,
     })),
+    {
+      url: `${SITE_URL}/autoridade`,
+      lastModified: AUTHORITY_REVIEW,
+      changeFrequency: "weekly",
+      priority: 0.86,
+    },
     {
       url: `${SITE_URL}/imprensa`,
       lastModified: LAST_REVIEW,
