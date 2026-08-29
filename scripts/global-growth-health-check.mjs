@@ -12,7 +12,12 @@ const routes = [
   "/sitemap.xml",
 ];
 
-const forbidden = [/Márcia Cavalcante/i, /Márcia Beatriz Cavalcante/i, /Marcia Cavalcante/i, /Marcia Beatriz Cavalcante/i];
+const forbidden = [
+  /m[aá]rcia\s+beatriz\s+cavalcante/iu,
+  /m[aá]rcia\s+cavalcante/iu,
+  /marcia\s+beatriz\s+cavalcante/iu,
+  /marcia\s+cavalcante/iu,
+];
 const failures = [];
 
 for (const route of routes) {
@@ -20,7 +25,7 @@ for (const route of routes) {
     const response = await fetch(`${base}${route}`, { redirect: "follow", signal: AbortSignal.timeout(15000) });
     const body = await response.text();
     if (!response.ok) failures.push(`${route}: HTTP ${response.status}`);
-    for (const pattern of forbidden) if (pattern.test(body)) failures.push(`${route}: forbidden identity ${pattern}`);
+    for (const pattern of forbidden) if (pattern.test(body)) failures.push(`${route}: forbidden cross-project identity`);
     if (route.includes("/en/") || route === "/work-with-lorenza") {
       if (!/Lorenza Volponi/i.test(body)) failures.push(`${route}: Lorenza Volponi entity missing`);
       if (!/work|consult|strateg|partner|brand|agenc/i.test(body)) failures.push(`${route}: commercial intent copy missing`);
