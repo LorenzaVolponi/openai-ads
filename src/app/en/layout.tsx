@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const links = [
+  ["/en/radar", "Radar"],
   ["/en/chatgpt-ads", "ChatGPT Ads"],
   ["/en/chatgpt-ads-strategy", "Strategy"],
   ["/en/chatgpt-ads-for-agencies", "Agencies"],
