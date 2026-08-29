@@ -8,6 +8,8 @@ const links = [
   ["/en/chatgpt-ads-partnerships", "Partnerships"],
   ["/en/geo-ai-strategy", "GEO"],
   ["/en/chatgpt-ads-consultant", "Consulting"],
+  ["/en/press", "Press"],
+  ["/en/partners", "Partner"],
   ["/en/lorenza-volponi", "Lorenza"],
 ] as const;
 
