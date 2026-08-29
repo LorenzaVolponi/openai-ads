@@ -2,13 +2,14 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, BadgeCheck, Globe2, Network, ShieldCheck } from "lucide-react";
 
 import { GrowthLink } from "@/components/growth-link";
-import type { GlobalGrowthPage } from "@/lib/global-growth-data";
+import { globalGrowthPages, type GlobalGrowthPage } from "@/lib/global-growth-data";
 import { SITE_URL } from "@/lib/media-authority";
 
 const linkedin = "https://www.linkedin.com/in/lorenzavolponi";
 
 export function GlobalGrowthPageView({ page }: { page: GlobalGrowthPage }) {
   const canonical = `${SITE_URL}/en/${page.slug}`;
+  const related = globalGrowthPages.filter((item) => item.slug !== page.slug);
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -67,6 +68,14 @@ export function GlobalGrowthPageView({ page }: { page: GlobalGrowthPage }) {
           <div className="grid gap-4 lg:grid-cols-3">
             {page.sections.map((section, index) => <article key={section.title} className="rounded-[2rem] border border-zinc-200 bg-white p-7"><span className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-zinc-400">0{index + 1}</span><h2 className="mt-4 text-2xl font-black tracking-[-0.03em]">{section.title}</h2><p className="mt-4 text-sm leading-7 text-zinc-600">{section.text}</p>{section.bullets ? <ul className="mt-4 space-y-2 text-sm text-zinc-600">{section.bullets.map((bullet) => <li key={bullet}>— {bullet}</li>)}</ul> : null}</article>)}
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-zinc-500">Global authority cluster</p>
+        <h2 className="mt-4 max-w-4xl font-serif text-4xl leading-[0.95] tracking-[-0.04em] md:text-6xl">One entity. Multiple commercial intents. One evidence system.</h2>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {related.map((item) => <Link key={item.slug} href={`/en/${item.slug}`} className="rounded-3xl border border-zinc-200 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-lg"><p className="text-sm font-black">{item.title}</p><p className="mt-2 line-clamp-2 text-xs leading-5 text-zinc-500">{item.description}</p><span className="mt-4 inline-flex items-center gap-2 text-xs font-black">Explore <ArrowUpRight className="h-3.5 w-3.5" /></span></Link>)}
         </div>
       </section>
 
