@@ -12,6 +12,7 @@ const topicLinks = [
   ["/chatgpt-ads-vs-google-ads", "vs Google Ads", "intenção, busca e complementaridade"],
   ["/chatgpt-ads-vs-meta-ads", "vs Meta Ads", "conversa, descoberta e criatividade"],
   ["/chatgpt-ads-para-agencias", "Para agências", "operação, governança e piloto"],
+  ["/autoridade", "Authority Observatory", "ranking, citações e evidência externa verificável"],
   ["/radar", "Radar", "mudanças oficiais e memória temporal"],
 ] as const;
 
