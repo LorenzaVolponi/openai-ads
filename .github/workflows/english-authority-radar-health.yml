@@ -1,0 +1,46 @@
+name: English Authority Radar Health
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/app/en/**"
+      - "src/app/radar/**"
+      - "src/app/sitemap.ts"
+      - "src/app/intelligence.json/**"
+      - "src/app/distribution-manifest.json/**"
+      - "scripts/english-authority-radar-health.mjs"
+      - "package.json"
+      - ".github/workflows/english-authority-radar-health.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm install --no-audit --no-fund
+      - run: npm run identity:health
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Start app
+        run: |
+          npm run start -- -p 3000 > /tmp/english-authority-next.log 2>&1 &
+          echo $! > /tmp/english-authority-next.pid
+      - name: Wait for app
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/en/radar >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/english-authority-next.log
+          exit 1
+      - run: npm run seo:english-authority -- http://127.0.0.1:3000
