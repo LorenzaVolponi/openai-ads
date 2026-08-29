@@ -48,6 +48,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       },
     },
+    {
+      url: `${SITE_URL}/en/radar`,
+      lastModified: LAST_REVIEW,
+      changeFrequency: "daily",
+      priority: 0.96,
+      alternates: {
+        languages: {
+          en: `${SITE_URL}/en/radar`,
+          "pt-BR": `${SITE_URL}/radar`,
+        },
+      },
+    },
     ...globalGrowthPaths.map((path) => ({
       url: `${SITE_URL}${path}`,
       lastModified: GLOBAL_GROWTH_REVIEW,
@@ -65,6 +77,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: LAST_REVIEW,
       changeFrequency: "daily",
       priority: 0.95,
+      alternates: {
+        languages: {
+          "pt-BR": `${SITE_URL}/radar`,
+          en: `${SITE_URL}/en/radar`,
+        },
+      },
     },
     {
       url: `${SITE_URL}/oai-adsbot-searchbot`,
