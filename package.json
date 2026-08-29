@@ -15,6 +15,7 @@
     "seo:organic-clients": "node scripts/organic-client-intelligence.mjs",
     "growth:health": "node scripts/global-growth-health-check.mjs",
     "authority:canonical": "node scripts/canonical-authority-health.mjs",
+    "reputation:health": "node scripts/reputation-shareability-health.mjs",
     "intelligence:health": "node scripts/intelligence-health-check.mjs",
     "authority:observe": "node scripts/authority-observatory.mjs",
     "authority:citations": "node scripts/verify-authority-citations.mjs",
