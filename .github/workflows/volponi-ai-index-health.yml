@@ -1,0 +1,36 @@
+name: Volponi AI Index Health
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm install --legacy-peer-deps --no-audit --no-fund
+      - run: npm run identity:health
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Start app
+        run: |
+          npm run start -- -H 127.0.0.1 -p 3000 > /tmp/volponi-ai-index.log 2>&1 &
+          echo $! > /tmp/volponi-ai-index.pid
+      - name: Wait for app
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/en/volponi-ai-index >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/volponi-ai-index.log
+          exit 1
+      - run: npm run research:index
