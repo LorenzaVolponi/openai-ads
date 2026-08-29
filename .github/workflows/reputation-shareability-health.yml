@@ -1,0 +1,49 @@
+name: Reputation Shareability Health
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reputation-shareability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  health:
+    name: Evidence-only reputation and media distribution
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Install dependencies
+        run: npm ci
+      - name: Identity integrity
+        run: npm run identity:health
+      - name: Build
+        run: npm run build
+      - name: Start application
+        run: npm run start -- -H 127.0.0.1 -p 3000 > /tmp/reputation-app.log 2>&1 &
+      - name: Wait for application
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000/person.json >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/reputation-app.log
+          exit 1
+      - name: Reputation and shareability health
+        run: npm run reputation:health
