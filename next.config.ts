@@ -38,17 +38,31 @@ const crawlerManifestHeaders = [
   },
 ];
 
+const authorityLinks = [
+  `<${SITE_URL}/imprensa>; rel=\"author\"`,
+  `<${SITE_URL}/author.json>; rel=\"alternate\"; type=\"application/json\"`,
+  `<${SITE_URL}/citation.json>; rel=\"cite-as\"; type=\"application/json\"`,
+  `<${SITE_URL}/provenance.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/data-catalog.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/intelligence.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/media-facts.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/feed.xml>; rel=\"alternate\"; type=\"application/rss+xml\"`,
+  `<${SITE_URL}/feed.json>; rel=\"alternate\"; type=\"application/feed+json\"`,
+];
+
 const authorityDiscoveryHeaders = [
+  { key: "Link", value: authorityLinks.join(", ") },
+];
+
+const englishDiscoveryHeaders = [
+  { key: "Content-Language", value: "en" },
   {
     key: "Link",
     value: [
-      `<${SITE_URL}/imprensa>; rel=\"author\"`,
-      `<${SITE_URL}/author.json>; rel=\"alternate\"; type=\"application/json\"`,
-      `<${SITE_URL}/citation.json>; rel=\"cite-as\"; type=\"application/json\"`,
-      `<${SITE_URL}/provenance.json>; rel=\"describedby\"; type=\"application/json\"`,
-      `<${SITE_URL}/data-catalog.json>; rel=\"describedby\"; type=\"application/json\"`,
-      `<${SITE_URL}/feed.xml>; rel=\"alternate\"; type=\"application/rss+xml\"`,
-      `<${SITE_URL}/feed.json>; rel=\"alternate\"; type=\"application/feed+json\"`,
+      ...authorityLinks,
+      `<${SITE_URL}>; rel=\"alternate\"; hreflang=\"pt-BR\"`,
+      `<${SITE_URL}/en>; rel=\"alternate\"; hreflang=\"en\"`,
+      `<${SITE_URL}>; rel=\"alternate\"; hreflang=\"x-default\"`,
     ].join(", "),
   },
 ];
@@ -80,6 +94,11 @@ const nextConfig: NextConfig = {
       { source: "/chatgpt-ads-manager", destination: "/ads-manager-chatgpt", permanent: true },
       { source: "/quanto-custa-anunciar-no-chatgpt", destination: "/chatgpt-ads-precos", permanent: true },
       { source: "/metricas-chatgpt-ads", destination: "/chatgpt-ads-metricas", permanent: true },
+      { source: "/chatgpt-ads-market-snapshot", destination: "/chatgpt-ads-market", permanent: true },
+      { source: "/chatgpt-ads-google-ads", destination: "/chatgpt-ads-vs-google-ads", permanent: true },
+      { source: "/chatgpt-ads-meta-ads", destination: "/chatgpt-ads-vs-meta-ads", permanent: true },
+      { source: "/chatgpt-ads-agencias", destination: "/chatgpt-ads-para-agencias", permanent: true },
+      { source: "/english", destination: "/en", permanent: true },
       { source: "/oai-adsbot", destination: "/oai-adsbot-searchbot", permanent: true },
       { source: "/oai-searchbot", destination: "/oai-adsbot-searchbot", permanent: true },
       { source: "/openai-crawlers", destination: "/oai-adsbot-searchbot", permanent: true },
@@ -90,7 +109,13 @@ const nextConfig: NextConfig = {
     return [
       { source: "/:path*", headers: securityHeaders },
       { source: "/", headers: authorityDiscoveryHeaders },
+      { source: "/en", headers: englishDiscoveryHeaders },
       { source: "/imprensa", headers: authorityDiscoveryHeaders },
+      { source: "/imprensa/dados", headers: authorityDiscoveryHeaders },
+      { source: "/chatgpt-ads-market", headers: authorityDiscoveryHeaders },
+      { source: "/chatgpt-ads-vs-google-ads", headers: authorityDiscoveryHeaders },
+      { source: "/chatgpt-ads-vs-meta-ads", headers: authorityDiscoveryHeaders },
+      { source: "/chatgpt-ads-para-agencias", headers: authorityDiscoveryHeaders },
       { source: "/radar", headers: authorityDiscoveryHeaders },
       { source: "/radar/:path*", headers: authorityDiscoveryHeaders },
       { source: "/oai-adsbot-searchbot", headers: crawlerManifestHeaders },
@@ -104,6 +129,8 @@ const nextConfig: NextConfig = {
       { source: "/press-kit.json", headers: machineOnlyHeaders },
       { source: "/author.json", headers: machineOnlyHeaders },
       { source: "/data-catalog.json", headers: machineOnlyHeaders },
+      { source: "/intelligence.json", headers: machineOnlyHeaders },
+      { source: "/media-facts.json", headers: machineOnlyHeaders },
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
       { source: "/oai-crawlers.txt", headers: machineOnlyHeaders },
