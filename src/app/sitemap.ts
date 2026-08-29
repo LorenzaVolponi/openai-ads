@@ -8,6 +8,7 @@ const INTELLIGENCE_REVIEW = new Date("2026-08-28T15:45:00-03:00");
 const AUTHORITY_REVIEW = new Date("2026-08-29T14:30:00-03:00");
 const GLOBAL_GROWTH_REVIEW = new Date("2026-08-29T15:00:00-03:00");
 const AI_INDEX_REVIEW = new Date("2026-08-29T15:35:00-03:00");
+const PRESS_REVIEW = new Date("2026-08-29T15:45:00-03:00");
 
 const globalGrowthPaths = [
   "/en/chatgpt-ads",
@@ -25,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: SITE_URL, lastModified: INTELLIGENCE_REVIEW, changeFrequency: "weekly", priority: 1, alternates: { languages: { "pt-BR": SITE_URL, en: `${SITE_URL}/en` } } },
     { url: `${SITE_URL}/en`, lastModified: GLOBAL_GROWTH_REVIEW, changeFrequency: "weekly", priority: 0.94, alternates: { languages: { "pt-BR": SITE_URL, en: `${SITE_URL}/en` } } },
     { url: `${SITE_URL}/en/volponi-ai-index`, lastModified: AI_INDEX_REVIEW, changeFrequency: "weekly", priority: 0.97 },
+    { url: `${SITE_URL}/en/press`, lastModified: PRESS_REVIEW, changeFrequency: "weekly", priority: 0.95, alternates: { languages: { en: `${SITE_URL}/en/press`, "pt-BR": `${SITE_URL}/imprensa` } } },
     { url: `${SITE_URL}/en/radar`, lastModified: LAST_REVIEW, changeFrequency: "daily", priority: 0.96, alternates: { languages: { en: `${SITE_URL}/en/radar`, "pt-BR": `${SITE_URL}/radar` } } },
     ...globalGrowthPaths.map((path) => ({ url: `${SITE_URL}${path}`, lastModified: GLOBAL_GROWTH_REVIEW, changeFrequency: "weekly" as const, priority: path === "/en/chatgpt-ads-consultant" || path === "/en/lorenza-volponi" || path === "/en/geo-ai-strategy" ? 0.93 : 0.9 })),
     { url: `${SITE_URL}/work-with-lorenza`, lastModified: GLOBAL_GROWTH_REVIEW, changeFrequency: "weekly", priority: 0.91 },
@@ -34,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...["/como-anunciar-no-chatgpt", "/chatgpt-ads-brasil", "/chatgpt-ads-precos", "/chatgpt-ads-metricas", "/ads-manager-chatgpt", "/chatgpt-ads-privacidade"].map((path) => ({ url: `${SITE_URL}${path}`, lastModified: path === "/como-anunciar-no-chatgpt" ? new Date("2026-08-27T12:00:00-03:00") : LAST_REVIEW, changeFrequency: "weekly" as const, priority: 0.9 })),
     ...["/chatgpt-ads-market", "/chatgpt-ads-vs-google-ads", "/chatgpt-ads-vs-meta-ads", "/chatgpt-ads-para-agencias"].map((path) => ({ url: `${SITE_URL}${path}`, lastModified: INTELLIGENCE_REVIEW, changeFrequency: "weekly" as const, priority: path === "/chatgpt-ads-market" ? 0.94 : 0.88 })),
     { url: `${SITE_URL}/autoridade`, lastModified: AUTHORITY_REVIEW, changeFrequency: "weekly", priority: 0.86 },
-    { url: `${SITE_URL}/imprensa`, lastModified: LAST_REVIEW, changeFrequency: "weekly", priority: 0.82 },
+    { url: `${SITE_URL}/imprensa`, lastModified: LAST_REVIEW, changeFrequency: "weekly", priority: 0.82, alternates: { languages: { "pt-BR": `${SITE_URL}/imprensa`, en: `${SITE_URL}/en/press` } } },
     { url: `${SITE_URL}/imprensa/dados`, lastModified: INTELLIGENCE_REVIEW, changeFrequency: "weekly", priority: 0.84 },
     { url: `${SITE_URL}/metodologia`, lastModified: LAST_REVIEW, changeFrequency: "monthly", priority: 0.75 },
     { url: `${SITE_URL}/privacidade`, lastModified: LAST_REVIEW, changeFrequency: "monthly", priority: 0.55 },
