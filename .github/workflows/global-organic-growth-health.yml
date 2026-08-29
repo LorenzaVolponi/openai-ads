@@ -1,0 +1,56 @@
+name: Global Organic Growth Health
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/app/en/**"
+      - "src/app/work-with-lorenza/**"
+      - "src/app/organic-growth.json/**"
+      - "src/components/global-growth-page.tsx"
+      - "src/components/growth-link.tsx"
+      - "src/lib/global-growth-data.ts"
+      - "src/app/intelligence.json/route.ts"
+      - "src/app/sitemap.ts"
+      - "scripts/global-growth-health-check.mjs"
+      - "scripts/organic-client-intelligence.mjs"
+      - ".github/workflows/global-organic-growth-health.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  growth-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - run: npm install --no-audit --no-fund
+      - name: Identity integrity
+        run: npm run identity:health
+      - name: Script syntax
+        run: |
+          node --check scripts/global-growth-health-check.mjs
+          node --check scripts/organic-client-intelligence.mjs
+      - name: Build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build
+      - name: Start and validate worldwide growth routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm start > /tmp/global-growth-next.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/en >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          npm run growth:health -- http://127.0.0.1:3000

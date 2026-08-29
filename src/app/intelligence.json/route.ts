@@ -6,6 +6,14 @@ export const dynamic = "force-static";
 
 const nodes = [
   ["hub", "/", "ChatGPT Ads Intelligence Hub"],
+  ["en-hub", "/en", "Global ChatGPT Ads Intelligence"],
+  ["en-chatgpt-ads", "/en/chatgpt-ads", "ChatGPT Ads Global Guide"],
+  ["en-strategy", "/en/chatgpt-ads-strategy", "ChatGPT Ads Strategy"],
+  ["en-agencies", "/en/chatgpt-ads-for-agencies", "ChatGPT Ads for Agencies"],
+  ["en-brands", "/en/chatgpt-ads-for-brands", "ChatGPT Ads for Brands"],
+  ["en-consultant", "/en/chatgpt-ads-consultant", "ChatGPT Ads Consultant — Lorenza Volponi"],
+  ["lorenza", "/en/lorenza-volponi", "Lorenza Volponi"],
+  ["work", "/work-with-lorenza", "Work with Lorenza Volponi"],
   ["how-to", "/como-anunciar-no-chatgpt", "Como anunciar no ChatGPT"],
   ["brazil", "/chatgpt-ads-brasil", "ChatGPT Ads Brasil"],
   ["market", "/chatgpt-ads-market", "Market Snapshot"],
@@ -23,7 +31,7 @@ const nodes = [
 
 export function GET() {
   const data = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     canonical: `${SITE_URL}/intelligence.json`,
     publisher: "volponi.tech",
     author: "Lorenza Volponi",
@@ -32,10 +40,13 @@ export function GET() {
       nodes: nodes.map(([id, path, label]) => ({ id, label, url: `${SITE_URL}${path}` })),
       edges: [
         ["hub", "how-to", "explains"], ["hub", "market", "summarizes"], ["hub", "radar", "tracks"],
+        ["hub", "en-hub", "internationalizes"], ["en-hub", "en-chatgpt-ads", "routes-to"], ["en-chatgpt-ads", "en-strategy", "commercializes"],
+        ["en-strategy", "en-brands", "serves"], ["en-strategy", "en-agencies", "serves"], ["en-consultant", "lorenza", "describes"],
+        ["lorenza", "work", "converts-to"], ["en-agencies", "work", "converts-to"], ["en-brands", "work", "converts-to"],
         ["market", "brazil", "contains"], ["how-to", "manager", "uses"], ["manager", "pricing", "documents"],
         ["manager", "metrics", "reports"], ["manager", "privacy", "constrains"], ["google", "metrics", "compares-through"],
         ["meta", "privacy", "compares-through"], ["agencies", "how-to", "operationalizes"], ["press", "press-data", "publishes"],
-        ["press-data", "market", "cites"], ["radar", "market", "updates"],
+        ["press-data", "market", "cites"], ["radar", "market", "updates"], ["lorenza", "radar", "authors"],
       ].map(([from, to, relation]) => ({ from, to, relation })),
     },
     marketSnapshot: {
@@ -43,8 +54,16 @@ export function GET() {
       comingSoon: marketStates.filter((market) => market.adsManager === "Coming Soon").length,
       data: `${SITE_URL}/data/chatgpt-ads-markets.json`,
     },
+    commercialLayer: {
+      entity: "Lorenza Volponi",
+      entityProfile: `${SITE_URL}/en/lorenza-volponi`,
+      conversionEntry: `${SITE_URL}/work-with-lorenza`,
+      growthManifest: `${SITE_URL}/organic-growth.json`,
+      trackedIntentEvent: "organic_client_intent",
+      evidenceRule: "Visibility, click, lead, proposal, partnership and revenue remain separate evidence states.",
+    },
     latestChanges: radarEntries.slice(0, 5).map((entry) => ({ date: entry.date, title: entry.title, url: `${SITE_URL}/radar/${entry.slug}`, primarySource: entry.source.url })),
-    editorialBoundary: "This graph describes the site's editorial architecture. It does not claim guaranteed ranking, AI citation, press coverage or affiliation with OpenAI.",
+    editorialBoundary: "This graph describes the site's editorial and commercial discovery architecture. It does not claim guaranteed ranking, lead generation, AI citation, press coverage or affiliation with OpenAI.",
   };
 
   const body = JSON.stringify(data, null, 2);
