@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight, ArrowUpRight, BookOpen, Check, Radio, ShieldCheck } from "lucide-react";
 import { AssistantChat } from "@/components/assistant-chat";
 import { AdQualityLab } from "@/components/ad-quality-lab";
+import { IntelligenceHub } from "@/components/intelligence-hub";
 import { OfficialAdsLearning } from "@/components/official-ads-learning";
 import { AuthorityMetrics, EvidenceLedger, MediaMath, ProductRealityGrid } from "@/components/authority-dashboard";
 import { AuthorShowcase } from "@/components/author-showcase";
@@ -14,15 +15,20 @@ import { authorityMetrics, CHECKED_AT } from "@/lib/authority-data";
 
 const deepDives = [
   ["/chatgpt-ads-brasil", "ChatGPT Ads no Brasil", "Disponibilidade, lançamento e planos."],
+  ["/chatgpt-ads-market", "Market Snapshot", "Países disponíveis, coming soon e fonte oficial."],
   ["/chatgpt-ads-precos", "Quanto custa anunciar?", "CPM, CPC, oCPC, lance e leilão."],
   ["/chatgpt-ads-metricas", "Métricas do ChatGPT Ads", "CTR, CPC, CPM, conversão, CPA e ROAS."],
   ["/ads-manager-chatgpt", "OpenAI Ads Manager", "Recursos, países, reporting e limites do beta."],
   ["/chatgpt-ads-privacidade", "Privacidade no ChatGPT Ads", "Contexto, personalização e o que o anunciante recebe."],
+  ["/chatgpt-ads-vs-google-ads", "ChatGPT Ads vs Google Ads", "Intenção conversacional, busca e complementaridade."],
+  ["/chatgpt-ads-vs-meta-ads", "ChatGPT Ads vs Meta Ads", "Conversa, descoberta criativa e mensuração."],
+  ["/chatgpt-ads-para-agencias", "Playbook para agências", "Operação, governança, piloto e critérios de escala."],
 ] as const;
 
 const topNav = [
   ["#como-aparece", "Como anunciar"],
   ["#review", "Revisar anúncio"],
+  ["#intelligence", "Intelligence"],
   ["#dados", "Dados"],
   ["/radar", "Radar"],
   ["/imprensa", "Imprensa"],
@@ -56,7 +62,7 @@ export default function HomeV2() {
             <Image src="/fox-black.png" alt="" width={36} height={36} className="h-9 w-9 shrink-0 rounded-xl" />
             <div className="min-w-0">
               <span className="block truncate text-sm font-black tracking-tight">volponi.tech</span>
-              <span className="block truncate font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">ChatGPT Ads Guide</span>
+              <span className="block truncate font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">ChatGPT Ads Intelligence</span>
             </div>
           </a>
           <nav className="hidden items-center gap-5 lg:flex" aria-label="Navegação principal">
@@ -82,11 +88,14 @@ export default function HomeV2() {
                 Aprenda a fazer anúncios no ChatGPT.
               </h1>
               <p className="press-summary mt-7 max-w-2xl text-lg leading-8 text-zinc-600 md:text-xl">
-                De forma simples, direta e útil. Veja como o anúncio aparece, como escrever melhor e como medir sem transformar hype em resultado.
+                De forma simples, direta e útil. Veja como o anúncio aparece, como escrever melhor, como medir e onde o produto realmente está disponível — sem transformar hype em resultado.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <button type="button" onClick={() => navigate("#como-aparece")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-zinc-800">
                   Ver como funciona <ArrowRight className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={() => navigate("#intelligence")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:border-zinc-500">
+                  Abrir Intelligence <ArrowRight className="h-4 w-4" />
                 </button>
                 <a href="https://ads.openai.com/pt-BR" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:border-zinc-500">
                   Fonte oficial <ArrowUpRight className="h-4 w-4" />
@@ -104,7 +113,7 @@ export default function HomeV2() {
               <div className="relative rounded-[2.25rem] border border-zinc-200 bg-[#f7f7f5] p-8 text-center shadow-[0_30px_90px_rgba(0,0,0,.08)]">
                 <Image src="/fox-black.png" alt="Marca da volponi.tech" width={144} height={144} className="mx-auto h-36 w-36 rounded-[2rem] object-contain opacity-95" />
                 <p className="mt-6 font-serif text-2xl tracking-[-0.03em]">Entender primeiro. Anunciar depois.</p>
-                <p className="mt-3 text-sm leading-6 text-zinc-500">A Raposa transforma documentação técnica em explicação que dá para usar.</p>
+                <p className="mt-3 text-sm leading-6 text-zinc-500">A Raposa transforma documentação técnica em explicação, evidência e decisão que dá para usar.</p>
                 <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-2 text-[11px] font-semibold text-zinc-600">
                   <Radio className="h-3.5 w-3.5 text-zinc-950" /> revisão {CHECKED_AT}
                 </div>
@@ -126,6 +135,7 @@ export default function HomeV2() {
         <OfficialAdsLearning />
         <AdQualityLab />
         <SearchIntentHub />
+        <IntelligenceHub />
 
         <section id="dados" className="content-auto scroll-mt-24 bg-white">
           <div className="mx-auto max-w-7xl px-4 pt-16 md:px-6 md:pt-24">
@@ -142,13 +152,13 @@ export default function HomeV2() {
 
         <section className="content-auto border-y border-zinc-200 bg-white">
           <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
-            <div className="grid gap-10 lg:grid-cols-[0.38fr_0.62fr]">
+            <div className="grid gap-10 lg:grid-cols-[0.32fr_0.68fr]">
               <div>
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-zinc-500">Continue aprendendo</p>
-                <h2 className="mt-4 font-serif text-5xl leading-[0.98] tracking-[-0.04em]">Uma pergunta por vez.</h2>
-                <p className="mt-4 text-sm leading-6 text-zinc-600">As subguias continuam existindo para quem quiser aprofundar. A home fica simples; o detalhe fica onde faz sentido.</p>
+                <h2 className="mt-4 font-serif text-5xl leading-[0.98] tracking-[-0.04em]">Uma pergunta por vez. Uma arquitetura inteira por trás.</h2>
+                <p className="mt-4 text-sm leading-6 text-zinc-600">As subguias aprofundam cada intenção sem duplicar conteúdo. A home organiza a decisão; as páginas carregam detalhe, fonte e limite.</p>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {deepDives.map(([href, title, desc]) => (
                   <a key={href} href={href} className="group rounded-2xl border border-zinc-200 bg-[#fafaf8] p-5 transition hover:-translate-y-0.5 hover:border-zinc-400 hover:bg-white hover:shadow-md">
                     <div className="flex items-center justify-between gap-4">
@@ -161,6 +171,10 @@ export default function HomeV2() {
                 <a href="/radar" className="group rounded-2xl border border-zinc-950 bg-zinc-950 p-5 text-white transition hover:bg-zinc-800">
                   <div className="flex items-center justify-between gap-4"><h3 className="font-bold">Volponi ChatGPT Ads Radar</h3><ArrowUpRight className="h-4 w-4" /></div>
                   <p className="mt-2 text-sm leading-6 text-zinc-400">Histórico de mudanças, fontes, dados abertos e RSS.</p>
+                </a>
+                <a href="/imprensa/dados" className="group rounded-2xl border border-zinc-950 bg-white p-5 text-zinc-950 transition hover:bg-zinc-50">
+                  <div className="flex items-center justify-between gap-4"><h3 className="font-bold">Dados para imprensa</h3><ArrowUpRight className="h-4 w-4" /></div>
+                  <p className="mt-2 text-sm leading-6 text-zinc-600">Factsheet, ressalvas e citação pronta em formato humano e JSON.</p>
                 </a>
               </div>
             </div>
@@ -176,10 +190,12 @@ export default function HomeV2() {
               <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">OpenAI e ChatGPT são marcas de seus respectivos titulares. Este site é informativo, não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.</p>
             </div>
             <div className="flex flex-wrap gap-2 text-xs font-semibold">
+              <a href="/chatgpt-ads-market" className="rounded-full border border-white/15 px-4 py-2 hover:bg-white hover:text-zinc-950">Market</a>
               <a href="/radar" className="rounded-full border border-white/15 px-4 py-2 hover:bg-white hover:text-zinc-950">Radar</a>
               <a href="/metodologia" className="rounded-full border border-white/15 px-4 py-2 hover:bg-white hover:text-zinc-950">Metodologia</a>
               <a href="/privacidade" className="rounded-full border border-white/15 px-4 py-2 hover:bg-white hover:text-zinc-950">Privacidade</a>
               <a href="/imprensa" className="rounded-full border border-white/15 px-4 py-2 hover:bg-white hover:text-zinc-950">Imprensa</a>
+              <a href="/en" className="rounded-full border border-white/15 px-4 py-2 hover:bg-white hover:text-zinc-950">English</a>
             </div>
           </div>
         </section>
