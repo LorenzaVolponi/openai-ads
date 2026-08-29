@@ -1,0 +1,33 @@
+name: Identity Integrity
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: identity-integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  identity:
+    name: Enforce Lorenza Volponi project identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Validate project identity
+        run: npm run identity:health
