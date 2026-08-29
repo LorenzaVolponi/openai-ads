@@ -1,0 +1,31 @@
+name: Authority Citation Observatory
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 10 * * 1,4"
+
+permissions:
+  contents: read
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate authority surfaces and citation portfolio
+        run: npm run authority:observe
+      - name: Publish observatory summary
+        if: always()
+        run: cat authority-observatory.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload observatory report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: authority-citation-observatory
+          path: authority-observatory.md
+          retention-days: 30
