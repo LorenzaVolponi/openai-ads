@@ -17,6 +17,8 @@ const globalGrowthPaths = [
   "/en/chatgpt-ads-for-agencies",
   "/en/chatgpt-ads-for-brands",
   "/en/chatgpt-ads-consultant",
+  "/en/chatgpt-ads-partnerships",
+  "/en/geo-ai-strategy",
   "/en/lorenza-volponi",
 ] as const;
 
@@ -50,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${SITE_URL}${path}`,
       lastModified: GLOBAL_GROWTH_REVIEW,
       changeFrequency: "weekly" as const,
-      priority: path === "/en/chatgpt-ads-consultant" || path === "/en/lorenza-volponi" ? 0.93 : 0.9,
+      priority: path === "/en/chatgpt-ads-consultant" || path === "/en/lorenza-volponi" || path === "/en/geo-ai-strategy" ? 0.93 : 0.9,
     })),
     {
       url: `${SITE_URL}/work-with-lorenza`,
