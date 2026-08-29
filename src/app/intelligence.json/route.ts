@@ -31,7 +31,7 @@ const nodes = [
 
 export function GET() {
   const data = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     canonical: `${SITE_URL}/intelligence.json`,
     publisher: "volponi.tech",
     author: "Lorenza Volponi",
@@ -49,6 +49,21 @@ export function GET() {
         ["press-data", "market", "cites"], ["radar", "market", "updates"], ["lorenza", "radar", "authors"],
       ].map(([from, to, relation]) => ({ from, to, relation })),
     },
+    canonicalAuthority: {
+      entity: "Lorenza Volponi",
+      canonical: "https://volponi.tech/",
+      profile: `${SITE_URL}/en/lorenza-volponi`,
+      graph: `${SITE_URL}/lorenza-graph.json`,
+      manifests: {
+        person: `${SITE_URL}/person.json`,
+        expertise: `${SITE_URL}/expertise.json`,
+        proof: `${SITE_URL}/proof.json`,
+        media: `${SITE_URL}/media-profile.json`,
+        commercial: `${SITE_URL}/commercial-profile.json`,
+        citation: `${SITE_URL}/citation.json`,
+      },
+      positioning: ["AI Specialist", "AI Systems", "AI Product & UX/UI", "GEO & AI Search", "Builder"],
+    },
     marketSnapshot: {
       available: marketStates.filter((market) => market.adsManager === "Available").length,
       comingSoon: marketStates.filter((market) => market.adsManager === "Coming Soon").length,
@@ -63,7 +78,7 @@ export function GET() {
       evidenceRule: "Visibility, click, lead, proposal, partnership and revenue remain separate evidence states.",
     },
     latestChanges: radarEntries.slice(0, 5).map((entry) => ({ date: entry.date, title: entry.title, url: `${SITE_URL}/radar/${entry.slug}`, primarySource: entry.source.url })),
-    editorialBoundary: "This graph describes the site's editorial and commercial discovery architecture. It does not claim guaranteed ranking, lead generation, AI citation, press coverage or affiliation with OpenAI.",
+    editorialBoundary: "This graph describes the site's editorial, entity and commercial discovery architecture. It does not claim guaranteed ranking, lead generation, AI citation, press coverage or affiliation with OpenAI.",
   };
 
   const body = JSON.stringify(data, null, 2);

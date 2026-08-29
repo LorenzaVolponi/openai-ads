@@ -1,0 +1,51 @@
+name: Canonical Authority Health
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canonical-authority-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  authority:
+    name: Validate Lorenza canonical authority backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+      - name: Identity integrity
+        run: npm run identity:health
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+      - name: Start application
+        run: |
+          npm run start > /tmp/openai-ads.log 2>&1 &
+          echo $! > /tmp/openai-ads.pid
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000/en/lorenza-volponi > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/openai-ads.log
+          exit 1
+      - name: Canonical authority health
+        run: npm run authority:canonical
