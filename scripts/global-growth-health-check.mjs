@@ -9,6 +9,7 @@ const routes = [
   "/en/chatgpt-ads-consultant",
   "/en/lorenza-volponi",
   "/work-with-lorenza",
+  "/work-with-lorenza/brief",
   "/organic-growth.json",
   "/intelligence.json",
   "/sitemap.xml",
@@ -28,9 +29,9 @@ for (const route of routes) {
     const body = await response.text();
     if (!response.ok) failures.push(`${route}: HTTP ${response.status}`);
     for (const pattern of forbidden) if (pattern.test(body)) failures.push(`${route}: forbidden cross-project identity`);
-    if (route.includes("/en/") || route === "/work-with-lorenza") {
+    if (route.includes("/en/") || route.startsWith("/work-with-lorenza")) {
       if (!/Lorenza Volponi/i.test(body)) failures.push(`${route}: Lorenza Volponi entity missing`);
-      if (!/work|consult|strateg|partner|brand|agenc|geo|discovery/i.test(body)) failures.push(`${route}: commercial intent copy missing`);
+      if (!/work|consult|strateg|partner|brand|agenc|geo|discovery|opportunity|brief/i.test(body)) failures.push(`${route}: commercial intent copy missing`);
     }
     if (route === "/organic-growth.json") {
       const parsed = JSON.parse(body);
@@ -38,7 +39,7 @@ for (const route of routes) {
       if (parsed?.commercialArchitecture?.trackedEvent !== "organic_client_intent") failures.push("organic-growth.json: tracked event missing");
     }
     if (route === "/sitemap.xml") {
-      for (const path of ["/en/chatgpt-ads-consultant", "/en/chatgpt-ads-partnerships", "/en/geo-ai-strategy", "/en/lorenza-volponi", "/work-with-lorenza"]) if (!body.includes(path)) failures.push(`sitemap: ${path} missing`);
+      for (const path of ["/en/chatgpt-ads-consultant", "/en/chatgpt-ads-partnerships", "/en/geo-ai-strategy", "/en/lorenza-volponi", "/work-with-lorenza", "/work-with-lorenza/brief"]) if (!body.includes(path)) failures.push(`sitemap: ${path} missing`);
     }
     console.log(`✓ ${route} ${response.status}`);
   } catch (error) {
@@ -52,4 +53,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("\nGlobal Growth Health PASSED — worldwide authority, commercial routes and Lorenza identity are coherent.");
+console.log("\nGlobal Growth Health PASSED — worldwide authority, commercial routes, qualified opportunity path and Lorenza identity are coherent.");
