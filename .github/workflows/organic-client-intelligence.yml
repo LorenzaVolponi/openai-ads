@@ -1,0 +1,56 @@
+name: Organic Client Intelligence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 12 * * 1,4"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: organic-client-intelligence
+  cancel-in-progress: true
+
+jobs:
+  intelligence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GSC_CLIENT_EMAIL: ${{ secrets.GSC_CLIENT_EMAIL }}
+      GSC_PRIVATE_KEY: ${{ secrets.GSC_PRIVATE_KEY }}
+      GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:openai-ads.volponi.tech' }}
+      GSC_DAYS: "28"
+      ORGANIC_CLIENT_OUTPUT: /tmp/organic-client-intelligence.md
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Build organic client intelligence
+        run: node scripts/organic-client-intelligence.mjs
+      - name: Publish summary
+        if: always()
+        run: cat /tmp/organic-client-intelligence.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Refresh opportunity issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TITLE="Organic Client Intelligence — global opportunities"
+          ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
+          if [ -n "$ISSUE_NUMBER" ]; then
+            gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$ORGANIC_CLIENT_OUTPUT"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file "$ORGANIC_CLIENT_OUTPUT"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: organic-client-intelligence
+          path: /tmp/organic-client-intelligence.md
+          retention-days: 30
