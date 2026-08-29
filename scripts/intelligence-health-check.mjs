@@ -58,6 +58,13 @@ function expectedUrl(path) {
   return normalizeUrl(`${BASE_URL}${path}`);
 }
 
+function sitemapLocations(xml) {
+  return [...xml.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)]
+    .map((match) => match[1]?.trim())
+    .filter(Boolean)
+    .map((value) => normalizeUrl(value));
+}
+
 async function request(path, options = {}) {
   return fetch(`${BASE_URL}${path}`, {
     redirect: options.redirect || "follow",
@@ -137,12 +144,14 @@ async function checkSitemap() {
   try {
     const response = await request("/sitemap.xml", { accept: "application/xml" });
     const xml = await response.text();
+    const locations = new Set(sitemapLocations(xml));
+
     assert(response.status === 200, "sitemap.xml returns 200", `HTTP ${response.status}`);
     for (const path of humanRoutes) {
-      assert(xml.includes(`<loc>${expectedUrl(path)}</loc>`), `sitemap contains ${path}`);
+      assert(locations.has(expectedUrl(path)), `sitemap contains ${path}`);
     }
     for (const path of machineRoutes) {
-      assert(!xml.includes(`<loc>${expectedUrl(path)}</loc>`), `sitemap excludes ${path}`);
+      assert(!locations.has(expectedUrl(path)), `sitemap excludes ${path}`);
     }
     assert(/hreflang=["']en["']/i.test(xml), "sitemap publishes English hreflang");
     assert(/hreflang=["']pt-BR["']/i.test(xml), "sitemap publishes Portuguese hreflang");
