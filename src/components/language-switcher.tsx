@@ -60,38 +60,54 @@ export function LanguageSwitcher() {
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
-    if (isTranslationProxy()) {
-      setDisabled(true);
-      return;
+    const translationProxy = isTranslationProxy();
+    const language = detectedLanguage();
+    const englishEdition = isEnglishEdition();
+    const saved = window.localStorage.getItem(STORAGE_KEY) as LanguagePreference | null;
+
+    const uiTimer = window.setTimeout(() => {
+      setDisabled(translationProxy);
+      if (!translationProxy) {
+        setDetected(language);
+        setEdition(englishEdition ? "en" : "pt");
+      }
+    }, 0);
+
+    if (translationProxy) {
+      return () => window.clearTimeout(uiTimer);
     }
 
-    const language = detectedLanguage();
-    const saved = window.localStorage.getItem(STORAGE_KEY) as LanguagePreference | null;
-    setDetected(language);
-    setEdition(isEnglishEdition() ? "en" : "pt");
-    document.documentElement.lang = isEnglishEdition() ? "en" : "pt-BR";
+    document.documentElement.lang = englishEdition ? "en" : "pt-BR";
 
-    if (isLikelyBot()) return;
+    if (isLikelyBot()) {
+      return () => window.clearTimeout(uiTimer);
+    }
 
     if (saved === "auto") {
       goToLanguage(language, true);
-      return;
+      return () => window.clearTimeout(uiTimer);
     }
 
     if (saved === "en") {
       goToLanguage("en", true);
-      return;
+      return () => window.clearTimeout(uiTimer);
     }
 
     if (saved === "pt") {
       goToLanguage("pt", true);
-      return;
+      return () => window.clearTimeout(uiTimer);
     }
 
+    let redirectTimer: number | undefined;
     if (!language.startsWith("pt")) {
       window.localStorage.setItem(STORAGE_KEY, "auto");
-      window.setTimeout(() => goToLanguage(language, true), 350);
+      redirectTimer = window.setTimeout(() => goToLanguage(language, true), 350);
     }
+
+    return () => {
+      window.clearTimeout(uiTimer);
+      if (redirectTimer !== undefined) window.clearTimeout(redirectTimer);
+    };
   }, []);
 
   const choose = (preference: LanguagePreference) => {
