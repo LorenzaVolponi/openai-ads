@@ -1,0 +1,58 @@
+name: Search Opportunity Hunter
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 10 * * 1,4"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: search-opportunity-hunter
+  cancel-in-progress: true
+
+jobs:
+  hunt:
+    name: Global commercial search opportunities
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GSC_CLIENT_EMAIL: ${{ secrets.GSC_CLIENT_EMAIL }}
+      GSC_PRIVATE_KEY: ${{ secrets.GSC_PRIVATE_KEY }}
+      GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:openai-ads.volponi.tech' }}
+      GSC_DAYS: "28"
+      GSC_OPPORTUNITY_OUTPUT: /tmp/search-opportunity-hunter.md
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Hunt real Search Console opportunities
+        run: npm run seo:opportunity-hunter
+      - name: Refresh opportunity issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TITLE="Search Opportunity Hunter — global commercial demand"
+          BODY="$(cat /tmp/search-opportunity-hunter.md)"
+          NUMBER="$(gh issue list --state open --search \"${TITLE} in:title\" --json number,title --jq '.[] | select(.title == \"'\"${TITLE}\"'\") | .number' | head -n1)"
+          if [ -n "$NUMBER" ]; then
+            gh issue edit "$NUMBER" --body "$BODY"
+            gh issue comment "$NUMBER" --body "Refreshed from Search Console on $(date -u +%Y-%m-%dT%H:%M:%SZ)."
+          else
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi
+      - name: Publish report summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/search-opportunity-hunter.md ]; then
+            cat /tmp/search-opportunity-hunter.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Search Opportunity Hunter did not produce a report." >> "$GITHUB_STEP_SUMMARY"
+          fi

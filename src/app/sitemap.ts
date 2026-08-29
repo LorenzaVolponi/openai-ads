@@ -63,6 +63,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.91,
     },
     {
+      url: `${SITE_URL}/work-with-lorenza/brief`,
+      lastModified: GLOBAL_GROWTH_REVIEW,
+      changeFrequency: "weekly",
+      priority: 0.86,
+    },
+    {
       url: `${SITE_URL}/radar`,
       lastModified: LAST_REVIEW,
       changeFrequency: "daily",
