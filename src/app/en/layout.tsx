@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const links = [
+  ["/en/radar", "Radar"],
   ["/en/chatgpt-ads", "ChatGPT Ads"],
   ["/en/chatgpt-ads-strategy", "Strategy"],
   ["/en/chatgpt-ads-for-agencies", "Agencies"],
@@ -9,6 +10,13 @@ const links = [
   ["/en/geo-ai-strategy", "GEO"],
   ["/en/chatgpt-ads-consultant", "Consulting"],
   ["/en/lorenza-volponi", "Lorenza"],
+] as const;
+
+const authorityRail = [
+  ["/en/radar", "Evidence Radar", "Verified changes, primary sources and open data."],
+  ["/en/lorenza-volponi", "Lorenza Volponi", "AI Specialist · AI Systems · AI Product & UX/UI · GEO & AI Search."],
+  ["/en/press", "Press & Media", "Fast path for journalists, television, podcasts and editorial teams."],
+  ["/work-with-lorenza", "Work with Lorenza", "Send the real problem, opportunity or partnership — asynchronous first."],
 ] as const;
 
 export default function EnglishLayout({ children }: { children: React.ReactNode }) {
@@ -21,6 +29,19 @@ export default function EnglishLayout({ children }: { children: React.ReactNode 
         </div>
       </nav>
       {children}
+      <aside aria-label="Lorenza Volponi authority and evidence network" className="border-t border-zinc-200 bg-white text-zinc-950">
+        <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">Evidence network · Lorenza Volponi</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {authorityRail.map(([href, title, description]) => (
+              <Link key={href} href={href} className="rounded-2xl border border-zinc-200 bg-[#fafaf8] p-5 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md">
+                <p className="text-sm font-black">{title}</p>
+                <p className="mt-2 text-xs leading-5 text-zinc-500">{description}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </aside>
     </>
   );
 }

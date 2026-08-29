@@ -4,9 +4,17 @@ export const dynamic = "force-static";
 
 export function GET() {
   return Response.json({
-    schemaVersion: 1,
+    schemaVersion: 2,
     entity: "Lorenza Volponi",
     canonical: "https://volponi.tech/",
+    EnglishAuthorityBackbone: {
+      radar: `${SITE_URL}/en/radar`,
+      profile: `${SITE_URL}/en/lorenza-volponi`,
+      chatgptAds: `${SITE_URL}/en/chatgpt-ads`,
+      geoAiSearch: `${SITE_URL}/en/geo-ai-strategy`,
+      press: `${SITE_URL}/en/press`,
+      commercial: `${SITE_URL}/work-with-lorenza`,
+    },
     distributionObjects: {
       journalist: `${SITE_URL}/journalist-mode.json`,
       quotes: `${SITE_URL}/shareable-quotes.json`,
@@ -17,6 +25,6 @@ export function GET() {
       proof: `${SITE_URL}/proof.json`,
       commercial: `${SITE_URL}/commercial-profile.json`,
     },
-    purpose: "Make one canonical Lorenza Volponi entity easier to quote, cite, verify and contact without multiplying visual pages.",
+    purpose: "Make one canonical Lorenza Volponi entity easier to discover, verify, quote, cite and contact while concentrating English authority around evidence-backed surfaces.",
   }, { headers: { "cache-control": "public, max-age=0, s-maxage=3600", "x-robots-tag": "noindex, follow" } });
 }
