@@ -9,6 +9,16 @@ import { radarEntries } from "@/lib/radar-data";
 const LAST_REVIEW = new Date(LAST_EDITORIAL_REVIEW_ISO);
 const INTELLIGENCE_REVIEW = new Date("2026-08-28T15:45:00-03:00");
 const AUTHORITY_REVIEW = new Date("2026-08-29T14:30:00-03:00");
+const GLOBAL_GROWTH_REVIEW = new Date("2026-08-29T15:00:00-03:00");
+
+const globalGrowthPaths = [
+  "/en/chatgpt-ads",
+  "/en/chatgpt-ads-strategy",
+  "/en/chatgpt-ads-for-agencies",
+  "/en/chatgpt-ads-for-brands",
+  "/en/chatgpt-ads-consultant",
+  "/en/lorenza-volponi",
+] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -26,15 +36,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}/en`,
-      lastModified: INTELLIGENCE_REVIEW,
+      lastModified: GLOBAL_GROWTH_REVIEW,
       changeFrequency: "weekly",
-      priority: 0.92,
+      priority: 0.94,
       alternates: {
         languages: {
           "pt-BR": SITE_URL,
           en: `${SITE_URL}/en`,
         },
       },
+    },
+    ...globalGrowthPaths.map((path) => ({
+      url: `${SITE_URL}${path}`,
+      lastModified: GLOBAL_GROWTH_REVIEW,
+      changeFrequency: "weekly" as const,
+      priority: path === "/en/chatgpt-ads-consultant" || path === "/en/lorenza-volponi" ? 0.93 : 0.9,
+    })),
+    {
+      url: `${SITE_URL}/work-with-lorenza`,
+      lastModified: GLOBAL_GROWTH_REVIEW,
+      changeFrequency: "weekly",
+      priority: 0.91,
     },
     {
       url: `${SITE_URL}/radar`,
