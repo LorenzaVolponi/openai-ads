@@ -15,13 +15,14 @@ const comingSoon = marketStates.filter((market) => market.adsManager === "Coming
 export const metadata: Metadata = {
   title: "ChatGPT Ads Market Snapshot: países e disponibilidade do Ads Manager",
   description: "Mapa auditável dos mercados do ChatGPT Ads e do Ads Manager: países disponíveis, coming soon, fonte oficial e data de revisão.",
+  authors: [{ name: "Lorenza Volponi", url: `${SITE_URL}/imprensa` }],
   alternates: { canonical: URL },
   openGraph: {
     title: "ChatGPT Ads Market Snapshot",
     description: "Disponibilidade por país, fonte oficial e data de revisão em um mapa auditável.",
     url: URL,
     type: "website",
-    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "ChatGPT Ads Market Snapshot por volponi.tech" }],
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "ChatGPT Ads Market Snapshot por Lorenza Volponi / volponi.tech" }],
   },
   twitter: { card: "summary_large_image", title: "ChatGPT Ads Market Snapshot", description: "Mercados disponíveis e coming soon com fonte oficial.", images: [SOCIAL_IMAGE] },
 };
@@ -38,6 +39,8 @@ const structuredData = {
       inLanguage: "pt-BR",
       dateModified: `${RADAR_CHECKED_AT}T12:00:00Z`,
       creator: { "@id": `${SITE_URL}/#author` },
+      author: { "@id": `${SITE_URL}/#author` },
+      publisher: { "@id": `${SITE_URL}/#publisher` },
       isAccessibleForFree: true,
       distribution: [
         { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/data/chatgpt-ads-markets.json` },
@@ -64,6 +67,7 @@ export default function MarketSnapshotPage() {
           <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-600"><Database className="h-3.5 w-3.5" /> Market Snapshot · {RADAR_CHECKED_AT}</div>
           <h1 className="mt-6 max-w-5xl font-serif text-5xl leading-[0.94] tracking-[-0.05em] md:text-8xl">Onde o ChatGPT Ads está operacional — e onde ainda não está.</h1>
           <p className="mt-7 max-w-3xl text-lg leading-8 text-zinc-600">Uma fotografia auditável da disponibilidade do Ads Manager. Status de mercado não é garantia de acesso para toda conta, inventário, volume ou performance.</p>
+          <p className="mt-4 text-sm font-semibold text-zinc-500">Pesquisa e curadoria editorial: Lorenza Volponi · volponi.tech.</p>
 
           <div className="mt-10 grid max-w-2xl grid-cols-2 gap-3">
             <div className="rounded-3xl bg-zinc-950 p-6 text-white"><p className="text-5xl font-black">{available}</p><p className="mt-2 text-sm text-zinc-400">mercados Available</p></div>
@@ -88,6 +92,7 @@ export default function MarketSnapshotPage() {
           <div>
             <h2 className="text-xl font-black">Limite editorial</h2>
             <p className="mt-2 max-w-4xl text-sm leading-6 text-zinc-600">Este mapa reproduz um snapshot de fonte primária na data indicada. Mudanças posteriores podem ainda não estar refletidas. Confirme a superfície oficial e a própria conta antes de decisão operacional de mídia.</p>
+            <p className="mt-3 text-xs leading-5 text-zinc-500">Projeto independente de Lorenza Volponi / volponi.tech. Não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.</p>
           </div>
         </div>
       </section>
