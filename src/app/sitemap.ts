@@ -19,6 +19,8 @@ const globalGrowthPaths = [
   "/en/chatgpt-ads-consultant",
   "/en/chatgpt-ads-partnerships",
   "/en/geo-ai-strategy",
+  "/en/press",
+  "/en/partners",
   "/en/lorenza-volponi",
 ] as const;
 
