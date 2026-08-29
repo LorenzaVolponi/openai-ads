@@ -5,6 +5,8 @@ const links = [
   ["/en/chatgpt-ads-strategy", "Strategy"],
   ["/en/chatgpt-ads-for-agencies", "Agencies"],
   ["/en/chatgpt-ads-for-brands", "Brands"],
+  ["/en/chatgpt-ads-partnerships", "Partnerships"],
+  ["/en/geo-ai-strategy", "GEO"],
   ["/en/chatgpt-ads-consultant", "Consulting"],
   ["/en/lorenza-volponi", "Lorenza"],
 ] as const;
