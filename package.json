@@ -13,6 +13,7 @@
     "seo:health": "node scripts/seo-health-check.mjs",
     "seo:ranking-hunt": "node scripts/search-console-ranking-hunt.mjs",
     "seo:organic-clients": "node scripts/organic-client-intelligence.mjs",
+    "growth:health": "node scripts/global-growth-health-check.mjs",
     "intelligence:health": "node scripts/intelligence-health-check.mjs",
     "authority:observe": "node scripts/authority-observatory.mjs",
     "authority:citations": "node scripts/verify-authority-citations.mjs",
