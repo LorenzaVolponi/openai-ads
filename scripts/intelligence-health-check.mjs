@@ -1,4 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.INTELLIGENCE_HEALTH_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
+const CANONICAL_ORIGIN = (process.env.INTELLIGENCE_CANONICAL_ORIGIN || "https://openai-ads.volponi.tech").replace(/\/$/, "");
 const USER_AGENT = "VolponiIntelligenceHealth/1.0 (+https://openai-ads.volponi.tech/metodologia)";
 
 const humanRoutes = [
@@ -37,7 +38,8 @@ function fail(label, detail = "") {
 }
 
 function assert(condition, label, detail = "") {
-  condition ? pass(label, detail) : fail(label, detail);
+  if (condition) pass(label, detail);
+  else fail(label, detail);
 }
 
 function canonicalHref(html) {
@@ -47,15 +49,15 @@ function canonicalHref(html) {
   return tag.match(/href=["']([^"']+)["']/i)?.[1] || "";
 }
 
-function normalizeUrl(value) {
-  const url = new URL(value, BASE_URL);
+function normalizeUrl(value, base = CANONICAL_ORIGIN) {
+  const url = new URL(value, base);
   url.hash = "";
   if (url.pathname !== "/") url.pathname = url.pathname.replace(/\/$/, "");
   return url.toString().replace(/\/$/, url.pathname === "/" ? "/" : "");
 }
 
 function expectedUrl(path) {
-  return normalizeUrl(`${BASE_URL}${path}`);
+  return normalizeUrl(`${CANONICAL_ORIGIN}${path}`);
 }
 
 function sitemapLocations(xml) {
@@ -91,7 +93,7 @@ async function checkHumanRoutes() {
         const language = response.headers.get("content-language") || "";
         assert(language.toLowerCase() === "en", "/en declares English response language", language || "missing");
         assert(/<main[^>]+lang=["']en["']/i.test(html), "/en marks its content language in HTML");
-        assert(html.includes(`${BASE_URL}/en`), "/en publishes English alternate URL");
+        assert(html.includes(`${CANONICAL_ORIGIN}/en`), "/en publishes English alternate URL");
       }
     } catch (error) {
       fail(`${path} request succeeds`, error instanceof Error ? error.message : String(error));
