@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "identity:health": "node scripts/identity-integrity-check.mjs",
     "seo:health": "node scripts/seo-health-check.mjs",
     "seo:ranking-hunt": "node scripts/search-console-ranking-hunt.mjs",
     "intelligence:health": "node scripts/intelligence-health-check.mjs",
