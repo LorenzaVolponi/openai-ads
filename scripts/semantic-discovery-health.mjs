@@ -27,6 +27,7 @@ if (!geoPaths.includes("/en/geo-ai-strategy") && !geoPaths.includes("/en/lorenza
 const pricing = await getJson("/semantic-search.json?q=custo%20anuncio&lang=pt-BR");
 const pricingPaths = pricing?.results?.map((item) => item.path) ?? [];
 if (!pricingPaths.includes("/chatgpt-ads-precos")) failures.push("semantic search: pricing intent did not resolve to /chatgpt-ads-precos");
+if (pricingPaths[0] !== "/chatgpt-ads-precos") failures.push("semantic search: pricing page should lead explicit pricing intent");
 
 const aiProduct = await getJson("/semantic-search.json?q=AI%20product%20UX&lang=en");
 const aiProductPaths = aiProduct?.results?.map((item) => item.path) ?? [];
@@ -55,11 +56,15 @@ if (!authority?.semanticDiscovery?.map?.includes("semantic-map.json")) failures.
 if (!authority?.queryPortfolio?.en?.includes("AI expert Brazil")) failures.push("authority manifest: English query portfolio missing");
 
 const citation = await getJson("/citation.json");
-if (!citation?.preferredSourceLinks?.some((url) => url.includes("/en/volponi-ai-index"))) failures.push("citation manifest: flagship research missing");
+if (!citation?.flagshipResearch?.page?.includes("/en/volponi-ai-index") && !citation?.preferredSourceLinks?.some((url) => url.includes("/en/volponi-ai-index"))) failures.push("citation manifest: flagship research missing");
 
 const intelligence = await getJson("/intelligence.json");
 if (!intelligence?.semanticDiscovery?.map?.includes("semantic-map.json")) failures.push("intelligence graph: semantic discovery missing");
 if (intelligence?.canonicalAuthority?.entityId !== "https://volponi.tech/#lorenza-volponi") failures.push("intelligence graph: canonical entity mismatch");
+
+const lorenzaGraph = await getJson("/lorenza-graph.json");
+if (!lorenzaGraph?.flagshipResearch?.page?.includes("/en/volponi-ai-index")) failures.push("lorenza graph: flagship research missing");
+if (!lorenzaGraph?.graph?.nodes?.some((node) => node.id === "volponi-ai-index")) failures.push("lorenza graph: AI Index node missing");
 
 const distribution = await getJson("/distribution-manifest.json");
 if (!distribution?.semanticDiscovery?.topicGraph?.includes("semantic-map.json")) failures.push("distribution manifest: semantic graph missing");
