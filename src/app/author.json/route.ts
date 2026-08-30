@@ -1,62 +1,49 @@
 import { createFreshnessHeaders } from "@/lib/http-freshness";
 import { LAST_EDITORIAL_REVIEW_ISO, SITE_URL } from "@/lib/editorial-meta";
+import { lorenzaAuthority } from "@/lib/lorenza-authority";
 import { radarEntries } from "@/lib/radar-data";
 
 export const dynamic = "force-static";
 
 export function GET() {
-  const canonicalIdentity = "https://volponi.tech";
-  const ecosystemHub = `${canonicalIdentity}/hub`;
-
   const data = {
-    schemaVersion: 2,
-    canonical: `${SITE_URL}/imprensa`,
-    type: "independent expert-source profile",
-    name: "Lorenza Volponi",
+    schemaVersion: 3,
+    canonical: `${SITE_URL}/en/lorenza-volponi`,
+    entityId: lorenzaAuthority.entity.entityId,
+    type: "Person",
+    name: lorenzaAuthority.entity.name,
+    positioning: lorenzaAuthority.entity.positioning,
     publisher: "volponi.tech",
-    canonicalIdentity,
-    ecosystemHub,
-    ecosystemRole: "research property",
-    isPartOf: ecosystemHub,
-    language: "pt-BR",
-    description:
-      "AI systems strategist, builder e autora do observatório independente Volponi ChatGPT Ads Radar, com foco em ChatGPT Ads, GEO, SEO, publicidade conversacional e sistemas de IA.",
-    expertise: [
-      "ChatGPT Ads",
-      "OpenAI Ads Manager",
-      "Generative Engine Optimization",
-      "Search Engine Optimization",
-      "AI systems",
-      "conversational advertising",
-      "digital strategy",
-      "software development",
-    ],
-    profile: `${SITE_URL}/imprensa`,
-    website: canonicalIdentity,
-    sameAs: [
-      canonicalIdentity,
-      ecosystemHub,
-      "https://github.com/LorenzaVolponi",
-      "https://www.linkedin.com/in/lorenzavolponi",
-    ],
+    canonicalIdentity: lorenzaAuthority.entity.canonical,
+    researchProperty: SITE_URL,
+    ecosystemRole: "independent research and intelligence property",
+    languages: ["pt-BR", "en"],
+    description: lorenzaAuthority.entity.description,
+    expertise: lorenzaAuthority.expertise.map((item) => ({ id: item.id, label: item.label, aliases: item.aliases, evidence: item.evidence })),
+    profile: `${SITE_URL}/en/lorenza-volponi`,
+    press: `${SITE_URL}/imprensa`,
+    globalPress: `${SITE_URL}/en/press`,
+    website: lorenzaAuthority.entity.canonical,
+    sameAs: lorenzaAuthority.entity.sameAs,
     authoredPublication: SITE_URL,
-    radar: `${SITE_URL}/radar`,
+    flagshipResearch: `${SITE_URL}/en/volponi-ai-index`,
+    radar: `${SITE_URL}/en/radar`,
     pressKit: `${SITE_URL}/press-kit.json`,
     citation: `${SITE_URL}/citation.json`,
     provenance: `${SITE_URL}/provenance.json`,
     evidence: `${SITE_URL}/evidence.json`,
-    ecosystemDiscovery: `${canonicalIdentity}/ecosystem.json`,
-    ecosystemFeed: `${canonicalIdentity}/feed.xml`,
+    semanticDiscovery: {
+      map: `${SITE_URL}/semantic-map.json`,
+      search: `${SITE_URL}/semantic-search.json?q=AI%20Search`,
+    },
     latestAuthoredRecords: radarEntries.slice(0, 5).map((entry) => ({
       date: entry.date,
       title: entry.title,
       url: `${SITE_URL}/radar/${entry.slug}`,
       primarySource: entry.source.url,
     })),
-    citationGuidance:
-      "For the ChatGPT Ads Radar cite the primary Radar URL. For ecosystem-level context cite https://volponi.tech/hub.",
-    editorialBoundary:
-      "Independent source profile. This endpoint does not claim affiliation, certification or endorsement by OpenAI and does not claim guaranteed ranking, citation or press coverage.",
+    citationGuidance: "For original research cite the Volponi AI Index or the specific Radar/data URL supporting the claim. For the person entity use the canonical Lorenza Volponi profile.",
+    editorialBoundary: lorenzaAuthority.boundaries.independence,
   };
   const body = `${JSON.stringify(data, null, 2)}\n`;
 
