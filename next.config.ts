@@ -26,6 +26,11 @@ const machineOnlyHeaders = [
   { key: "Cache-Control", value: "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400" },
 ];
 
+const immutableResearchHeaders = [
+  { key: "X-Robots-Tag", value: "noindex, follow" },
+  { key: "Cache-Control", value: "public, max-age=31536000, s-maxage=31536000, immutable" },
+];
+
 const diagnosticHeaders = [
   { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
   { key: "Cache-Control", value: "no-store" },
@@ -43,6 +48,7 @@ const authorityLinks = [
   `<${SITE_URL}/author.json>; rel=\"alternate\"; type=\"application/json\"`,
   `<${SITE_URL}/citation.json>; rel=\"cite-as\"; type=\"application/json\"`,
   `<${SITE_URL}/provenance.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/research-manifest.json>; rel=\"describedby\"; type=\"application/json\"`,
   `<${SITE_URL}/data-catalog.json>; rel=\"describedby\"; type=\"application/json\"`,
   `<${SITE_URL}/intelligence.json>; rel=\"describedby\"; type=\"application/json\"`,
   `<${SITE_URL}/media-facts.json>; rel=\"describedby\"; type=\"application/json\"`,
@@ -128,6 +134,7 @@ const nextConfig: NextConfig = {
       { source: "/radar/:path*", headers: authorityDiscoveryHeaders },
       { source: "/oai-adsbot-searchbot", headers: crawlerManifestHeaders },
       { source: "/api/oai-readiness", headers: diagnosticHeaders },
+      { source: "/research/volponi-ai-index/2026-08.json", headers: immutableResearchHeaders },
       { source: "/feed.xml", headers: machineOnlyHeaders },
       { source: "/feed.json", headers: machineOnlyHeaders },
       { source: "/knowledge.json", headers: machineOnlyHeaders },
@@ -136,9 +143,24 @@ const nextConfig: NextConfig = {
       { source: "/evidence.json", headers: machineOnlyHeaders },
       { source: "/press-kit.json", headers: machineOnlyHeaders },
       { source: "/author.json", headers: machineOnlyHeaders },
+      { source: "/person.json", headers: machineOnlyHeaders },
+      { source: "/expertise.json", headers: machineOnlyHeaders },
+      { source: "/proof.json", headers: machineOnlyHeaders },
+      { source: "/commercial-profile.json", headers: machineOnlyHeaders },
+      { source: "/lorenza-graph.json", headers: machineOnlyHeaders },
       { source: "/data-catalog.json", headers: machineOnlyHeaders },
       { source: "/intelligence.json", headers: machineOnlyHeaders },
       { source: "/media-facts.json", headers: machineOnlyHeaders },
+      { source: "/media-profile.json", headers: machineOnlyHeaders },
+      { source: "/journalist-mode.json", headers: machineOnlyHeaders },
+      { source: "/outreach-kit.json", headers: machineOnlyHeaders },
+      { source: "/distribution-manifest.json", headers: machineOnlyHeaders },
+      { source: "/reputation-signals.json", headers: machineOnlyHeaders },
+      { source: "/shareable-quotes.json", headers: machineOnlyHeaders },
+      { source: "/semantic-map.json", headers: machineOnlyHeaders },
+      { source: "/semantic-search.json", headers: machineOnlyHeaders },
+      { source: "/volponi-ai-index.json", headers: machineOnlyHeaders },
+      { source: "/research-manifest.json", headers: machineOnlyHeaders },
       { source: "/llms.txt", headers: machineOnlyHeaders },
       { source: "/llms-full.txt", headers: machineOnlyHeaders },
       { source: "/oai-crawlers.txt", headers: machineOnlyHeaders },
