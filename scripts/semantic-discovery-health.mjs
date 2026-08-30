@@ -56,7 +56,8 @@ if (!authority?.semanticDiscovery?.map?.includes("semantic-map.json")) failures.
 if (!authority?.queryPortfolio?.en?.includes("AI expert Brazil")) failures.push("authority manifest: English query portfolio missing");
 
 const citation = await getJson("/citation.json");
-if (!citation?.flagshipResearch?.page?.includes("/en/volponi-ai-index") && !citation?.preferredSourceLinks?.some((url) => url.includes("/en/volponi-ai-index"))) failures.push("citation manifest: flagship research missing");
+const citationText = JSON.stringify(citation ?? {});
+if (!citationText.includes("Volponi AI Index") || !citationText.includes("/en/volponi-ai-index")) failures.push("citation manifest: flagship research missing");
 
 const intelligence = await getJson("/intelligence.json");
 if (!intelligence?.semanticDiscovery?.map?.includes("semantic-map.json")) failures.push("intelligence graph: semantic discovery missing");
