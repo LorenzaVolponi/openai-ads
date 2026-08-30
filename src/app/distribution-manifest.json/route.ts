@@ -1,12 +1,19 @@
+import { LORENZA_ENTITY_ID } from "@/lib/lorenza-authority";
 import { SITE_URL } from "@/lib/media-authority";
+import {
+  digestVolponiAiIndexPublication,
+  RESEARCH_MANIFEST_URL,
+  VOLPONI_AI_INDEX_VERSIONED_URL,
+} from "@/lib/volponi-ai-index-publication";
+import { VOLPONI_AI_INDEX_EDITION } from "@/lib/volponi-ai-index";
 
 export const dynamic = "force-static";
 
 export function GET() {
   return Response.json({
-    schemaVersion: 5,
+    schemaVersion: 6,
     entity: "Lorenza Volponi",
-    entityId: "https://volponi.tech/#lorenza-volponi",
+    entityId: LORENZA_ENTITY_ID,
     canonical: "https://volponi.tech/",
     EnglishAuthorityBackbone: {
       aiIndex: `${SITE_URL}/en/volponi-ai-index`,
@@ -19,7 +26,11 @@ export function GET() {
     },
     originalResearch: {
       flagship: `${SITE_URL}/en/volponi-ai-index`,
-      dataset: `${SITE_URL}/volponi-ai-index.json`,
+      edition: VOLPONI_AI_INDEX_EDITION,
+      latestDataset: `${SITE_URL}/volponi-ai-index.json`,
+      versionedDataset: VOLPONI_AI_INDEX_VERSIONED_URL,
+      manifest: RESEARCH_MANIFEST_URL,
+      contentDigest: digestVolponiAiIndexPublication(),
       evidenceRadar: `${SITE_URL}/en/radar`,
       mediaRoom: `${SITE_URL}/en/press`,
     },
@@ -37,12 +48,13 @@ export function GET() {
       mediaProfile: `${SITE_URL}/media-profile.json`,
       pressKit: `${SITE_URL}/press-kit.json`,
       citations: `${SITE_URL}/citation.json`,
+      researchManifest: RESEARCH_MANIFEST_URL,
       proof: `${SITE_URL}/proof.json`,
       commercial: `${SITE_URL}/commercial-profile.json`,
       author: `${SITE_URL}/author.json`,
       authority: `${SITE_URL}/authority.json`,
     },
-    distributionFlow: ["Semantic discovery", "Volponi AI Index", "Evidence Radar", "Press room", "Citation/share objects", "Lorenza Volponi"],
-    purpose: "Make one canonical Lorenza Volponi entity easier to discover, understand, verify, quote, cite and contact while concentrating authority around evidence-backed original research and semantically connected pages.",
+    distributionFlow: ["Semantic discovery", "Versioned original research", "Evidence Radar", "Press room", "Citation/share objects", "Lorenza Volponi"],
+    purpose: "Make one canonical Lorenza Volponi entity easier to discover, understand, verify, quote, cite and contact while concentrating authority around evidence-backed, versioned original research and semantically connected pages.",
   }, { headers: { "cache-control": "public, max-age=0, s-maxage=3600", "x-robots-tag": "noindex, follow" } });
 }

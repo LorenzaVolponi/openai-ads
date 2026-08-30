@@ -1,19 +1,36 @@
 import { LAST_EDITORIAL_REVIEW_ISO, SITE_URL } from "@/lib/editorial-meta";
 import { createFreshnessHeaders } from "@/lib/http-freshness";
 import { RADAR_CHECKED_AT } from "@/lib/radar-data";
+import {
+  digestVolponiAiIndexPublication,
+  RESEARCH_MANIFEST_URL,
+  VOLPONI_AI_INDEX_VERSIONED_URL,
+} from "@/lib/volponi-ai-index-publication";
+import { VOLPONI_AI_INDEX_EDITION, VOLPONI_AI_INDEX_NAME } from "@/lib/volponi-ai-index";
 
 export const dynamic = "force-static";
 
 export function GET() {
   const data = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     type: "DataCatalog",
-    name: "Volponi ChatGPT Ads Data Catalog",
+    name: "Volponi AI Research & ChatGPT Ads Data Catalog",
     canonical: `${SITE_URL}/radar`,
     author: "Lorenza Volponi",
     publisher: "volponi.tech",
     checkedAt: RADAR_CHECKED_AT,
+    researchManifest: RESEARCH_MANIFEST_URL,
     datasets: [
+      {
+        name: VOLPONI_AI_INDEX_NAME,
+        edition: VOLPONI_AI_INDEX_EDITION,
+        page: `${SITE_URL}/en/volponi-ai-index`,
+        latestJson: `${SITE_URL}/volponi-ai-index.json`,
+        versionedJson: VOLPONI_AI_INDEX_VERSIONED_URL,
+        contentDigest: digestVolponiAiIndexPublication(),
+        methodology: `${SITE_URL}/en/volponi-ai-index#methodology`,
+        evidence: `${SITE_URL}/evidence.json`,
+      },
       {
         name: "ChatGPT Ads Manager market availability",
         json: `${SITE_URL}/data/chatgpt-ads-markets.json`,

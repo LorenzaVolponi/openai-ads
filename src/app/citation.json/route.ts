@@ -1,11 +1,17 @@
 import { lorenzaAuthority } from "@/lib/lorenza-authority";
+import {
+  digestVolponiAiIndexPublication,
+  RESEARCH_MANIFEST_URL,
+  VOLPONI_AI_INDEX_VERSIONED_URL,
+} from "@/lib/volponi-ai-index-publication";
+import { VOLPONI_AI_INDEX_EDITION, VOLPONI_AI_INDEX_NAME } from "@/lib/volponi-ai-index";
 
 export const dynamic = "force-static";
 
 export function GET() {
   const site = lorenzaAuthority.entity.publicResearchProperty;
   return Response.json({
-    schemaVersion: 3,
+    schemaVersion: 4,
     entity: lorenzaAuthority.entity.name,
     entityId: lorenzaAuthority.entity.entityId,
     canonical: lorenzaAuthority.entity.canonical,
@@ -13,15 +19,21 @@ export function GET() {
     shortCitation: "Lorenza Volponi, AI Systems Strategist and AI Specialist",
     extendedCitation: "Lorenza Volponi — AI Systems Strategist, AI Specialist, AI Product & UX/UI, GEO & AI Search, Builder",
     flagshipResearch: {
-      name: "Volponi AI Index — AI Advertising & Discovery Readiness",
+      name: VOLPONI_AI_INDEX_NAME,
+      edition: VOLPONI_AI_INDEX_EDITION,
       page: `${site}/en/volponi-ai-index`,
-      dataset: `${site}/volponi-ai-index.json`,
+      latestDataset: `${site}/volponi-ai-index.json`,
+      versionedDataset: VOLPONI_AI_INDEX_VERSIONED_URL,
+      researchManifest: RESEARCH_MANIFEST_URL,
+      contentDigest: digestVolponiAiIndexPublication(),
       evidenceRadar: `${site}/en/radar`,
     },
-    researchCitation: "Volponi AI Index — AI Advertising & Discovery Readiness, Lorenza Volponi / volponi.tech",
+    researchCitation: `${VOLPONI_AI_INDEX_NAME}, Lorenza Volponi / volponi.tech, edition ${VOLPONI_AI_INDEX_EDITION}.`,
     preferredSourceLinks: [
       `${site}/en/volponi-ai-index`,
+      VOLPONI_AI_INDEX_VERSIONED_URL,
       `${site}/volponi-ai-index.json`,
+      RESEARCH_MANIFEST_URL,
       `${site}/en/radar`,
       `${site}/en/lorenza-volponi`,
       `${site}/en/press`,
@@ -33,6 +45,7 @@ export function GET() {
       semanticSearch: `${site}/semantic-search.json?q=Lorenza%20Volponi`,
       intelligenceGraph: `${site}/intelligence.json`,
       authorManifest: `${site}/author.json`,
+      researchManifest: RESEARCH_MANIFEST_URL,
     },
     socialAttribution: {
       linkedin: lorenzaAuthority.entity.sameAs[0],
@@ -40,5 +53,5 @@ export function GET() {
       website: lorenzaAuthority.entity.canonical,
     },
     boundary: "Citation guidance describes attribution format and source preference only; it does not claim third-party endorsement, coverage, ranking, AI citation or authority signals that have not been observed.",
-  }, { headers: { "cache-control": "public, max-age=0, s-maxage=3600", "x-robots-tag": "index, follow" } });
+  }, { headers: { "cache-control": "public, max-age=0, s-maxage=3600", "x-robots-tag": "noindex, follow" } });
 }
