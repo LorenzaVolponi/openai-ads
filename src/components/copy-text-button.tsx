@@ -7,10 +7,12 @@ export function CopyTextButton({
   text,
   idleLabel = "Copy text",
   copiedLabel = "Copied",
+  className = "inline-flex min-h-11 items-center gap-2 rounded-full bg-zinc-950 px-4 text-xs font-black text-white transition hover:bg-zinc-800",
 }: {
   text: string;
   idleLabel?: string;
   copiedLabel?: string;
+  className?: string;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -33,11 +35,7 @@ export function CopyTextButton({
   };
 
   return (
-    <button
-      type="button"
-      onClick={copy}
-      className="inline-flex min-h-11 items-center gap-2 rounded-full bg-zinc-950 px-4 text-xs font-black text-white transition hover:bg-zinc-800"
-    >
+    <button type="button" onClick={copy} className={className}>
       {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
       <span aria-live="polite">{copied ? copiedLabel : idleLabel}</span>
     </button>
