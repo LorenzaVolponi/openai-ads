@@ -1,5 +1,5 @@
 const BASE_URL = (process.argv[2] || process.env.MEDIA_AUTHORITY_BASE_URL || "https://openai-ads.volponi.tech").replace(/\/$/, "");
-const USER_AGENT = "VolponiMediaAuthorityHealth/1.2 (+https://openai-ads.volponi.tech/imprensa)";
+const USER_AGENT = "VolponiMediaAuthorityHealth/1.3 (+https://openai-ads.volponi.tech/imprensa)";
 
 const RADAR_SLUGS = [
   "ads-manager-nine-markets",
@@ -30,7 +30,7 @@ async function checkAuthorityLinkHeaders(path) {
   const response = await request(path, "text/html");
   const links = response.headers.get("link") || "";
   assert(response.status === 200, `${path} returns 200 for authority-link verification`, `HTTP ${response.status}`);
-  assert(links.includes(`${BASE_URL}/imprensa`) && /rel="author"/i.test(links), `${path} exposes author Link header`);
+  assert(links.includes(`${BASE_URL}/en/lorenza-volponi`) && /rel="author"/i.test(links), `${path} exposes canonical Lorenza author Link header`);
   assert(links.includes(`${BASE_URL}/citation.json`) && /rel="cite-as"/i.test(links), `${path} exposes cite-as Link header`);
   assert(links.includes(`${BASE_URL}/provenance.json`) && /rel="describedby"/i.test(links), `${path} exposes provenance Link header`);
   assert(links.includes(`${BASE_URL}/data-catalog.json`), `${path} exposes data-catalog discovery Link header`);
@@ -53,11 +53,15 @@ async function checkAuthorManifest() {
   const response = await request("/author.json", "application/json");
   const robots = response.headers.get("x-robots-tag") || "";
   const data = await response.json();
+  const expertise = Array.isArray(data?.expertise) ? data.expertise : [];
+  const expertiseTerms = expertise.flatMap((item) => [item?.label, ...(Array.isArray(item?.aliases) ? item.aliases : [])]).filter(Boolean);
+
   assert(response.status === 200, "author.json returns 200", `HTTP ${response.status}`);
   assert(/noindex/i.test(robots) && /follow/i.test(robots), "author manifest is crawlable but noindex");
   assert(data?.name === "Lorenza Volponi", "author manifest preserves Lorenza Volponi identity");
-  assert(data?.canonical === `${BASE_URL}/imprensa`, "author manifest points to canonical press profile");
-  assert(Array.isArray(data?.expertise) && data.expertise.includes("ChatGPT Ads"), "author manifest declares ChatGPT Ads expertise");
+  assert(data?.canonical === `${BASE_URL}/en/lorenza-volponi`, "author manifest points to canonical Lorenza profile");
+  assert(data?.press === `${BASE_URL}/imprensa` && data?.globalPress === `${BASE_URL}/en/press`, "author manifest exposes press rooms separately from person canonical");
+  assert(expertiseTerms.includes("ChatGPT Ads"), "author manifest declares ChatGPT Ads expertise through the canonical expertise graph");
   assert(Array.isArray(data?.latestAuthoredRecords) && data.latestAuthoredRecords.length >= 3, "author manifest exposes authored Radar records");
   assert(/independent/i.test(data?.editorialBoundary || ""), "author manifest preserves independence boundary");
 }
@@ -66,15 +70,22 @@ async function checkDataCatalog() {
   const response = await request("/data-catalog.json", "application/json");
   const robots = response.headers.get("x-robots-tag") || "";
   const data = await response.json();
+  const datasets = Array.isArray(data?.datasets) ? data.datasets : [];
+  const marketDataset = datasets.find((item) => item?.name === "ChatGPT Ads Manager market availability") || {};
+  const indexDataset = datasets.find((item) => /Volponi AI Index/i.test(item?.name || "")) || {};
+
   assert(response.status === 200, "data-catalog.json returns 200", `HTTP ${response.status}`);
   assert(/noindex/i.test(robots) && /follow/i.test(robots), "data catalog is crawlable but noindex");
   assert(data?.type === "DataCatalog", "data catalog declares DataCatalog type");
   assert(data?.author === "Lorenza Volponi", "data catalog preserves author identity");
-  assert(Array.isArray(data?.datasets) && data.datasets.length > 0, "data catalog contains datasets");
-  const dataset = data?.datasets?.[0] || {};
-  assert(dataset.json === `${BASE_URL}/data/chatgpt-ads-markets.json`, "data catalog points to JSON dataset");
-  assert(dataset.csv === `${BASE_URL}/data/chatgpt-ads-markets.csv`, "data catalog points to CSV dataset");
-  assert(/^https:\/\/help\.openai\.com\//i.test(dataset.source || ""), "data catalog preserves primary-source URL");
+  assert(datasets.length > 0, "data catalog contains datasets");
+  assert(marketDataset.json === `${BASE_URL}/data/chatgpt-ads-markets.json`, "data catalog points to market JSON dataset");
+  assert(marketDataset.csv === `${BASE_URL}/data/chatgpt-ads-markets.csv`, "data catalog points to market CSV dataset");
+  assert(/^https:\/\/help\.openai\.com\//i.test(marketDataset.source || ""), "data catalog preserves market primary-source URL");
+  if (indexDataset.name) {
+    assert(indexDataset.versionedJson === `${BASE_URL}/research/volponi-ai-index/2026-08.json`, "data catalog exposes versioned AI Index edition");
+    assert(/^sha256:[a-f0-9]{64}$/.test(indexDataset.contentDigest || ""), "data catalog exposes AI Index SHA-256 digest");
+  }
   assert(data?.provenance === `${BASE_URL}/provenance.json`, "data catalog links provenance");
   assert(data?.evidence === `${BASE_URL}/evidence.json`, "data catalog links evidence ledger");
 }
@@ -87,7 +98,7 @@ async function checkPressKit() {
   assert(/noindex/i.test(robots) && /follow/i.test(robots), "press kit is crawlable but noindex");
   assert(data?.schemaVersion >= 2, "press kit exposes newsroom briefing schema");
   assert(data?.person?.name === "Lorenza Volponi", "press kit preserves person identity");
-  assert(data?.canonical === `${BASE_URL}/imprensa`, "press kit canonical points to the human profile");
+  assert(data?.canonical === `${BASE_URL}/imprensa`, "press kit canonical points to the human press room");
   assert(Array.isArray(data?.fastFacts) && data.fastFacts.length >= 5, "press kit exposes fast facts for newsroom use");
   assert(Array.isArray(data?.newsroomAngles) && data.newsroomAngles.length >= 4, "press kit exposes differentiated newsroom angles");
   assert(Array.isArray(data?.latestSignals) && data.latestSignals.length >= 3, "press kit exposes recent Radar signals");
