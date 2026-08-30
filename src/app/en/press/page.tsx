@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, Database, Newspaper, Quote, ShieldCheck, UserRound } from "lucide-react";
 
+import { SemanticRelatedLinks } from "@/components/semantic-related-links";
 import { Button } from "@/components/ui/button";
-import { SITE_URL } from "@/lib/media-authority";
+import { AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
 import { VOLPONI_AI_INDEX_EDITION, VOLPONI_AI_INDEX_NAME, indexDimensions, pressFindings } from "@/lib/volponi-ai-index";
 
 const URL = `${SITE_URL}/en/press`;
@@ -21,9 +22,28 @@ export const metadata: Metadata = {
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "ProfilePage", "@id": `${URL}#page`, url: URL, name: "Lorenza Volponi Press Room", inLanguage: "en", mainEntity: { "@id": "https://volponi.tech/#lorenza-volponi" } },
-    { "@type": "Person", "@id": "https://volponi.tech/#lorenza-volponi", name: "Lorenza Volponi", url: "https://volponi.tech/", sameAs: [linkedin, "https://github.com/LorenzaVolponi"], jobTitle: ["AI Systems Strategist", "AI Specialist", "AI Product & UX/UI Specialist", "GEO & AI Search Strategist"], knowsAbout: ["Artificial Intelligence", "AI systems", "AI Product", "UX/UI", "GEO", "AI Search", "ChatGPT", "automation", "AI agents", "conversational advertising"] },
-    { "@type": "Dataset", "@id": `${SITE_URL}/en/volponi-ai-index#dataset`, name: VOLPONI_AI_INDEX_NAME, creator: { "@id": "https://volponi.tech/#lorenza-volponi" }, url: `${SITE_URL}/en/volponi-ai-index` },
+    {
+      "@type": "ProfilePage",
+      "@id": `${URL}#page`,
+      url: URL,
+      name: "Lorenza Volponi Press Room",
+      inLanguage: "en",
+      mainEntity: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
+      about: ["Artificial Intelligence", "AI systems", "AI Product", "UX/UI for AI", "GEO", "AI Search", "ChatGPT Ads", "conversational advertising"],
+      relatedLink: [`${SITE_URL}/en/volponi-ai-index`, `${SITE_URL}/en/radar`, `${SITE_URL}/semantic-map.json`],
+    },
+    mediaAuthorStructuredData,
+    {
+      "@type": "Dataset",
+      "@id": `${SITE_URL}/en/volponi-ai-index#dataset`,
+      name: VOLPONI_AI_INDEX_NAME,
+      creator: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
+      url: `${SITE_URL}/en/volponi-ai-index`,
+      distribution: { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/volponi-ai-index.json` },
+    },
+    publisherStructuredData,
   ],
 };
 
@@ -64,6 +84,8 @@ export default function EnglishPressRoom() {
           <article className="rounded-3xl border border-zinc-200 bg-white p-7"><ShieldCheck className="h-5 w-5" /><h2 className="mt-4 text-2xl font-black">Editorial boundary</h2><p className="mt-3 text-sm leading-7 text-zinc-600">Independent research. Availability, access, inventory and campaign performance remain separate claims. Lorenza Volponi / volponi.tech is not affiliated with or endorsed by OpenAI.</p></article>
         </div>
       </section>
+
+      <SemanticRelatedLinks currentPath="/en/press" language="en" limit={5} />
     </main>
   );
 }
