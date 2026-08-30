@@ -14,6 +14,7 @@
     "seo:ranking-hunt": "node scripts/search-console-ranking-hunt.mjs",
     "seo:organic-clients": "node scripts/organic-client-intelligence.mjs",
     "seo:english-authority": "node scripts/english-authority-radar-health.mjs",
+    "seo:core-authority": "node scripts/core-authority-consolidation-health.mjs",
     "research:index": "node scripts/volponi-ai-index-health.mjs",
     "distribution:index": "node scripts/ai-index-distribution-health.mjs",
     "growth:health": "node scripts/global-growth-health-check.mjs",
@@ -50,8 +51,8 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "eslint": "^9",
     "eslint-config-next": "^16.1.1",
     "tailwindcss": "^4",
