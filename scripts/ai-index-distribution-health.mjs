@@ -8,7 +8,14 @@ async function get(path) {
   return text;
 }
 
-const press = await get("/en/press");
+function normalizeHtmlText(value) {
+  return value
+    .replace(/&amp;|&#38;|&#x26;/gi, "&")
+    .replace(/&quot;|&#34;|&#x22;/gi, '"')
+    .replace(/&#39;|&#x27;/gi, "'");
+}
+
+const press = normalizeHtmlText(await get("/en/press"));
 for (const needle of ["Need an AI source?", "Volponi AI Index", "Lorenza Volponi", "AI Product & UX/UI", "GEO", "AI Search"]) {
   if (!press.includes(needle)) failures.push(`/en/press missing: ${needle}`);
 }
