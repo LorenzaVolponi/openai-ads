@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      VOLPONI_AI_INDEX_2026_08_DIGEST: ""
+      VOLPONI_AI_INDEX_2026_08_DIGEST: "sha256:086108f8df68a98c6f6098eb1115a4593a18215d1db4a9cce7ad007d5b1c7fad"
 
     steps:
       - name: Checkout repository
