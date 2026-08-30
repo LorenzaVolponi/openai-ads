@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, BadgeCheck, Database, Globe2, Network, ShieldCheck } from "lucide-react";
 
 import { GrowthLink } from "@/components/growth-link";
-import { globalGrowthPages, type GlobalGrowthPage } from "@/lib/global-growth-data";
+import { SemanticRelatedLinks } from "@/components/semantic-related-links";
+import type { GlobalGrowthPage } from "@/lib/global-growth-data";
 import { RADAR_CHECKED_AT } from "@/lib/radar-data";
 import { SITE_URL } from "@/lib/media-authority";
 
@@ -16,8 +17,8 @@ const authoritySurfaces = [
 ] as const;
 
 export function GlobalGrowthPageView({ page }: { page: GlobalGrowthPage }) {
-  const canonical = `${SITE_URL}/en/${page.slug}`;
-  const related = globalGrowthPages.filter((item) => item.slug !== page.slug);
+  const currentPath = `/en/${page.slug}`;
+  const canonical = `${SITE_URL}${currentPath}`;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -98,12 +99,7 @@ export function GlobalGrowthPageView({ page }: { page: GlobalGrowthPage }) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-14 md:px-6 md:pb-20">
-        <p className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-zinc-500">Global authority cluster</p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {related.map((item) => <Link key={item.slug} href={`/en/${item.slug}`} className="rounded-3xl border border-zinc-200 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-lg"><p className="text-sm font-black">{item.title}</p><p className="mt-2 line-clamp-2 text-xs leading-5 text-zinc-500">{item.description}</p><span className="mt-4 inline-flex items-center gap-2 text-xs font-black">Explore <ArrowUpRight className="h-3.5 w-3.5" /></span></Link>)}
-        </div>
-      </section>
+      <SemanticRelatedLinks currentPath={currentPath} language="en" limit={5} />
 
       <section className="bg-zinc-950 text-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 md:px-6 md:py-24 lg:grid-cols-[0.62fr_0.38fr] lg:items-end">
