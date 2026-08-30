@@ -29,10 +29,23 @@ for (const route of routes) {
     const body = await response.text();
     if (!response.ok) failures.push(`${route}: HTTP ${response.status}`);
     for (const pattern of forbidden) if (pattern.test(body)) failures.push(`${route}: forbidden cross-project identity`);
-    if (route.includes("/en/") || route.startsWith("/work-with-lorenza")) {
+
+    const isEnglishAuthorityRoute = route.includes("/en/") || route.startsWith("/work-with-lorenza");
+    if (isEnglishAuthorityRoute) {
       if (!/Lorenza Volponi/i.test(body)) failures.push(`${route}: Lorenza Volponi entity missing`);
       if (!/work|consult|strateg|partner|brand|agenc|geo|discovery|opportunity|brief/i.test(body)) failures.push(`${route}: commercial intent copy missing`);
+
+      const contentLanguage = response.headers.get("content-language") || "";
+      if (!contentLanguage.split(",").map((value) => value.trim().toLowerCase()).includes("en")) {
+        failures.push(`${route}: Content-Language en missing (${contentLanguage || "none"})`);
+      }
+
+      const linkHeader = response.headers.get("link") || "";
+      if (!linkHeader.includes("/en/lorenza-volponi") || !/rel=\"author\"/i.test(linkHeader)) {
+        failures.push(`${route}: canonical Lorenza author Link header missing`);
+      }
     }
+
     if (route === "/work-with-lorenza/brief") {
       if (!/Qualified opportunity brief/i.test(body)) failures.push("work-with-lorenza/brief: qualified brief marker missing");
       if (!/Nothing is submitted or stored/i.test(body)) failures.push("work-with-lorenza/brief: privacy boundary missing");
