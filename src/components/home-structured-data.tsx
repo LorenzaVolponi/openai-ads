@@ -1,8 +1,7 @@
 import { authorityMetrics, citationBlock, SOURCES } from "@/lib/authority-data";
-import {
-  LAST_EDITORIAL_REVIEW_ISO,
-  SITE_URL,
-} from "@/lib/editorial-meta";
+import { LAST_EDITORIAL_REVIEW_ISO, SITE_URL } from "@/lib/editorial-meta";
+import { AUTHOR_ID, PUBLISHER_ID, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
+import { getRelatedSemanticDocuments, getSemanticDocument, semanticTopics } from "@/lib/semantic-discovery";
 import { searchIntentAnswers, socialImageForPath } from "@/lib/seo";
 
 const primarySources = Object.values(SOURCES).map((source) => source.url);
@@ -15,6 +14,12 @@ const searchAliases = [
   "anúncios no ChatGPT",
   "ChatGPT advertising",
 ];
+const semanticDocument = getSemanticDocument("/");
+const semanticRelated = getRelatedSemanticDocuments("/", 8, "pt-BR");
+const semanticAbout = semanticDocument?.topics.map((topicId) => {
+  const topic = semanticTopics[topicId as keyof typeof semanticTopics];
+  return { "@type": "Thing", name: topic?.label ?? topicId, alternateName: topic?.aliases ?? [] };
+}) ?? [];
 
 const homeStructuredData = {
   "@context": "https://schema.org",
@@ -27,38 +32,21 @@ const homeStructuredData = {
       alternateName: searchAliases,
       description: citationBlock.description,
       image: socialImage,
-      author: { "@id": `${SITE_URL}/#author` },
-      publisher: { "@id": `${SITE_URL}/#author` },
+      author: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
       datePublished: "2026-08-24T09:00:00-03:00",
       dateModified: LAST_EDITORIAL_REVIEW_ISO,
       inLanguage: "pt-BR",
       isAccessibleForFree: true,
       citation: primarySources,
-      keywords: [
-        "ChatGPT Ads",
-        "ChatGPT Ads Brasil",
-        "ChatGPT Ads 2026",
-        "GPT Ads",
-        "Ads GPT",
-        "OpenAI Ads",
-        "OpenAI Ads Manager",
-        "ChatGPT Ads preços",
-        "ChatGPT Ads métricas",
-        "como anunciar no ChatGPT",
-        "como criar anúncio no ChatGPT",
-        "anúncios no ChatGPT",
-        "CPC ChatGPT Ads",
-        "CPM ChatGPT Ads",
-        "oCPC ChatGPT Ads",
-        "privacidade ChatGPT Ads",
-        "Lorenza Volponi",
-        "volponi.tech",
-      ],
+      about: semanticAbout,
+      mentions: semanticDocument?.entities.map((name) => ({ "@type": "Thing", name })) ?? [],
+      relatedLink: semanticRelated.map((item) => `${SITE_URL}${item.path}`),
       speakable: {
         "@type": "SpeakableSpecification",
         cssSelector: [".geo-answer", ".press-summary"],
       },
-      copyrightHolder: { "@id": `${SITE_URL}/#author` },
+      copyrightHolder: { "@id": AUTHOR_ID },
       copyrightYear: 2026,
     },
     {
@@ -79,8 +67,8 @@ const homeStructuredData = {
         "Como explicar benefício e próximo passo",
         "Como interpretar métricas básicas de mídia",
       ],
-      author: { "@id": `${SITE_URL}/#author` },
-      publisher: { "@id": `${SITE_URL}/#author` },
+      author: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
       dateModified: LAST_EDITORIAL_REVIEW_ISO,
       citation: primarySources,
     },
@@ -91,32 +79,12 @@ const homeStructuredData = {
       description:
         "Framework editorial simples da volponi.tech para melhorar clareza, benefício, especificidade e próximo passo antes de testar uma campanha real.",
       inLanguage: "pt-BR",
-      author: { "@id": `${SITE_URL}/#author` },
+      author: { "@id": AUTHOR_ID },
       step: [
-        {
-          "@type": "HowToStep",
-          position: 1,
-          name: "Entenda o problema",
-          text: "Comece pelo problema real que a pessoa quer resolver.",
-        },
-        {
-          "@type": "HowToStep",
-          position: 2,
-          name: "Mostre o benefício",
-          text: "Explique de forma concreta o que melhora para a pessoa.",
-        },
-        {
-          "@type": "HowToStep",
-          position: 3,
-          name: "Seja específico",
-          text: "Troque promessas genéricas por uma proposta clara, concreta e verificável.",
-        },
-        {
-          "@type": "HowToStep",
-          position: 4,
-          name: "Diga o próximo passo",
-          text: "Oriente uma ação simples e coerente, sem pressão artificial.",
-        },
+        { "@type": "HowToStep", position: 1, name: "Entenda o problema", text: "Comece pelo problema real que a pessoa quer resolver." },
+        { "@type": "HowToStep", position: 2, name: "Mostre o benefício", text: "Explique de forma concreta o que melhora para a pessoa." },
+        { "@type": "HowToStep", position: 3, name: "Seja específico", text: "Troque promessas genéricas por uma proposta clara, concreta e verificável." },
+        { "@type": "HowToStep", position: 4, name: "Diga o próximo passo", text: "Oriente uma ação simples e coerente, sem pressão artificial." },
       ],
     },
     {
@@ -130,7 +98,7 @@ const homeStructuredData = {
       isAccessibleForFree: true,
       description:
         "Ferramenta didática local que revisa clareza, benefício, especificidade e próximo passo do texto de um anúncio. O texto é processado no navegador e o resultado não é um score oficial da OpenAI.",
-      creator: { "@id": `${SITE_URL}/#author` },
+      creator: { "@id": AUTHOR_ID },
     },
     {
       "@type": "Dataset",
@@ -139,7 +107,8 @@ const homeStructuredData = {
       description:
         "Conjunto editorial de fatos verificáveis sobre escala do ChatGPT, disponibilidade do Ads Manager, expansão, modelos de compra e orientação de lance, cada um acompanhado de contexto e ressalva.",
       url: `${SITE_URL}/knowledge.json`,
-      creator: { "@id": `${SITE_URL}/#author` },
+      creator: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
       dateModified: LAST_EDITORIAL_REVIEW_ISO,
       inLanguage: "pt-BR",
       isAccessibleForFree: true,
@@ -152,17 +121,19 @@ const homeStructuredData = {
         url: metric.source.url,
       })),
       distribution: [
-        {
-          "@type": "DataDownload",
-          encodingFormat: "application/json",
-          contentUrl: `${SITE_URL}/knowledge.json`,
-        },
-        {
-          "@type": "DataDownload",
-          encodingFormat: "text/plain",
-          contentUrl: `${SITE_URL}/llms-full.txt`,
-        },
+        { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/knowledge.json` },
+        { "@type": "DataDownload", encodingFormat: "text/plain", contentUrl: `${SITE_URL}/llms-full.txt` },
       ],
+    },
+    {
+      "@type": "Dataset",
+      "@id": `${SITE_URL}/en/volponi-ai-index#dataset`,
+      name: "Volponi AI Index — AI Advertising & Discovery Readiness",
+      url: `${SITE_URL}/en/volponi-ai-index`,
+      creator: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
+      isAccessibleForFree: true,
+      distribution: [{ "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/volponi-ai-index.json` }],
     },
     {
       "@type": "FAQPage",
@@ -170,11 +141,7 @@ const homeStructuredData = {
       mainEntity: searchIntentAnswers.map((item) => ({
         "@type": "Question",
         name: item.q,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: item.a,
-          url: `${SITE_URL}${item.href}`,
-        },
+        acceptedAnswer: { "@type": "Answer", text: item.a, url: `${SITE_URL}${item.href}` },
       })),
     },
     {
@@ -186,14 +153,10 @@ const homeStructuredData = {
       description:
         "Aprenda como anunciar no ChatGPT no Brasil em 2026 com exemplos oficiais, Ads Manager, preços, métricas, privacidade, Radar e fontes primárias.",
       image: socialImage,
-      primaryImageOfPage: {
-        "@type": "ImageObject",
-        url: socialImage,
-        width: 1200,
-        height: 630,
-      },
+      primaryImageOfPage: { "@type": "ImageObject", url: socialImage, width: 1200, height: 630 },
       isPartOf: { "@id": `${SITE_URL}/#website` },
-      about: searchAliases.map((name) => ({ "@type": "Thing", name })),
+      about: semanticAbout,
+      relatedLink: semanticRelated.map((item) => `${SITE_URL}${item.path}`),
       hasPart: [
         { "@type": "WebPage", name: "ChatGPT Ads no Brasil", url: `${SITE_URL}/chatgpt-ads-brasil` },
         { "@type": "WebPage", name: "Quanto custa anunciar no ChatGPT", url: `${SITE_URL}/chatgpt-ads-precos` },
@@ -201,11 +164,14 @@ const homeStructuredData = {
         { "@type": "WebPage", name: "OpenAI Ads Manager", url: `${SITE_URL}/ads-manager-chatgpt` },
         { "@type": "WebPage", name: "Privacidade no ChatGPT Ads", url: `${SITE_URL}/chatgpt-ads-privacidade` },
         { "@type": "CollectionPage", name: "Volponi ChatGPT Ads Radar", url: `${SITE_URL}/radar` },
+        { "@type": "Dataset", name: "Volponi AI Index", url: `${SITE_URL}/en/volponi-ai-index` },
       ],
-      author: { "@id": `${SITE_URL}/#author` },
+      author: { "@id": AUTHOR_ID },
       inLanguage: "pt-BR",
       dateModified: LAST_EDITORIAL_REVIEW_ISO,
     },
+    mediaAuthorStructuredData,
+    publisherStructuredData,
   ],
 };
 
