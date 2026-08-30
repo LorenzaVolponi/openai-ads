@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, BarChart3, Database, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, BarChart3, Database, FileCheck2, ShieldCheck } from "lucide-react";
 
 import { SemanticRelatedLinks } from "@/components/semantic-related-links";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
 import { indexDimensions, indexMethodology, indexSnapshot, pressFindings, VOLPONI_AI_INDEX_CANONICAL, VOLPONI_AI_INDEX_NAME } from "@/lib/volponi-ai-index";
+import {
+  digestVolponiAiIndexPublication,
+  RESEARCH_MANIFEST_URL,
+  VOLPONI_AI_INDEX_VERSIONED_URL,
+} from "@/lib/volponi-ai-index-publication";
 
 export const metadata: Metadata = {
   title: "Volponi AI Index 2026: AI Advertising & Discovery Readiness | Lorenza Volponi",
@@ -29,6 +34,7 @@ const structuredData = {
       "@type": ["Dataset", "CreativeWork"],
       "@id": `${VOLPONI_AI_INDEX_CANONICAL}#index`,
       name: VOLPONI_AI_INDEX_NAME,
+      version: indexSnapshot.edition,
       url: VOLPONI_AI_INDEX_CANONICAL,
       description: "Evidence-based research on AI advertising and discovery readiness using primary-source product and market observations.",
       creator: { "@id": AUTHOR_ID },
@@ -37,9 +43,12 @@ const structuredData = {
       inLanguage: "en",
       keywords: ["AI Index", "AI advertising", "AI discovery", "ChatGPT Ads", "GEO", "AI Search", "Lorenza Volponi"],
       about: ["AI advertising", "ChatGPT Ads", "market readiness", "measurement", "GEO", "AI Search", "evidence architecture"],
-      relatedLink: [`${SITE_URL}/en/radar`, `${SITE_URL}/semantic-map.json`, `${SITE_URL}/en/lorenza-volponi`, `${SITE_URL}/en/press`],
+      relatedLink: [`${SITE_URL}/en/radar`, RESEARCH_MANIFEST_URL, `${SITE_URL}/semantic-map.json`, `${SITE_URL}/en/lorenza-volponi`, `${SITE_URL}/en/press`],
       isBasedOn: indexDimensions.map((dimension) => dimension.source.url),
-      distribution: { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/volponi-ai-index.json` },
+      distribution: [
+        { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/volponi-ai-index.json`, name: "Latest dataset pointer" },
+        { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: VOLPONI_AI_INDEX_VERSIONED_URL, name: `Versioned edition ${indexSnapshot.edition}` },
+      ],
     },
     mediaAuthorStructuredData,
     publisherStructuredData,
@@ -47,6 +56,8 @@ const structuredData = {
 };
 
 export default function VolponiAIIndexPage() {
+  const digest = digestVolponiAiIndexPublication();
+
   return (
     <main lang="en" className="min-h-screen bg-[#fafaf8] text-zinc-950">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
@@ -57,11 +68,14 @@ export default function VolponiAIIndexPage() {
           <h1 className="mt-6 max-w-6xl font-serif text-[clamp(3.4rem,8vw,7rem)] leading-[0.9] tracking-[-0.055em]">AI readiness without a magic score.</h1>
           <p className="mt-7 max-w-3xl text-lg leading-8 text-zinc-600 md:text-xl">Independent research by Lorenza Volponi tracking observable signals across AI advertising access, international expansion, buying infrastructure, measurement and performance evidence.</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild><a href="/volponi-ai-index.json"><Database className="mr-2 h-4 w-4" /> Open dataset</a></Button>
+            <Button asChild><a href="/volponi-ai-index.json"><Database className="mr-2 h-4 w-4" /> Latest dataset</a></Button>
+            <Button asChild variant="outline"><a href={VOLPONI_AI_INDEX_VERSIONED_URL}><FileCheck2 className="mr-2 h-4 w-4" /> Edition {indexSnapshot.edition}</a></Button>
+            <Button asChild variant="outline"><a href={RESEARCH_MANIFEST_URL}>Research manifest</a></Button>
             <Button asChild variant="outline"><Link href="/en/radar">Evidence Radar</Link></Button>
             <Button asChild variant="outline"><Link href="/en/press">Press & media</Link></Button>
             <Button asChild variant="outline"><Link href="/en/lorenza-volponi">About Lorenza</Link></Button>
           </div>
+          <p className="mt-5 max-w-4xl break-all font-mono text-[10px] leading-5 text-zinc-500">Edition content digest: {digest}</p>
         </div>
       </section>
 
@@ -93,7 +107,7 @@ export default function VolponiAIIndexPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-16 md:px-6 md:py-24 lg:grid-cols-2">
+      <section id="methodology" className="mx-auto grid max-w-7xl scroll-mt-24 gap-8 px-4 py-16 md:px-6 md:py-24 lg:grid-cols-2">
         <div>
           <p className="font-mono text-xs font-black uppercase tracking-[0.16em] text-zinc-500">Methodology</p>
           <h2 className="mt-4 font-serif text-5xl leading-[0.95] tracking-[-0.04em]">Evidence before score.</h2>
