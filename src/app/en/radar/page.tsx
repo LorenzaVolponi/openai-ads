@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Database, Download, RadioTower, ShieldCheck, UserRound } from "lucide-react";
 
+import { SemanticRelatedLinks } from "@/components/semantic-related-links";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AUTHOR, AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
@@ -57,6 +58,7 @@ const structuredData = {
       publisher: { "@id": PUBLISHER_ID },
       about: ["ChatGPT Ads", "AI advertising", "conversational advertising", "AI discovery", "GEO", "AI Search"],
       mainEntity: { "@id": `${URL}#dataset` },
+      relatedLink: [`${SITE_URL}/en/volponi-ai-index`, `${SITE_URL}/semantic-map.json`, `${SITE_URL}/en/lorenza-volponi`],
     },
     {
       "@type": "Dataset",
@@ -64,6 +66,7 @@ const structuredData = {
       name: "ChatGPT Ads market availability and change ledger",
       description: "Editorial snapshot of ChatGPT Ads market availability and verified changes, maintained by Lorenza Volponi with primary-source references.",
       creator: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
       dateModified: RADAR_CHECKED_AT,
       keywords: ["ChatGPT Ads", "OpenAI Ads", "AI advertising", "Ads Manager", "GEO", "AI Search", "conversational advertising"],
       distribution: [
@@ -121,7 +124,7 @@ export default function EnglishRadarPage() {
             <ShieldCheck className="h-5 w-5" />
             <h2 className="mt-4 text-2xl font-black">Evidence backbone</h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">Use the public ledger to verify dates, primary sources and observed changes before citing a claim.</p>
-            <div className="mt-5 grid gap-2 text-sm font-bold"><Link href="/proof.json" className="hover:underline">Proof manifest</Link><Link href="/citation.json" className="hover:underline">Citation guide</Link><Link href="/journalist-mode.json" className="hover:underline">Journalist fast path</Link><Link href="/en/press" className="hover:underline">English press room</Link></div>
+            <div className="mt-5 grid gap-2 text-sm font-bold"><Link href="/proof.json" className="hover:underline">Proof manifest</Link><Link href="/citation.json" className="hover:underline">Citation guide</Link><Link href="/semantic-map.json" className="hover:underline">Semantic map</Link><Link href="/en/press" className="hover:underline">English press room</Link></div>
           </aside>
         </div>
       </section>
@@ -135,6 +138,8 @@ export default function EnglishRadarPage() {
           </div>
         </div>
       </section>
+
+      <SemanticRelatedLinks currentPath="/en/radar" language="en" limit={5} />
 
       <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="rounded-3xl bg-zinc-950 p-8 text-white md:p-12">
