@@ -1,0 +1,78 @@
+name: Research Publication Health
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/lib/volponi-ai-index.ts"
+      - "src/lib/volponi-ai-index-publication.ts"
+      - "src/app/en/volponi-ai-index/page.tsx"
+      - "src/app/volponi-ai-index.json/route.ts"
+      - "src/app/research/**"
+      - "src/app/research-manifest.json/route.ts"
+      - "src/app/citation.json/route.ts"
+      - "src/app/data-catalog.json/route.ts"
+      - "src/app/distribution-manifest.json/route.ts"
+      - "next.config.ts"
+      - "scripts/research-publication-health.mjs"
+      - "package.json"
+      - ".github/workflows/research-publication-health.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publication-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      VOLPONI_AI_INDEX_2026_08_DIGEST: ""
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Identity integrity
+        run: npm run identity:health
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Start application
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- -H 127.0.0.1 -p 3000 > /tmp/research-publication-next.log 2>&1 &
+          echo $! > /tmp/research-publication-next.pid
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:3000/research-manifest.json > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/research-publication-next.log
+          exit 1
+
+      - name: Validate immutable research publication
+        run: npm run research:publication
+
+      - name: Stop application
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/research-publication-next.pid ]; then
+            kill "$(cat /tmp/research-publication-next.pid)" 2>/dev/null || true
+          fi
