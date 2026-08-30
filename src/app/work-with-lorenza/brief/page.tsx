@@ -140,8 +140,13 @@ export default function OpportunityBriefPage() {
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-zinc-400">Serious opportunity</p>
           <h2 className="mx-auto mt-4 max-w-4xl font-serif text-5xl leading-[0.95] tracking-[-0.045em] md:text-7xl">Context first. Then we decide if the work deserves to exist.</h2>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <CopyTextButton text={briefTemplate} idleLabel="Copy brief template" copiedLabel="Brief copied" />
-            <GrowthLink href={LORENZA_LINKEDIN} intent="consulting" placement="brief-bottom-linkedin" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-xs font-black text-zinc-950">
+            <CopyTextButton
+              text={briefTemplate}
+              idleLabel="Copy brief template"
+              copiedLabel="Brief copied"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-xs font-black text-zinc-950 transition hover:bg-zinc-200"
+            />
+            <GrowthLink href={LORENZA_LINKEDIN} intent="consulting" placement="brief-bottom-linkedin" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-zinc-700 px-5 text-xs font-black text-white transition hover:border-zinc-500">
               Message Lorenza <ArrowUpRight className="h-4 w-4" />
             </GrowthLink>
           </div>
