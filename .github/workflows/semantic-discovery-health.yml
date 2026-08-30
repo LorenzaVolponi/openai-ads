@@ -1,4 +1,4 @@
-name: AI Index Distribution Health
+name: Semantic Discovery Health
 
 on:
   pull_request:
@@ -22,14 +22,14 @@ jobs:
       - run: npm run build
       - name: Start app
         run: |
-          npm run start -- -H 127.0.0.1 -p 3000 > /tmp/ai-index-distribution.log 2>&1 &
-          echo $! > /tmp/ai-index-distribution.pid
+          npm run start -- -H 127.0.0.1 -p 3000 > /tmp/semantic-discovery.log 2>&1 &
+          echo $! > /tmp/semantic-discovery.pid
       - name: Wait for app
         run: |
           for i in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:3000/en/press >/dev/null; then exit 0; fi
+            if curl -fsS http://127.0.0.1:3000/semantic-map.json >/dev/null; then exit 0; fi
             sleep 2
           done
-          cat /tmp/ai-index-distribution.log
+          cat /tmp/semantic-discovery.log
           exit 1
-      - run: npm run distribution:index
+      - run: npm run seo:semantic

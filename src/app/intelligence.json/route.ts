@@ -1,6 +1,7 @@
 import { createFreshnessHeaders } from "@/lib/http-freshness";
 import { SITE_URL } from "@/lib/media-authority";
 import { marketStates, RADAR_CHECKED_AT, radarEntries } from "@/lib/radar-data";
+import { semanticDocuments, semanticTopics } from "@/lib/semantic-discovery";
 
 export const dynamic = "force-static";
 
@@ -29,19 +30,23 @@ const nodes = [
   ["radar", "/radar", "Radar de mudanças"],
   ["press", "/imprensa", "Media Source Room"],
   ["press-data", "/imprensa/dados", "Dados para imprensa"],
+  ["semantic-map", "/semantic-map.json", "Semantic topic and similarity graph"],
+  ["semantic-search", "/semantic-search.json", "Deterministic semantic search endpoint"],
 ] as const;
 
 export function GET() {
   const data = {
-    schemaVersion: 5,
+    schemaVersion: 6,
     canonical: `${SITE_URL}/intelligence.json`,
     publisher: "volponi.tech",
-    author: "Lorenza Volponi",
+    author: { name: "Lorenza Volponi", id: "https://volponi.tech/#lorenza-volponi" },
     checkedAt: RADAR_CHECKED_AT,
     graph: {
       nodes: nodes.map(([id, path, label]) => ({ id, label, url: `${SITE_URL}${path}` })),
       edges: [
         ["hub", "how-to", "explains"], ["hub", "market", "summarizes"], ["hub", "radar", "tracks"],
+        ["hub", "semantic-map", "describes-semantically"], ["semantic-map", "semantic-search", "powers"], ["semantic-map", "lorenza", "centers-entity"],
+        ["semantic-map", "ai-index", "relates-research"], ["semantic-map", "en-radar", "relates-evidence"],
         ["hub", "en-hub", "internationalizes"], ["radar", "en-radar", "internationalizes"], ["en-hub", "ai-index", "features-research"],
         ["ai-index", "en-radar", "derived-from-evidence"], ["ai-index", "lorenza", "research-by"], ["ai-index", "press", "supports-media"],
         ["en-hub", "en-radar", "evidence-from"], ["en-radar", "en-chatgpt-ads", "supports"], ["en-radar", "lorenza", "evidence-by"], ["en-radar", "market", "documents"],
@@ -54,8 +59,16 @@ export function GET() {
         ["press-data", "market", "cites"], ["radar", "market", "updates"], ["lorenza", "radar", "authors"],
       ].map(([from, to, relation]) => ({ from, to, relation })),
     },
+    semanticDiscovery: {
+      map: `${SITE_URL}/semantic-map.json`,
+      search: `${SITE_URL}/semantic-search.json?q=ChatGPT%20Ads`,
+      topicClusters: Object.keys(semanticTopics).length,
+      indexedDocuments: semanticDocuments.length,
+      method: "deterministic topic/entity/intent/audience expansion and similarity; no runtime model or embedding API",
+    },
     canonicalAuthority: {
       entity: "Lorenza Volponi",
+      entityId: "https://volponi.tech/#lorenza-volponi",
       canonical: "https://volponi.tech/",
       profile: `${SITE_URL}/en/lorenza-volponi`,
       flagshipResearch: `${SITE_URL}/en/volponi-ai-index`,
@@ -63,14 +76,14 @@ export function GET() {
       EnglishEvidenceHub: `${SITE_URL}/en/radar`,
       graph: `${SITE_URL}/lorenza-graph.json`,
       manifests: {
-        person: `${SITE_URL}/person.json`, expertise: `${SITE_URL}/expertise.json`, proof: `${SITE_URL}/proof.json`, media: `${SITE_URL}/media-profile.json`, commercial: `${SITE_URL}/commercial-profile.json`, citation: `${SITE_URL}/citation.json`, distribution: `${SITE_URL}/distribution-manifest.json`,
+        person: `${SITE_URL}/person.json`, expertise: `${SITE_URL}/expertise.json`, proof: `${SITE_URL}/proof.json`, media: `${SITE_URL}/media-profile.json`, commercial: `${SITE_URL}/commercial-profile.json`, citation: `${SITE_URL}/citation.json`, distribution: `${SITE_URL}/distribution-manifest.json`, semantic: `${SITE_URL}/semantic-map.json`,
       },
       positioning: ["AI Specialist", "AI Systems", "AI Product & UX/UI", "GEO & AI Search", "Builder"],
     },
     marketSnapshot: { available: marketStates.filter((market) => market.adsManager === "Available").length, comingSoon: marketStates.filter((market) => market.adsManager === "Coming Soon").length, data: `${SITE_URL}/data/chatgpt-ads-markets.json` },
     commercialLayer: { entity: "Lorenza Volponi", entityProfile: `${SITE_URL}/en/lorenza-volponi`, conversionEntry: `${SITE_URL}/work-with-lorenza`, growthManifest: `${SITE_URL}/organic-growth.json`, trackedIntentEvent: "organic_client_intent", evidenceRule: "Visibility, click, lead, proposal, partnership and revenue remain separate evidence states." },
     latestChanges: radarEntries.slice(0, 5).map((entry) => ({ date: entry.date, title: entry.title, url: `${SITE_URL}/radar/${entry.slug}`, primarySource: entry.source.url })),
-    editorialBoundary: "This graph describes the site's editorial, entity, research and commercial discovery architecture. It does not claim guaranteed ranking, lead generation, AI citation, press coverage or affiliation with OpenAI.",
+    editorialBoundary: "This graph describes the site's editorial, semantic, entity, research and commercial discovery architecture. It does not claim guaranteed ranking, lead generation, AI citation, press coverage or affiliation with OpenAI.",
   };
 
   const body = JSON.stringify(data, null, 2);

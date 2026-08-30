@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, BarChart3, Database, ShieldCheck } from "lucide-react";
 
+import { SemanticRelatedLinks } from "@/components/semantic-related-links";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
 import { indexDimensions, indexMethodology, indexSnapshot, pressFindings, VOLPONI_AI_INDEX_CANONICAL, VOLPONI_AI_INDEX_NAME } from "@/lib/volponi-ai-index";
 
 export const metadata: Metadata = {
   title: "Volponi AI Index 2026: AI Advertising & Discovery Readiness | Lorenza Volponi",
   description: "Independent evidence-based AI market research by Lorenza Volponi tracking ChatGPT Ads availability, buying infrastructure, measurement maturity and performance evidence.",
+  authors: [{ name: "Lorenza Volponi", url: `${SITE_URL}/en/lorenza-volponi` }],
   alternates: { canonical: VOLPONI_AI_INDEX_CANONICAL },
   openGraph: {
     title: "Volponi AI Index 2026",
@@ -28,20 +31,18 @@ const structuredData = {
       name: VOLPONI_AI_INDEX_NAME,
       url: VOLPONI_AI_INDEX_CANONICAL,
       description: "Evidence-based research on AI advertising and discovery readiness using primary-source product and market observations.",
-      creator: { "@id": "https://openai-ads.volponi.tech/#author" },
+      creator: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
       dateModified: indexSnapshot.checkedAt,
       inLanguage: "en",
       keywords: ["AI Index", "AI advertising", "AI discovery", "ChatGPT Ads", "GEO", "AI Search", "Lorenza Volponi"],
-      distribution: { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: "https://openai-ads.volponi.tech/volponi-ai-index.json" },
+      about: ["AI advertising", "ChatGPT Ads", "market readiness", "measurement", "GEO", "AI Search", "evidence architecture"],
+      relatedLink: [`${SITE_URL}/en/radar`, `${SITE_URL}/semantic-map.json`, `${SITE_URL}/en/lorenza-volponi`, `${SITE_URL}/en/press`],
+      isBasedOn: indexDimensions.map((dimension) => dimension.source.url),
+      distribution: { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/volponi-ai-index.json` },
     },
-    {
-      "@type": "Person",
-      "@id": "https://openai-ads.volponi.tech/#author",
-      name: "Lorenza Volponi",
-      url: "https://volponi.tech/",
-      sameAs: ["https://www.linkedin.com/in/lorenzavolponi", "https://github.com/LorenzaVolponi"],
-      knowsAbout: ["Artificial intelligence", "AI systems", "AI Product and UX/UI", "GEO", "AI Search", "AI advertising", "evidence architecture"],
-    },
+    mediaAuthorStructuredData,
+    publisherStructuredData,
   ],
 };
 
@@ -57,6 +58,7 @@ export default function VolponiAIIndexPage() {
           <p className="mt-7 max-w-3xl text-lg leading-8 text-zinc-600 md:text-xl">Independent research by Lorenza Volponi tracking observable signals across AI advertising access, international expansion, buying infrastructure, measurement and performance evidence.</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild><a href="/volponi-ai-index.json"><Database className="mr-2 h-4 w-4" /> Open dataset</a></Button>
+            <Button asChild variant="outline"><Link href="/en/radar">Evidence Radar</Link></Button>
             <Button asChild variant="outline"><Link href="/en/press">Press & media</Link></Button>
             <Button asChild variant="outline"><Link href="/en/lorenza-volponi">About Lorenza</Link></Button>
           </div>
@@ -105,6 +107,8 @@ export default function VolponiAIIndexPage() {
           <p className="mt-7 text-xs leading-5 text-zinc-500">Citation: Volponi AI Index — AI Advertising & Discovery Readiness, Lorenza Volponi / volponi.tech, edition {indexSnapshot.edition}.</p>
         </div>
       </section>
+
+      <SemanticRelatedLinks currentPath="/en/volponi-ai-index" language="en" limit={5} />
     </main>
   );
 }

@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Database, Newspaper, ShieldCheck } from "lucide-react";
 
-import { SITE_URL } from "@/lib/media-authority";
+import { SemanticRelatedLinks } from "@/components/semantic-related-links";
+import { AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
 import { marketStates, RADAR_CHECKED_AT, radarEntries } from "@/lib/radar-data";
 import { socialImageForPath } from "@/lib/seo";
 
@@ -32,22 +33,19 @@ const structuredData = {
       description: "Independent English intelligence on AI systems, ChatGPT Ads, GEO, AI Search and evidence-backed product strategy.",
       inLanguage: "en",
       isPartOf: { "@id": `${SITE_URL}/#website` },
-      author: { "@id": "https://volponi.tech/#lorenza-volponi" },
+      author: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
       dateModified: `${RADAR_CHECKED_AT}T12:00:00Z`,
+      about: ["Artificial Intelligence", "AI systems", "AI Product", "UX/UI for AI", "GEO", "AI Search", "ChatGPT Ads", "conversational advertising", "evidence architecture"],
       hasPart: [
         { "@type": "Dataset", url: `${SITE_URL}/en/volponi-ai-index`, name: "Volponi AI Index — AI Advertising & Discovery Readiness" },
         { "@type": "CollectionPage", url: `${SITE_URL}/en/radar`, name: "ChatGPT Ads Evidence Radar" },
         { "@type": "ProfilePage", url: `${SITE_URL}/en/press`, name: "Lorenza Volponi Press Room" },
       ],
+      relatedLink: [`${SITE_URL}/semantic-map.json`, `${SITE_URL}/en/geo-ai-strategy`, `${SITE_URL}/en/lorenza-volponi`],
     },
-    {
-      "@type": "Person",
-      "@id": "https://volponi.tech/#lorenza-volponi",
-      name: "Lorenza Volponi",
-      url: "https://volponi.tech/",
-      sameAs: ["https://www.linkedin.com/in/lorenzavolponi", "https://github.com/LorenzaVolponi"],
-      knowsAbout: ["Artificial Intelligence", "AI systems", "AI Product", "UX/UI", "GEO", "AI Search", "ChatGPT Ads", "automation", "agents", "evidence architecture"],
-    },
+    mediaAuthorStructuredData,
+    publisherStructuredData,
   ],
 };
 
@@ -136,6 +134,8 @@ export default function EnglishPage() {
           ))}
         </div>
       </section>
+
+      <SemanticRelatedLinks currentPath="/en" language="en" limit={5} />
 
       <footer className="bg-white">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-12 md:px-6 lg:grid-cols-[1fr_auto] lg:items-center">

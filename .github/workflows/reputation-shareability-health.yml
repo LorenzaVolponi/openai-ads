@@ -30,7 +30,7 @@ jobs:
           node-version: "24"
           package-manager-cache: false
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps --no-audit --no-fund
       - name: Identity integrity
         run: npm run identity:health
       - name: Build

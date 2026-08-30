@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { LAST_EDITORIAL_REVIEW_ISO } from "@/lib/editorial-meta";
+import { AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
+import { getRelatedSemanticDocuments, getSemanticDocument, semanticTopics } from "@/lib/semantic-discovery";
 import { socialImageForCanonical } from "@/lib/seo";
 
 export type TopicFact = {
@@ -53,6 +55,18 @@ export function TopicArticle({
 }) {
   const socialImage = socialImageForCanonical(canonical);
   const reviewedAt = formatReviewDate(dateModified);
+  const currentPath = canonical.startsWith(SITE_URL) ? canonical.slice(SITE_URL.length) || "/" : new URL(canonical).pathname;
+  const semanticDocument = getSemanticDocument(currentPath);
+  const semanticRelated = getRelatedSemanticDocuments(currentPath, 6, "pt-BR").map((item) => ({ label: item.title, href: item.path }));
+  const mergedRelated = [...related, ...semanticRelated]
+    .filter((item, index, items) => items.findIndex((candidate) => candidate.href === item.href) === index)
+    .filter((item) => item.href !== currentPath)
+    .slice(0, 8);
+  const semanticAbout = semanticDocument?.topics.map((topicId) => {
+    const topic = semanticTopics[topicId as keyof typeof semanticTopics];
+    return { "@type": "Thing", name: topic?.label ?? topicId, alternateName: topic?.aliases ?? [] };
+  }) ?? [];
+
   const topicStructuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -64,13 +78,17 @@ export function TopicArticle({
         description,
         image: socialImage,
         thumbnailUrl: socialImage,
-        author: { "@id": "https://openai-ads.volponi.tech/#author" },
-        publisher: { "@id": "https://openai-ads.volponi.tech/#author" },
+        author: { "@id": AUTHOR_ID },
+        publisher: { "@id": PUBLISHER_ID },
         dateModified,
         inLanguage: "pt-BR",
         isAccessibleForFree: true,
         citation: sources.map((source) => source.url),
-        about: facts.map((fact) => ({
+        about: semanticAbout,
+        mentions: semanticDocument?.entities.map((name) => ({ "@type": "Thing", name })) ?? [],
+        keywords: semanticDocument?.topics.map((topicId) => semanticTopics[topicId as keyof typeof semanticTopics]?.label ?? topicId) ?? [],
+        relatedLink: mergedRelated.map((item) => `${SITE_URL}${item.href}`),
+        variableMeasured: facts.map((fact) => ({
           "@type": "PropertyValue",
           name: fact.label,
           value: fact.value,
@@ -85,7 +103,7 @@ export function TopicArticle({
             "@type": "ListItem",
             position: 1,
             name: "ChatGPT Ads Brasil 2026",
-            item: "https://openai-ads.volponi.tech/",
+            item: SITE_URL,
           },
           {
             "@type": "ListItem",
@@ -95,6 +113,8 @@ export function TopicArticle({
           },
         ],
       },
+      mediaAuthorStructuredData,
+      publisherStructuredData,
     ],
   };
 
@@ -188,9 +208,9 @@ export function TopicArticle({
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-5">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-950">Continue</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-950">Continue · similaridade semântica</p>
               <div className="mt-4 space-y-2">
-                {related.map((item) => (
+                {mergedRelated.map((item) => (
                   <Link key={item.href} href={item.href} className="flex min-h-11 items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-muted hover:text-zinc-950">
                     {item.label} <ArrowUpRight className="h-3.5 w-3.5" />
                   </Link>

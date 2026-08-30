@@ -2,6 +2,7 @@ import { AUDITED_KNOWLEDGE } from "@/lib/assistant/knowledge";
 import { evidenceLedger, metricFormulas, productFacts } from "@/lib/authority-data";
 import { strategies } from "@/lib/content";
 import { editorialFaqs, editorialTimeline } from "@/lib/editorial-content";
+import { semanticSearch, semanticTopics } from "@/lib/semantic-discovery";
 
 export type ChatTurn = { role: "user" | "assistant"; text: string };
 
@@ -40,6 +41,24 @@ const tokenize = (value: string) =>
     .split(/\s+/)
     .filter((token) => token.length > 1 && !STOPWORDS.has(token));
 
+const semanticTokenize = (value: string) => {
+  const base = new Set(tokenize(value));
+  const normalizedQuery = normalize(value);
+
+  for (const [topicId, topic] of Object.entries(semanticTopics)) {
+    const candidates = [topicId, topic.label, ...topic.aliases];
+    const matched = candidates.some((candidate) => {
+      const normalizedCandidate = normalize(candidate);
+      const candidateTokens = tokenize(candidate);
+      return normalizedQuery.includes(normalizedCandidate) || candidateTokens.some((token) => base.has(token));
+    });
+    if (!matched) continue;
+    for (const candidate of candidates) for (const token of tokenize(candidate)) base.add(token);
+  }
+
+  return [...base];
+};
+
 const sanitize = (value: string) =>
   value
     .replace(/[<>]/g, "")
@@ -54,49 +73,49 @@ const entries: Entry[] = [
     text: item.text,
     href: item.href,
     section: item.section,
-    keywords: tokenize(`${item.title} ${item.text} ${item.tags}`),
+    keywords: semanticTokenize(`${item.title} ${item.text} ${item.tags}`),
   })),
   ...editorialFaqs.map((item) => ({
     title: item.q,
     text: item.a,
     href: "#faq",
     section: "FAQ",
-    keywords: tokenize(`${item.q} ${item.a}`),
+    keywords: semanticTokenize(`${item.q} ${item.a}`),
   })),
   ...editorialTimeline.map((item) => ({
     title: `${item.date} — ${item.title}`,
     text: item.desc,
     href: "#cronograma",
     section: "Linha do tempo",
-    keywords: tokenize(`${item.date} ${item.title} ${item.desc}`),
+    keywords: semanticTokenize(`${item.date} ${item.title} ${item.desc}`),
   })),
   ...productFacts.map((item) => ({
     title: item.title,
     text: item.text,
     href: "#produto-real",
     section: "Produto real",
-    keywords: tokenize(`${item.eyebrow} ${item.title} ${item.text}`),
+    keywords: semanticTokenize(`${item.eyebrow} ${item.title} ${item.text}`),
   })),
   ...metricFormulas.map((item) => ({
     title: `${item.metric} — ${item.formula}`,
     text: `${item.reads} ${item.warning}`,
     href: "#metricas",
     section: "Métricas",
-    keywords: tokenize(`${item.metric} ${item.formula} ${item.reads} ${item.warning}`),
+    keywords: semanticTokenize(`${item.metric} ${item.formula} ${item.reads} ${item.warning}`),
   })),
   ...evidenceLedger.map((item) => ({
     title: item.title,
     text: item.text,
     href: "#evidencia",
     section: "Evidência",
-    keywords: tokenize(`${item.status} ${item.title} ${item.text}`),
+    keywords: semanticTokenize(`${item.status} ${item.title} ${item.text}`),
   })),
   ...strategies.map((item) => ({
     title: item.title,
     text: item.desc,
     href: "#estrategias",
     section: "Estratégia",
-    keywords: tokenize(`${item.title} ${item.desc}`),
+    keywords: semanticTokenize(`${item.title} ${item.desc}`),
   })),
 ];
 
@@ -125,8 +144,18 @@ const fallback = (): AssistantAnswer => ({
   followUps: STARTERS.slice(0, 4),
 });
 
+const semanticNavigation = (query: string): AssistantAnswer | null => {
+  const matches = semanticSearch(query, { language: "pt-BR", limit: 3 });
+  if (!matches.length) return null;
+  return {
+    text: "Não encontrei uma resposta factual suficientemente forte para afirmar algo novo, mas encontrei conteúdos semanticamente relacionados no observatório. Posso te levar direto para a evidência mais próxima sem inventar uma resposta.",
+    sources: matches.map((match) => ({ label: match.title, href: match.path })),
+    followUps: STARTERS.slice(0, 3),
+  };
+};
+
 const score = (queryTokens: string[], entry: Entry) => {
-  const haystack = new Set([...entry.keywords, ...tokenize(entry.title), ...tokenize(entry.text)]);
+  const haystack = new Set([...entry.keywords, ...semanticTokenize(entry.title), ...semanticTokenize(entry.text)]);
   let total = 0;
   for (const token of queryTokens) {
     if (haystack.has(token)) total += entry.keywords.includes(token) ? 3 : 1;
@@ -157,7 +186,7 @@ export function askAssistant(query: string, history: ChatTurn[] = []): Assistant
     if (lastUser) effectiveQuery = `${lastUser.text} ${clean}`;
   }
 
-  const queryTokens = tokenize(effectiveQuery);
+  const queryTokens = semanticTokenize(effectiveQuery);
   if (!queryTokens.length) return fallback();
 
   const ranked = entries
@@ -166,7 +195,7 @@ export function askAssistant(query: string, history: ChatTurn[] = []): Assistant
     .sort((a, b) => b.score - a.score);
 
   const best = ranked[0];
-  if (!best || best.score < (queryTokens.length === 1 ? 1 : 2)) return fallback();
+  if (!best || best.score < (queryTokens.length === 1 ? 1 : 2)) return semanticNavigation(effectiveQuery) ?? fallback();
 
   const second = ranked[1];
   const sources = [{ label: best.entry.section, href: best.entry.href }];
@@ -177,9 +206,14 @@ export function askAssistant(query: string, history: ChatTurn[] = []): Assistant
     sources.push({ label: second.entry.section, href: second.entry.href });
   }
 
+  const related = semanticSearch(effectiveQuery, { language: "pt-BR", limit: 2 });
+  for (const match of related) {
+    if (!sources.some((source) => source.href === match.path)) sources.push({ label: match.title, href: match.path });
+  }
+
   return {
     text,
-    sources,
+    sources: sources.slice(0, 4),
     followUps: STARTERS.filter((item) => normalize(item) !== normalize(clean)).slice(0, 3),
   };
 }
