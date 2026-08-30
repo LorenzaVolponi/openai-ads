@@ -2,18 +2,26 @@ const base = (process.argv[2] || "http://127.0.0.1:3000").replace(/\/$/, "");
 const routes = ["/en/radar", "/en/lorenza-volponi", "/en/chatgpt-ads", "/en/geo-ai-strategy", "/en/press", "/distribution-manifest.json", "/intelligence.json", "/sitemap.xml"];
 const failures = [];
 
+function normalizeHtmlText(value) {
+  return value
+    .replace(/&amp;|&#38;|&#x26;/gi, "&")
+    .replace(/&quot;|&#34;|&#x22;/gi, '"')
+    .replace(/&#39;|&#x27;/gi, "'");
+}
+
 for (const route of routes) {
   try {
     const response = await fetch(`${base}${route}`, { redirect: "follow", signal: AbortSignal.timeout(15000) });
     const body = await response.text();
+    const normalizedBody = normalizeHtmlText(body);
     if (!response.ok) failures.push(`${route}: HTTP ${response.status}`);
     if (route.startsWith("/en/")) {
-      if (!/Lorenza Volponi/i.test(body)) failures.push(`${route}: Lorenza entity missing`);
-      if (!/AI|GEO|ChatGPT|evidence|Radar|UX\/UI|AI Search/i.test(body)) failures.push(`${route}: authority vocabulary missing`);
+      if (!/Lorenza Volponi/i.test(normalizedBody)) failures.push(`${route}: Lorenza entity missing`);
+      if (!/AI|GEO|ChatGPT|evidence|Radar|UX\/UI|AI Search/i.test(normalizedBody)) failures.push(`${route}: authority vocabulary missing`);
     }
     if (route === "/en/radar") {
       for (const term of ["ChatGPT Ads Radar", "AI Product & UX/UI", "GEO", "AI Search", "primary-source", "Lorenza Volponi"]) {
-        if (!body.includes(term)) failures.push(`/en/radar: missing ${term}`);
+        if (!normalizedBody.includes(term)) failures.push(`/en/radar: missing ${term}`);
       }
     }
     if (route === "/distribution-manifest.json") {

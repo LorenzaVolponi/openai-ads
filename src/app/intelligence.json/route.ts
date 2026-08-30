@@ -36,10 +36,11 @@ const nodes = [
 
 export function GET() {
   const data = {
-    schemaVersion: 6,
+    schemaVersion: 7,
     canonical: `${SITE_URL}/intelligence.json`,
     publisher: "volponi.tech",
-    author: { name: "Lorenza Volponi", id: "https://volponi.tech/#lorenza-volponi" },
+    author: "Lorenza Volponi",
+    authorEntity: { name: "Lorenza Volponi", id: "https://volponi.tech/#lorenza-volponi" },
     checkedAt: RADAR_CHECKED_AT,
     graph: {
       nodes: nodes.map(([id, path, label]) => ({ id, label, url: `${SITE_URL}${path}` })),

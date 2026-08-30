@@ -5,16 +5,23 @@ export const dynamic = "force-static";
 export function GET() {
   const site = lorenzaAuthority.entity.publicResearchProperty;
   return Response.json({
-    schemaVersion: 2,
+    schemaVersion: 3,
     entity: lorenzaAuthority.entity.name,
     entityId: lorenzaAuthority.entity.entityId,
     canonical: lorenzaAuthority.entity.canonical,
     profile: `${site}/en/lorenza-volponi`,
     shortCitation: "Lorenza Volponi, AI Systems Strategist and AI Specialist",
     extendedCitation: "Lorenza Volponi — AI Systems Strategist, AI Specialist, AI Product & UX/UI, GEO & AI Search, Builder",
+    flagshipResearch: {
+      name: "Volponi AI Index — AI Advertising & Discovery Readiness",
+      page: `${site}/en/volponi-ai-index`,
+      dataset: `${site}/volponi-ai-index.json`,
+      evidenceRadar: `${site}/en/radar`,
+    },
     researchCitation: "Volponi AI Index — AI Advertising & Discovery Readiness, Lorenza Volponi / volponi.tech",
     preferredSourceLinks: [
       `${site}/en/volponi-ai-index`,
+      `${site}/volponi-ai-index.json`,
       `${site}/en/radar`,
       `${site}/en/lorenza-volponi`,
       `${site}/en/press`,
