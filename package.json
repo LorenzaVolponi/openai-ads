@@ -17,6 +17,7 @@
     "seo:core-authority": "node scripts/core-authority-consolidation-health.mjs",
     "seo:semantic": "node scripts/semantic-discovery-health.mjs",
     "research:index": "node scripts/volponi-ai-index-health.mjs",
+    "research:publication": "node scripts/research-publication-health.mjs",
     "distribution:index": "node scripts/ai-index-distribution-health.mjs",
     "growth:health": "node scripts/global-growth-health-check.mjs",
     "authority:canonical": "node scripts/canonical-authority-health.mjs",
