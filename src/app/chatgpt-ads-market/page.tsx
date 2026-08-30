@@ -3,7 +3,8 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Database, ShieldCheck } from "lucide-react";
 
 import { MarketExplorer } from "@/components/market-explorer";
-import { SITE_URL } from "@/lib/media-authority";
+import { SemanticRelatedLinks } from "@/components/semantic-related-links";
+import { AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
 import { marketStates, RADAR_CHECKED_AT, RADAR_SOURCES } from "@/lib/radar-data";
 import { socialImageForPath } from "@/lib/seo";
 
@@ -15,7 +16,7 @@ const comingSoon = marketStates.filter((market) => market.adsManager === "Coming
 export const metadata: Metadata = {
   title: "ChatGPT Ads Market Snapshot: países e disponibilidade do Ads Manager",
   description: "Mapa auditável dos mercados do ChatGPT Ads e do Ads Manager: países disponíveis, coming soon, fonte oficial e data de revisão.",
-  authors: [{ name: "Lorenza Volponi", url: `${SITE_URL}/imprensa` }],
+  authors: [{ name: "Lorenza Volponi", url: `${SITE_URL}/en/lorenza-volponi` }],
   alternates: { canonical: URL },
   openGraph: {
     title: "ChatGPT Ads Market Snapshot",
@@ -38,16 +39,20 @@ const structuredData = {
       url: URL,
       inLanguage: "pt-BR",
       dateModified: `${RADAR_CHECKED_AT}T12:00:00Z`,
-      creator: { "@id": `${SITE_URL}/#author` },
-      author: { "@id": `${SITE_URL}/#author` },
-      publisher: { "@id": `${SITE_URL}/#publisher` },
+      creator: { "@id": AUTHOR_ID },
+      author: { "@id": AUTHOR_ID },
+      publisher: { "@id": PUBLISHER_ID },
       isAccessibleForFree: true,
+      about: ["ChatGPT Ads", "OpenAI Ads Manager", "market availability", "AI advertising", "conversational advertising"],
+      subjectOf: [{ "@type": "Dataset", url: `${SITE_URL}/en/volponi-ai-index`, name: "Volponi AI Index — AI Advertising & Discovery Readiness" }],
       distribution: [
         { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/data/chatgpt-ads-markets.json` },
         { "@type": "DataDownload", encodingFormat: "text/csv", contentUrl: `${SITE_URL}/data/chatgpt-ads-markets.csv` },
       ],
       citation: RADAR_SOURCES.availability.url,
     },
+    mediaAuthorStructuredData,
+    publisherStructuredData,
   ],
 };
 
@@ -77,6 +82,7 @@ export default function MarketSnapshotPage() {
           <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
             <a href="/data/chatgpt-ads-markets.json" className="rounded-full border border-zinc-300 bg-white px-4 py-2">JSON</a>
             <a href="/data/chatgpt-ads-markets.csv" className="rounded-full border border-zinc-300 bg-white px-4 py-2">CSV</a>
+            <Link href="/en/volponi-ai-index" className="rounded-full border border-zinc-300 bg-white px-4 py-2">Volponi AI Index</Link>
             <a href={RADAR_SOURCES.availability.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2">Fonte oficial <ArrowUpRight className="h-3.5 w-3.5" /></a>
           </div>
         </div>
@@ -85,6 +91,8 @@ export default function MarketSnapshotPage() {
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
         <MarketExplorer />
       </section>
+
+      <SemanticRelatedLinks currentPath="/chatgpt-ads-market" language="pt-BR" limit={5} />
 
       <section className="border-t border-zinc-200 bg-white">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-12 md:px-6 lg:grid-cols-[auto_1fr] lg:items-start">
