@@ -76,12 +76,14 @@ export const lorenzaAuthority = {
   ],
   proof: {
     research: [
+      { label: "Volponi AI Index", url: `${SITE_URL}/en/volponi-ai-index` },
       { label: "ChatGPT Ads Intelligence", url: `${SITE_URL}/en` },
       { label: "Verified change Radar", url: `${SITE_URL}/radar` },
       { label: "Authority Observatory", url: `${SITE_URL}/autoridade` },
       { label: "Market data", url: `${SITE_URL}/data/chatgpt-ads-markets.json` },
     ],
     machineReadable: [
+      `${SITE_URL}/volponi-ai-index.json`,
       `${SITE_URL}/evidence.json`,
       `${SITE_URL}/provenance.json`,
       `${SITE_URL}/intelligence.json`,

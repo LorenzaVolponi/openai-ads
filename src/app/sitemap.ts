@@ -9,6 +9,7 @@ const AUTHORITY_REVIEW = new Date("2026-08-29T14:30:00-03:00");
 const GLOBAL_GROWTH_REVIEW = new Date("2026-08-29T15:00:00-03:00");
 const AI_INDEX_REVIEW = new Date("2026-08-29T15:35:00-03:00");
 const PRESS_REVIEW = new Date("2026-08-29T15:45:00-03:00");
+const CONVERSION_REVIEW = new Date("2026-08-30T13:10:00-03:00");
 
 const globalGrowthPaths = [
   "/en/chatgpt-ads",
@@ -29,7 +30,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/en/press`, lastModified: PRESS_REVIEW, changeFrequency: "weekly", priority: 0.95, alternates: { languages: { en: `${SITE_URL}/en/press`, "pt-BR": `${SITE_URL}/imprensa` } } },
     { url: `${SITE_URL}/en/radar`, lastModified: LAST_REVIEW, changeFrequency: "daily", priority: 0.96, alternates: { languages: { en: `${SITE_URL}/en/radar`, "pt-BR": `${SITE_URL}/radar` } } },
     ...globalGrowthPaths.map((path) => ({ url: `${SITE_URL}${path}`, lastModified: GLOBAL_GROWTH_REVIEW, changeFrequency: "weekly" as const, priority: path === "/en/chatgpt-ads-consultant" || path === "/en/lorenza-volponi" || path === "/en/geo-ai-strategy" ? 0.93 : 0.9 })),
-    { url: `${SITE_URL}/work-with-lorenza`, lastModified: GLOBAL_GROWTH_REVIEW, changeFrequency: "weekly", priority: 0.91 },
+    { url: `${SITE_URL}/work-with-lorenza`, lastModified: CONVERSION_REVIEW, changeFrequency: "weekly", priority: 0.91 },
+    { url: `${SITE_URL}/work-with-lorenza/brief`, lastModified: CONVERSION_REVIEW, changeFrequency: "weekly", priority: 0.92 },
     { url: `${SITE_URL}/radar`, lastModified: LAST_REVIEW, changeFrequency: "daily", priority: 0.95, alternates: { languages: { "pt-BR": `${SITE_URL}/radar`, en: `${SITE_URL}/en/radar` } } },
     { url: `${SITE_URL}/oai-adsbot-searchbot`, lastModified: LAST_REVIEW, changeFrequency: "weekly", priority: 0.96 },
     ...radarEntries.map((entry) => ({ url: `${SITE_URL}/radar/${entry.slug}`, lastModified: new Date(`${entry.date}T12:00:00Z`), changeFrequency: "monthly" as const, priority: 0.78 })),

@@ -39,7 +39,7 @@ const crawlerManifestHeaders = [
 ];
 
 const authorityLinks = [
-  `<${SITE_URL}/imprensa>; rel=\"author\"`,
+  `<${SITE_URL}/en/lorenza-volponi>; rel=\"author\"`,
   `<${SITE_URL}/author.json>; rel=\"alternate\"; type=\"application/json\"`,
   `<${SITE_URL}/citation.json>; rel=\"cite-as\"; type=\"application/json\"`,
   `<${SITE_URL}/provenance.json>; rel=\"describedby\"; type=\"application/json\"`,
@@ -51,6 +51,11 @@ const authorityLinks = [
 ];
 
 const authorityDiscoveryHeaders = [
+  { key: "Link", value: authorityLinks.join(", ") },
+];
+
+const englishSectionHeaders = [
+  { key: "Content-Language", value: "en" },
   { key: "Link", value: authorityLinks.join(", ") },
 ];
 
@@ -110,6 +115,9 @@ const nextConfig: NextConfig = {
       { source: "/:path*", headers: securityHeaders },
       { source: "/", headers: authorityDiscoveryHeaders },
       { source: "/en", headers: englishDiscoveryHeaders },
+      { source: "/en/:path*", headers: englishSectionHeaders },
+      { source: "/work-with-lorenza", headers: englishSectionHeaders },
+      { source: "/work-with-lorenza/:path*", headers: englishSectionHeaders },
       { source: "/imprensa", headers: authorityDiscoveryHeaders },
       { source: "/imprensa/dados", headers: authorityDiscoveryHeaders },
       { source: "/chatgpt-ads-market", headers: authorityDiscoveryHeaders },
