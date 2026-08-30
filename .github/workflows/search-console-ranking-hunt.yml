@@ -1,4 +1,4 @@
-name: Search Console Ranking Hunt
+name: Search Console English Opportunity Hunt
 
 on:
   push:
@@ -22,12 +22,12 @@ permissions:
   issues: write
 
 concurrency:
-  group: search-console-ranking-hunt
+  group: search-console-english-opportunity-hunt
   cancel-in-progress: true
 
 jobs:
   ranking-hunt:
-    name: Turn real queries into ranking priorities
+    name: Turn real English queries into ranking priorities
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -35,6 +35,7 @@ jobs:
       GSC_PRIVATE_KEY: ${{ secrets.GSC_PRIVATE_KEY }}
       GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:openai-ads.volponi.tech' }}
       GSC_DAYS: ${{ inputs.days || '28' }}
+      GSC_MIN_PUBLIC_IMPRESSIONS: "10"
       GSC_OUTPUT: /tmp/search-console-ranking-hunt.md
 
     steps:
@@ -49,20 +50,25 @@ jobs:
           node-version: "24"
           package-manager-cache: false
 
-      - name: Build ranking hunt from Search Console
+      - name: Build English opportunity hunt from Search Console
         run: node scripts/search-console-ranking-hunt.mjs
 
-      - name: Publish ranking hunt issue
+      - name: Publish measured opportunity issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          TITLE="Search Console ranking hunt"
+          if grep -Fq 'Status: **NOT_MEASURED**' "$GSC_OUTPUT"; then
+            echo "Search Console evidence is not available to this workflow. No public issue will be created from unmeasured data."
+            exit 0
+          fi
+
+          TITLE="Search Console English opportunity hunt"
           ISSUE_NUMBER="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "${TITLE} in:title" --json number,title --jq ".[] | select(.title == \"${TITLE}\") | .number" | head -n 1)"
           if [ -n "$ISSUE_NUMBER" ]; then
             gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$GSC_OUTPUT"
-            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Ranking hunt refreshed from real Search Console data: $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
+            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "English opportunity hunt refreshed from privacy-filtered Search Console evidence: $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
           else
             gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file "$GSC_OUTPUT"
           fi
