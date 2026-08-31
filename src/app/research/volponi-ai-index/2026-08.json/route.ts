@@ -3,6 +3,11 @@ import {
   digestVolponiAiIndexPublication,
   VOLPONI_AI_INDEX_VERSIONED_URL,
 } from "@/lib/volponi-ai-index-publication";
+import {
+  VOLPONI_AI_INDEX_BIBTEX_URL,
+  VOLPONI_AI_INDEX_CSL_URL,
+  VOLPONI_AI_INDEX_RIS_URL,
+} from "@/lib/volponi-ai-index-citations";
 
 export const dynamic = "force-static";
 
@@ -20,6 +25,11 @@ export function GET() {
     headers: {
       "cache-control": "public, max-age=31536000, s-maxage=31536000, immutable",
       "x-content-sha256": contentDigest.replace("sha256:", ""),
+      link: [
+        `<${VOLPONI_AI_INDEX_BIBTEX_URL}>; rel="alternate"; type="application/x-bibtex"`,
+        `<${VOLPONI_AI_INDEX_RIS_URL}>; rel="alternate"; type="application/x-research-info-systems"`,
+        `<${VOLPONI_AI_INDEX_CSL_URL}>; rel="alternate"; type="application/vnd.citationstyles.csl+json"`,
+      ].join(", "),
     },
   });
 }

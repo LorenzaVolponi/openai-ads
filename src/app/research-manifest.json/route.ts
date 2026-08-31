@@ -3,6 +3,7 @@ import {
   RESEARCH_MANIFEST_URL,
   VOLPONI_AI_INDEX_VERSIONED_URL,
 } from "@/lib/volponi-ai-index-publication";
+import { VOLPONI_AI_INDEX_CITATION_FORMATS } from "@/lib/volponi-ai-index-citations";
 import {
   VOLPONI_AI_INDEX_CANONICAL,
   VOLPONI_AI_INDEX_EDITION,
@@ -17,7 +18,7 @@ export function GET() {
   const contentDigest = digestVolponiAiIndexPublication();
 
   return Response.json({
-    schemaVersion: 1,
+    schemaVersion: 2,
     canonical: RESEARCH_MANIFEST_URL,
     publisher: "volponi.tech",
     authorEntity: LORENZA_ENTITY_ID,
@@ -35,6 +36,7 @@ export function GET() {
         evidence: `${SITE_URL}/evidence.json`,
         provenance: `${SITE_URL}/provenance.json`,
         citation: `${VOLPONI_AI_INDEX_NAME}, Lorenza Volponi / volponi.tech, edition ${VOLPONI_AI_INDEX_EDITION}.`,
+        citationFormats: VOLPONI_AI_INDEX_CITATION_FORMATS,
       },
     ],
     boundary:

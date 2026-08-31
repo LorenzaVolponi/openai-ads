@@ -12,6 +12,11 @@ import {
   RESEARCH_MANIFEST_URL,
   VOLPONI_AI_INDEX_VERSIONED_URL,
 } from "@/lib/volponi-ai-index-publication";
+import {
+  VOLPONI_AI_INDEX_BIBTEX_URL,
+  VOLPONI_AI_INDEX_CSL_URL,
+  VOLPONI_AI_INDEX_RIS_URL,
+} from "@/lib/volponi-ai-index-citations";
 
 export const metadata: Metadata = {
   title: "Volponi AI Index 2026: AI Advertising & Discovery Readiness | Lorenza Volponi",
@@ -48,6 +53,9 @@ const structuredData = {
       distribution: [
         { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE_URL}/volponi-ai-index.json`, name: "Latest dataset pointer" },
         { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: VOLPONI_AI_INDEX_VERSIONED_URL, name: `Versioned edition ${indexSnapshot.edition}` },
+        { "@type": "DataDownload", encodingFormat: "application/x-bibtex", contentUrl: VOLPONI_AI_INDEX_BIBTEX_URL, name: `BibTeX citation for edition ${indexSnapshot.edition}` },
+        { "@type": "DataDownload", encodingFormat: "application/x-research-info-systems", contentUrl: VOLPONI_AI_INDEX_RIS_URL, name: `RIS citation for edition ${indexSnapshot.edition}` },
+        { "@type": "DataDownload", encodingFormat: "application/vnd.citationstyles.csl+json", contentUrl: VOLPONI_AI_INDEX_CSL_URL, name: `CSL-JSON citation for edition ${indexSnapshot.edition}` },
       ],
     },
     mediaAuthorStructuredData,
@@ -76,6 +84,11 @@ export default function VolponiAIIndexPage() {
             <Button asChild variant="outline"><Link href="/en/lorenza-volponi">About Lorenza</Link></Button>
           </div>
           <p className="mt-5 max-w-4xl break-all font-mono text-[10px] leading-5 text-zinc-500">Edition content digest: {digest}</p>
+          <p className="mt-3 text-xs text-zinc-500">
+            Cite this edition: <a className="font-bold text-zinc-800 underline underline-offset-4" href={VOLPONI_AI_INDEX_BIBTEX_URL}>BibTeX</a>
+            {" · "}<a className="font-bold text-zinc-800 underline underline-offset-4" href={VOLPONI_AI_INDEX_RIS_URL}>RIS</a>
+            {" · "}<a className="font-bold text-zinc-800 underline underline-offset-4" href={VOLPONI_AI_INDEX_CSL_URL}>CSL-JSON</a>
+          </p>
         </div>
       </section>
 
