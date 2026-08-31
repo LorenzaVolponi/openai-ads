@@ -4,6 +4,7 @@ import {
   RESEARCH_MANIFEST_URL,
   VOLPONI_AI_INDEX_VERSIONED_URL,
 } from "@/lib/volponi-ai-index-publication";
+import { VOLPONI_AI_INDEX_CITATION_FORMATS } from "@/lib/volponi-ai-index-citations";
 import { VOLPONI_AI_INDEX_EDITION, VOLPONI_AI_INDEX_NAME } from "@/lib/volponi-ai-index";
 
 export const dynamic = "force-static";
@@ -11,7 +12,7 @@ export const dynamic = "force-static";
 export function GET() {
   const site = lorenzaAuthority.entity.publicResearchProperty;
   return Response.json({
-    schemaVersion: 4,
+    schemaVersion: 5,
     entity: lorenzaAuthority.entity.name,
     entityId: lorenzaAuthority.entity.entityId,
     canonical: lorenzaAuthority.entity.canonical,
@@ -27,6 +28,7 @@ export function GET() {
       researchManifest: RESEARCH_MANIFEST_URL,
       contentDigest: digestVolponiAiIndexPublication(),
       evidenceRadar: `${site}/en/radar`,
+      citationFormats: VOLPONI_AI_INDEX_CITATION_FORMATS,
     },
     researchCitation: `${VOLPONI_AI_INDEX_NAME}, Lorenza Volponi / volponi.tech, edition ${VOLPONI_AI_INDEX_EDITION}.`,
     preferredSourceLinks: [
@@ -34,6 +36,9 @@ export function GET() {
       VOLPONI_AI_INDEX_VERSIONED_URL,
       `${site}/volponi-ai-index.json`,
       RESEARCH_MANIFEST_URL,
+      VOLPONI_AI_INDEX_CITATION_FORMATS.cslJson,
+      VOLPONI_AI_INDEX_CITATION_FORMATS.bibtex,
+      VOLPONI_AI_INDEX_CITATION_FORMATS.ris,
       `${site}/en/radar`,
       `${site}/en/lorenza-volponi`,
       `${site}/en/press`,
