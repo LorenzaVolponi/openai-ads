@@ -70,6 +70,8 @@ export function MobileDock() {
         <button
           type="button"
           onClick={openAssistant}
+          aria-haspopup="dialog"
+          aria-controls="raposa-assistant-dialog"
           className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl bg-zinc-100 px-1 text-[10px] font-bold text-zinc-950 transition hover:bg-zinc-200"
         >
           <MessageCircle className="h-4 w-4" />
