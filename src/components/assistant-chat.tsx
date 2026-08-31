@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import {
   motion,
   AnimatePresence,
@@ -23,6 +29,15 @@ type Msg = ChatTurn & {
   followUps?: string[];
 };
 
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "textarea:not([disabled])",
+  "select:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
+
 function greetingMessage(): Msg {
   return {
     role: "assistant",
@@ -33,23 +48,24 @@ function greetingMessage(): Msg {
 
 function TypewriterText({
   text,
+  reducedMotion,
   onTick,
   onDone,
 }: {
   text: string;
+  reducedMotion: boolean;
   onTick?: () => void;
   onDone?: () => void;
 }) {
-  const [shown, setShown] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? text.length
-      : 0;
-  });
-  const doneRef = useRef(shown >= text.length);
+  const [shown, setShown] = useState(() => (reducedMotion ? text.length : 0));
+  const doneRef = useRef(false);
 
   useEffect(() => {
-    if (doneRef.current) return;
+    if (reducedMotion) {
+      setShown(text.length);
+      return;
+    }
+
     const step = Math.max(2, Math.ceil(text.length / 90));
     const id = window.setInterval(() => {
       setShown((prev) => {
@@ -62,7 +78,7 @@ function TypewriterText({
       onTick?.();
     }, 24);
     return () => window.clearInterval(id);
-  }, [text, onTick]);
+  }, [text, reducedMotion, onTick]);
 
   useEffect(() => {
     if (shown >= text.length && !doneRef.current) {
@@ -90,21 +106,44 @@ export function AssistantChat() {
   const [thinking, setThinking] = useState(false);
   const [revealing, setRevealing] = useState(-1);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const wasOpenRef = useRef(false);
   const dragControls = useDragControls();
   const prefersReducedMotion = useReducedMotion();
+
+  const dismissSheet = useCallback(() => setOpen(false), []);
 
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") dismissSheet();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKeyDown);
     };
+  }, [open, dismissSheet]);
+
+  useEffect(() => {
+    if (open) {
+      wasOpenRef.current = true;
+      const frame = window.requestAnimationFrame(() => inputRef.current?.focus());
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      const previous = previousFocusRef.current;
+      const target = previous?.isConnected ? previous : launcherRef.current;
+      const frame = window.requestAnimationFrame(() => target?.focus());
+      return () => window.cancelAnimationFrame(frame);
+    }
   }, [open]);
 
   const scrollToBottom = useCallback(() => {
@@ -117,13 +156,17 @@ export function AssistantChat() {
   }, [messages, thinking, scrollToBottom]);
 
   const openAssistant = useCallback(() => {
+    if (!open) {
+      const active = document.activeElement;
+      previousFocusRef.current = active instanceof HTMLElement ? active : launcherRef.current;
+    }
     if (messages.length === 0) {
       setMessages([greetingMessage()]);
       setRevealing(0);
     }
     setHintDismissed(true);
     setOpen(true);
-  }, [messages.length]);
+  }, [messages.length, open]);
 
   useEffect(() => {
     const handler = () => openAssistant();
@@ -133,11 +176,11 @@ export function AssistantChat() {
 
   const toggleOpen = useCallback(() => {
     if (open) {
-      setOpen(false);
+      dismissSheet();
       return;
     }
     openAssistant();
-  }, [open, openAssistant]);
+  }, [open, openAssistant, dismissSheet]);
 
   const send = useCallback(
     (raw?: string) => {
@@ -165,8 +208,6 @@ export function AssistantChat() {
     [input, thinking, messages, prefersReducedMotion]
   );
 
-  const dismissSheet = useCallback(() => setOpen(false), []);
-
   const navigateTo = useCallback(
     (href: string) => {
       dismissSheet();
@@ -182,6 +223,42 @@ export function AssistantChat() {
       });
     },
     [dismissSheet, prefersReducedMotion]
+  );
+
+  const handleDialogKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        dismissSheet();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+        (element) => element.tabIndex >= 0 && !element.hasAttribute("disabled") && element.getAttribute("aria-hidden") !== "true"
+      );
+
+      if (!focusable.length) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && (active === first || !dialog.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || !dialog.contains(active))) {
+        event.preventDefault();
+        first.focus();
+      }
+    },
+    [dismissSheet]
   );
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
@@ -216,11 +293,14 @@ export function AssistantChat() {
         </AnimatePresence>
 
         <motion.button
+          ref={launcherRef}
           whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
           whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
           onClick={toggleOpen}
           aria-label={open ? "Fechar assistente Raposa IA" : "Abrir assistente Raposa IA — perguntas sobre o guia"}
           aria-expanded={open}
+          aria-controls="raposa-assistant-dialog"
+          aria-haspopup="dialog"
           className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-black/15 transition-colors hover:bg-zinc-800"
         >
           {!open && !prefersReducedMotion && (
@@ -242,6 +322,9 @@ export function AssistantChat() {
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={dialogRef}
+            id="raposa-assistant-dialog"
+            tabIndex={-1}
             initial={prefersReducedMotion ? false : { opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 60 }}
@@ -252,9 +335,11 @@ export function AssistantChat() {
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.6 }}
             onDragEnd={onDragEnd}
+            onKeyDown={handleDialogKeyDown}
             role="dialog"
             aria-modal="true"
-            aria-label="Raposa IA — assistente do guia"
+            aria-labelledby="raposa-assistant-title"
+            aria-describedby="raposa-assistant-description"
             className="fixed inset-x-3 bottom-[calc(4.9rem+env(safe-area-inset-bottom))] z-50 flex h-[min(68dvh,620px)] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl lg:inset-x-auto lg:bottom-24 lg:right-6 lg:h-[min(560px,calc(100dvh-7.5rem))] lg:w-[400px] lg:rounded-2xl"
           >
             {!prefersReducedMotion && (
@@ -276,8 +361,8 @@ export function AssistantChat() {
                 className="h-9 w-9 rounded-lg"
               />
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold leading-tight">Raposa IA</p>
-                <p className="truncate text-xs text-muted-foreground">
+                <p id="raposa-assistant-title" className="text-sm font-semibold leading-tight">Raposa IA</p>
+                <p id="raposa-assistant-description" className="truncate text-xs text-muted-foreground">
                   Responde só com o conteúdo do guia — sem inventar
                 </p>
               </div>
@@ -296,6 +381,7 @@ export function AssistantChat() {
               style={{ WebkitOverflowScrolling: "touch" }}
               role="log"
               aria-live="polite"
+              aria-busy={thinking}
             >
               {messages.map((m, i) => (
                 <div key={i} className={cn("flex flex-col", m.role === "user" ? "items-end" : "items-start")}>
@@ -310,6 +396,7 @@ export function AssistantChat() {
                     {m.role === "assistant" && i === revealing ? (
                       <TypewriterText
                         text={m.text}
+                        reducedMotion={Boolean(prefersReducedMotion)}
                         onTick={scrollToBottom}
                         onDone={() => setRevealing(-1)}
                       />
@@ -352,6 +439,7 @@ export function AssistantChat() {
               {thinking && (
                 <div className="flex items-start">
                   <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-muted px-4 py-3">
+                    <span className="sr-only">A Raposa está preparando a resposta.</span>
                     {[0, 1, 2].map((d) => (
                       <span
                         key={d}
@@ -360,6 +448,7 @@ export function AssistantChat() {
                           !prefersReducedMotion && "animate-bounce"
                         )}
                         style={prefersReducedMotion ? undefined : { animationDelay: `${d * 0.15}s` }}
+                        aria-hidden="true"
                       />
                     ))}
                   </div>
@@ -375,6 +464,7 @@ export function AssistantChat() {
               }}
             >
               <Input
+                ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pergunte sobre ChatGPT Ads..."
@@ -384,7 +474,6 @@ export function AssistantChat() {
                 maxLength={200}
                 autoComplete="off"
                 enterKeyHint="send"
-                autoFocus
               />
               <Button
                 type="submit"
