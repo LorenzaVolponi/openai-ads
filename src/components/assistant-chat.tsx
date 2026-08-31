@@ -48,24 +48,17 @@ function greetingMessage(): Msg {
 
 function TypewriterText({
   text,
-  reducedMotion,
   onTick,
   onDone,
 }: {
   text: string;
-  reducedMotion: boolean;
   onTick?: () => void;
   onDone?: () => void;
 }) {
-  const [shown, setShown] = useState(() => (reducedMotion ? text.length : 0));
+  const [shown, setShown] = useState(0);
   const doneRef = useRef(false);
 
   useEffect(() => {
-    if (reducedMotion) {
-      setShown(text.length);
-      return;
-    }
-
     const step = Math.max(2, Math.ceil(text.length / 90));
     const id = window.setInterval(() => {
       setShown((prev) => {
@@ -78,7 +71,7 @@ function TypewriterText({
       onTick?.();
     }, 24);
     return () => window.clearInterval(id);
-  }, [text, reducedMotion, onTick]);
+  }, [text, onTick]);
 
   useEffect(() => {
     if (shown >= text.length && !doneRef.current) {
@@ -162,11 +155,11 @@ export function AssistantChat() {
     }
     if (messages.length === 0) {
       setMessages([greetingMessage()]);
-      setRevealing(0);
+      setRevealing(prefersReducedMotion ? -1 : 0);
     }
     setHintDismissed(true);
     setOpen(true);
-  }, [messages.length, open]);
+  }, [messages.length, open, prefersReducedMotion]);
 
   useEffect(() => {
     const handler = () => openAssistant();
@@ -199,7 +192,7 @@ export function AssistantChat() {
             .map(({ role, text }) => ({ role, text }));
           const ans = askAssistant(q, history);
           setMessages((m) => [...m, { role: "assistant", ...ans }]);
-          setRevealing(messages.length + 1);
+          setRevealing(prefersReducedMotion ? -1 : messages.length + 1);
           setThinking(false);
         },
         prefersReducedMotion ? 0 : 420 + Math.random() * 380
@@ -396,7 +389,6 @@ export function AssistantChat() {
                     {m.role === "assistant" && i === revealing ? (
                       <TypewriterText
                         text={m.text}
-                        reducedMotion={Boolean(prefersReducedMotion)}
                         onTick={scrollToBottom}
                         onDone={() => setRevealing(-1)}
                       />
