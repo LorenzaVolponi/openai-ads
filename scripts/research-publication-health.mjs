@@ -41,6 +41,16 @@ function digestPayload(record) {
   return `sha256:${createHash("sha256").update(serialized).digest("hex")}`;
 }
 
+function representationIntegrity(text) {
+  const bytes = createHash("sha256").update(text).digest();
+  const hex = bytes.toString("hex");
+  return {
+    hex,
+    contentDigest: `sha-256=:${bytes.toString("base64")}:`,
+    etag: `"${hex}"`,
+  };
+}
+
 const latest = await get("/volponi-ai-index.json");
 const versioned = await get("/research/volponi-ai-index/2026-08.json");
 const bibtex = await get("/research/volponi-ai-index/2026-08.bib");
@@ -86,6 +96,14 @@ for (const [label, result] of [
 ]) {
   const cache = result.response.headers.get("cache-control") || "";
   requireValue(/31536000/.test(cache) && /immutable/i.test(cache), `${label} cache is not immutable for one year: ${cache || "none"}`);
+
+  const expected = representationIntegrity(result.text);
+  const representationSha = result.response.headers.get("x-representation-sha256") || "";
+  const contentDigest = result.response.headers.get("content-digest") || "";
+  const etag = result.response.headers.get("etag") || "";
+  requireValue(representationSha === expected.hex, `${label}: x-representation-sha256 mismatch`);
+  requireValue(contentDigest === expected.contentDigest, `${label}: Content-Digest mismatch`);
+  requireValue(etag === expected.etag, `${label}: ETag mismatch (${etag || "none"})`);
 }
 
 for (const [label, result] of [
@@ -144,4 +162,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`\nResearch Publication Health PASSED — edition ${expectedEdition}, digest ${latestDigest}, citation interoperability verified.`);
+console.log(`\nResearch Publication Health PASSED — edition ${expectedEdition}, digest ${latestDigest}, citation and HTTP integrity verified.`);
