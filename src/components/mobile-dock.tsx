@@ -33,10 +33,6 @@ export function MobileDock() {
     return () => observer.disconnect();
   }, []);
 
-  const goTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   const openAssistant = () => {
     window.dispatchEvent(new Event("volponi:assistant-open"));
   };
@@ -51,16 +47,15 @@ export function MobileDock() {
           const Icon = item.icon;
           const selected = active === item.id;
           return (
-            <button
+            <a
               key={item.id}
-              type="button"
-              onClick={() => goTo(item.id)}
+              href={`#${item.id}`}
               aria-current={selected ? "location" : undefined}
               className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] font-bold transition ${selected ? "bg-zinc-950 text-white" : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950"}`}
             >
               <Icon className="h-4 w-4" />
               {item.label}
-            </button>
+            </a>
           );
         })}
 

@@ -5,6 +5,7 @@ import {
   motion,
   AnimatePresence,
   useDragControls,
+  useReducedMotion,
   type PanInfo,
 } from "framer-motion";
 import { MessageCircle, X, Send, BookOpen, Sparkles, GripHorizontal } from "lucide-react";
@@ -81,7 +82,7 @@ function TypewriterText({
   );
 }
 
-export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => void }) {
+export function AssistantChat() {
   const [open, setOpen] = useState(false);
   const [hintDismissed, setHintDismissed] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -90,15 +91,20 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
   const [revealing, setRevealing] = useState(-1);
   const scrollRef = useRef<HTMLDivElement>(null);
   const dragControls = useDragControls();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (open) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = prev;
-      };
-    }
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
   const scrollToBottom = useCallback(() => {
@@ -153,13 +159,30 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
           setRevealing(messages.length + 1);
           setThinking(false);
         },
-        420 + Math.random() * 380
+        prefersReducedMotion ? 0 : 420 + Math.random() * 380
       );
     },
-    [input, thinking, messages]
+    [input, thinking, messages, prefersReducedMotion]
   );
 
   const dismissSheet = useCallback(() => setOpen(false), []);
+
+  const navigateTo = useCallback(
+    (href: string) => {
+      dismissSheet();
+      window.requestAnimationFrame(() => {
+        if (href.startsWith("#")) {
+          document.getElementById(href.slice(1))?.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start",
+          });
+          return;
+        }
+        window.location.assign(href);
+      });
+    },
+    [dismissSheet, prefersReducedMotion]
+  );
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     if (info.offset.y > 90 || info.velocity.y > 600) dismissSheet();
@@ -178,9 +201,9 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
         <AnimatePresence>
           {!open && !hintDismissed && (
             <motion.button
-              initial={{ opacity: 0, x: 8 }}
+              initial={prefersReducedMotion ? false : { opacity: 0, x: 8 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 8 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 8 }}
               onClick={() => setHintDismissed(true)}
               aria-hidden="true"
               tabIndex={-1}
@@ -193,14 +216,14 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
         </AnimatePresence>
 
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.92 }}
+          whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
+          whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
           onClick={toggleOpen}
           aria-label={open ? "Fechar assistente Raposa IA" : "Abrir assistente Raposa IA — perguntas sobre o guia"}
           aria-expanded={open}
           className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-black/15 transition-colors hover:bg-zinc-800"
         >
-          {!open && (
+          {!open && !prefersReducedMotion && (
             <span
               className="absolute inset-0 animate-ping rounded-full bg-zinc-950/15"
               aria-hidden="true"
@@ -219,11 +242,11 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 60 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 60 }}
-            transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            drag="y"
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 60 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { type: "spring", stiffness: 320, damping: 32 }}
+            drag={prefersReducedMotion ? false : "y"}
             dragListener={false}
             dragControls={dragControls}
             dragConstraints={{ top: 0, bottom: 0 }}
@@ -234,13 +257,15 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
             aria-label="Raposa IA — assistente do guia"
             className="fixed inset-x-3 bottom-[calc(4.9rem+env(safe-area-inset-bottom))] z-50 flex h-[min(68dvh,620px)] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl lg:inset-x-auto lg:bottom-24 lg:right-6 lg:h-[min(560px,calc(100dvh-7.5rem))] lg:w-[400px] lg:rounded-2xl"
           >
-            <div
-              className="flex cursor-grab touch-none justify-center pb-1 pt-2 active:cursor-grabbing lg:hidden"
-              onPointerDown={(e) => dragControls.start(e)}
-              aria-hidden="true"
-            >
-              <GripHorizontal className="h-5 w-10 text-muted-foreground/50" />
-            </div>
+            {!prefersReducedMotion && (
+              <div
+                className="flex cursor-grab touch-none justify-center pb-1 pt-2 active:cursor-grabbing lg:hidden"
+                onPointerDown={(e) => dragControls.start(e)}
+                aria-hidden="true"
+              >
+                <GripHorizontal className="h-5 w-10 text-muted-foreground/50" />
+              </div>
+            )}
 
             <div className="flex items-center gap-3 border-b border-border bg-zinc-50 px-4 py-3">
               <img
@@ -298,10 +323,7 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                       {m.sources.map((s, j) => (
                         <button
                           key={j}
-                          onClick={() => {
-                            onNavigate(s.href);
-                            dismissSheet();
-                          }}
+                          onClick={() => navigateTo(s.href)}
                           className="inline-flex min-h-9 items-center gap-1 rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-1 text-[11px] font-medium text-zinc-800 transition-colors hover:bg-zinc-100"
                         >
                           <BookOpen className="h-3 w-3" />
@@ -333,8 +355,11 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                     {[0, 1, 2].map((d) => (
                       <span
                         key={d}
-                        className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60"
-                        style={{ animationDelay: `${d * 0.15}s` }}
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full bg-muted-foreground/60",
+                          !prefersReducedMotion && "animate-bounce"
+                        )}
+                        style={prefersReducedMotion ? undefined : { animationDelay: `${d * 0.15}s` }}
                       />
                     ))}
                   </div>
@@ -359,6 +384,7 @@ export function AssistantChat({ onNavigate }: { onNavigate: (href: string) => vo
                 maxLength={200}
                 autoComplete="off"
                 enterKeyHint="send"
+                autoFocus
               />
               <Button
                 type="submit"

@@ -1,5 +1,3 @@
-"use client";
-
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight, BookOpen, Check, Radio, ShieldCheck } from "lucide-react";
@@ -35,14 +33,6 @@ const topNav = [
 ] as const;
 
 export default function HomeV2() {
-  const navigate = (href: string) => {
-    if (href.startsWith("#")) {
-      document.getElementById(href.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    window.location.href = href;
-  };
-
   const theme = {
     "--primary": "oklch(0.18 0 0)",
     "--primary-foreground": "oklch(1 0 0)",
@@ -91,12 +81,12 @@ export default function HomeV2() {
                 De forma simples, direta e útil. Veja como o anúncio aparece, como escrever melhor, como medir e onde o produto realmente está disponível — sem transformar hype em resultado.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <button type="button" onClick={() => navigate("#como-aparece")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-zinc-800">
+                <a href="#como-aparece" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-zinc-800">
                   Ver como funciona <ArrowRight className="h-4 w-4" />
-                </button>
-                <button type="button" onClick={() => navigate("#intelligence")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:border-zinc-500">
+                </a>
+                <a href="#intelligence" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:border-zinc-500">
                   Abrir Intelligence <ArrowRight className="h-4 w-4" />
-                </button>
+                </a>
                 <a href="https://ads.openai.com/pt-BR" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:border-zinc-500">
                   Fonte oficial <ArrowUpRight className="h-4 w-4" />
                 </a>
@@ -202,7 +192,7 @@ export default function HomeV2() {
       </main>
 
       <MobileDock />
-      <AssistantChat onNavigate={navigate} />
+      <AssistantChat />
     </div>
   );
 }
