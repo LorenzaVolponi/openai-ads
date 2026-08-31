@@ -6,6 +6,7 @@ on:
     paths:
       - "src/lib/volponi-ai-index.ts"
       - "src/lib/volponi-ai-index-publication.ts"
+      - "src/lib/volponi-ai-index-citations.ts"
       - "src/app/en/volponi-ai-index/page.tsx"
       - "src/app/volponi-ai-index.json/route.ts"
       - "src/app/research/**"
