@@ -18,3 +18,11 @@ keywords:
   - "Brazil"
   - "AI discovery"
   - "GEO"
+preferred-citation:
+  type: dataset
+  title: "Volponi AI Index — AI Advertising & Discovery Readiness"
+  authors:
+    - family-names: "Volponi"
+      given-names: "Lorenza"
+  year: 2026
+  url: "https://openai-ads.volponi.tech/research/volponi-ai-index/2026-08.json"
