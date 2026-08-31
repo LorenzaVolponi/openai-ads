@@ -43,6 +43,9 @@ function digestPayload(record) {
 
 const latest = await get("/volponi-ai-index.json");
 const versioned = await get("/research/volponi-ai-index/2026-08.json");
+const bibtex = await get("/research/volponi-ai-index/2026-08.bib");
+const ris = await get("/research/volponi-ai-index/2026-08.ris");
+const csl = await get("/research/volponi-ai-index/2026-08.csl.json");
 const manifest = await get("/research-manifest.json");
 const page = await fetch(`${base}/en/volponi-ai-index`, { signal: AbortSignal.timeout(15000) });
 const pageHtml = await page.text();
@@ -75,17 +78,54 @@ const versionedHeaderDigest = versioned.response.headers.get("x-content-sha256")
 requireValue(latestHeaderDigest === latestDigest.replace("sha256:", ""), "latest x-content-sha256 header mismatch");
 requireValue(versionedHeaderDigest === versionedDigest.replace("sha256:", ""), "versioned x-content-sha256 header mismatch");
 
-const versionedCache = versioned.response.headers.get("cache-control") || "";
-requireValue(/31536000/.test(versionedCache) && /immutable/i.test(versionedCache), `versioned cache is not immutable for one year: ${versionedCache || "none"}`);
-for (const [label, result] of [["latest", latest], ["versioned", versioned], ["manifest", manifest]]) {
+for (const [label, result] of [
+  ["versioned", versioned],
+  ["bibtex", bibtex],
+  ["ris", ris],
+  ["csl", csl],
+]) {
+  const cache = result.response.headers.get("cache-control") || "";
+  requireValue(/31536000/.test(cache) && /immutable/i.test(cache), `${label} cache is not immutable for one year: ${cache || "none"}`);
+}
+
+for (const [label, result] of [
+  ["latest", latest],
+  ["versioned", versioned],
+  ["bibtex", bibtex],
+  ["ris", ris],
+  ["csl", csl],
+  ["manifest", manifest],
+]) {
   const robots = result.response.headers.get("x-robots-tag") || "";
   requireValue(/noindex/i.test(robots) && /follow/i.test(robots), `${label}: machine endpoint must be noindex, follow (${robots || "none"})`);
 }
+
+requireValue(/application\/x-bibtex/i.test(bibtex.response.headers.get("content-type") || ""), "BibTeX endpoint content-type mismatch");
+requireValue(/application\/x-research-info-systems/i.test(ris.response.headers.get("content-type") || ""), "RIS endpoint content-type mismatch");
+requireValue(/citationstyles\.csl\+json/i.test(csl.response.headers.get("content-type") || ""), "CSL-JSON endpoint content-type mismatch");
+requireValue(bibtex.text.includes("@misc{volponi2026aiindex"), "BibTeX citation key missing");
+requireValue(bibtex.text.includes("Volponi, Lorenza"), "BibTeX author missing");
+requireValue(bibtex.text.includes("2026-08.json"), "BibTeX immutable dataset URL missing");
+requireValue(ris.text.includes("TY  - DATA"), "RIS dataset type missing");
+requireValue(ris.text.includes("AU  - Volponi, Lorenza"), "RIS author missing");
+requireValue(ris.text.includes("ET  - 2026.08"), "RIS edition missing");
+requireValue(csl.json?.type === "dataset", "CSL-JSON type must be dataset");
+requireValue(csl.json?.author?.[0]?.family === "Volponi" && csl.json?.author?.[0]?.given === "Lorenza", "CSL-JSON author mismatch");
+requireValue(csl.json?.version === expectedEdition, "CSL-JSON edition mismatch");
+requireValue(csl.json?.URL?.endsWith("/research/volponi-ai-index/2026-08.json"), "CSL-JSON immutable dataset URL missing");
+
+const versionedLinks = versioned.response.headers.get("link") || "";
+requireValue(versionedLinks.includes("2026-08.bib"), "versioned dataset: BibTeX alternate Link missing");
+requireValue(versionedLinks.includes("2026-08.ris"), "versioned dataset: RIS alternate Link missing");
+requireValue(versionedLinks.includes("2026-08.csl.json"), "versioned dataset: CSL-JSON alternate Link missing");
 
 requireValue(latestJson?.versionedDataset?.endsWith("/research/volponi-ai-index/2026-08.json"), "latest dataset: versionedDataset link missing");
 requireValue(latestJson?.researchManifest?.endsWith("/research-manifest.json"), "latest dataset: research manifest link missing");
 requireValue(manifestEntry?.versionedDataset === latestJson?.versionedDataset, "manifest/versioned dataset URL mismatch");
 requireValue(manifestEntry?.latestDataset === latestJson?.latestDataset, "manifest/latest dataset URL mismatch");
+requireValue(manifestEntry?.citationFormats?.bibtex?.endsWith("/2026-08.bib"), "research manifest: BibTeX citation URL missing");
+requireValue(manifestEntry?.citationFormats?.ris?.endsWith("/2026-08.ris"), "research manifest: RIS citation URL missing");
+requireValue(manifestEntry?.citationFormats?.cslJson?.endsWith("/2026-08.csl.json"), "research manifest: CSL-JSON citation URL missing");
 requireValue(/independent/i.test(latestJson?.boundary || "") && /OpenAI/i.test(latestJson?.boundary || ""), "research independence boundary missing");
 requireValue(/id=["']methodology["']/.test(pageHtml), "AI Index page: stable #methodology anchor missing");
 requireValue(pageHtml.includes("2026-08.json"), "AI Index page: versioned edition link missing");
@@ -104,4 +144,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`\nResearch Publication Health PASSED — edition ${expectedEdition}, digest ${latestDigest}.`);
+console.log(`\nResearch Publication Health PASSED — edition ${expectedEdition}, digest ${latestDigest}, citation interoperability verified.`);
