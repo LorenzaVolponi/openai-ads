@@ -37,7 +37,7 @@ jobs:
           restore-keys: |
             radar-source-watch-
 
-      - name: Compare official source signatures
+      - name: Compare official source signatures and freshness windows
         id: watch
         run: node scripts/watch-official-sources.mjs
 
@@ -48,18 +48,35 @@ jobs:
           path: .radar-watch
           key: radar-source-watch-${{ github.run_id }}
 
+      - name: Preserve source-watch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: radar-source-watch-${{ github.run_id }}
+          path: |
+            .radar-watch/state.json
+            .radar-watch/report.md
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Open or update editorial review issue
-        if: steps.watch.outputs.changed == 'true'
+        if: steps.watch.outputs.changed == 'true' || steps.watch.outputs.review_due == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          CHANGED: ${{ steps.watch.outputs.changed }}
+          REVIEW_DUE: ${{ steps.watch.outputs.review_due }}
         run: |
           set -euo pipefail
-          TITLE="Radar: mudança detectada em fonte oficial"
-          ISSUE_NUMBER="$(gh issue list --state open --json number,title --jq '.[] | select(.title == "Radar: mudança detectada em fonte oficial") | .number' | head -n 1)"
+          TITLE="Radar: revisão de fonte oficial necessária"
+          ISSUE_NUMBER="$(gh issue list --state open --json number,title --jq '.[] | select(.title == "Radar: revisão de fonte oficial necessária") | .number' | head -n 1)"
 
           if [ -n "${ISSUE_NUMBER}" ]; then
-            gh issue comment "${ISSUE_NUMBER}" --body-file .radar-watch/report.md
-            echo "Updated editorial review issue #${ISSUE_NUMBER}."
+            if [ "$CHANGED" = "true" ]; then
+              gh issue comment "${ISSUE_NUMBER}" --body-file .radar-watch/report.md
+              echo "Updated editorial review issue #${ISSUE_NUMBER} because a source signature changed."
+            else
+              echo "Editorial review issue #${ISSUE_NUMBER} is already open; freshness window remains due, so no duplicate comment was added."
+            fi
           else
             gh issue create --title "${TITLE}" --body-file .radar-watch/report.md
           fi
