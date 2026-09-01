@@ -105,11 +105,11 @@ export default function VolponiAIIndexPage() {
 
       <section className="border-y border-zinc-200 bg-[#f4f4f1]">
         <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
-          <div className="mb-8 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-500"><BarChart3 className="h-4 w-4" /> Evidence matrix</div>
+          <div className="mb-8 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-600"><BarChart3 className="h-4 w-4" /> Evidence matrix</div>
           <div className="grid gap-4 lg:grid-cols-5">
             {indexDimensions.map((dimension) => (
               <article key={dimension.id} className="rounded-3xl border border-zinc-200 bg-white p-6">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-zinc-400">{dimension.label}</p>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-zinc-600">{dimension.label}</p>
                 <h2 className="mt-3 text-xl font-black">{dimension.state}</h2>
                 <p className="mt-4 text-sm leading-6 text-zinc-600">{dimension.finding}</p>
                 <p className="mt-4 text-xs leading-5 text-zinc-500">{dimension.interpretation}</p>
