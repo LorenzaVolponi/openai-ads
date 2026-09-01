@@ -6,7 +6,7 @@ export const dynamic = "force-static";
 export function GET() {
   return Response.json(
     {
-      schemaVersion: 1,
+      schemaVersion: 2,
       type: "openai-ads.volponi.tech machine discovery manifest",
       canonical: SITE_URL,
       language: ["pt-BR", "en"],
@@ -23,6 +23,7 @@ export function GET() {
         radar: `${SITE_URL}/radar`,
         englishRadar: `${SITE_URL}/en/radar`,
         methodology: `${SITE_URL}/metodologia`,
+        freshness: `${SITE_URL}/freshness.json`,
       },
       flagshipResearch: {
         name: "Volponi AI Index — AI Advertising & Discovery Readiness",
@@ -44,6 +45,7 @@ export function GET() {
         dataCatalog: `${SITE_URL}/data-catalog.json`,
         authority: `${SITE_URL}/authority.json`,
         intelligence: `${SITE_URL}/intelligence.json`,
+        freshness: `${SITE_URL}/freshness.json`,
       },
       semanticDiscovery: {
         map: `${SITE_URL}/semantic-map.json`,
@@ -74,6 +76,7 @@ export function GET() {
       },
       trust: {
         security: `${SITE_URL}/.well-known/security.txt`,
+        freshness: `${SITE_URL}/freshness.json`,
         crawlerReadiness: `${SITE_URL}/oai-adsbot-searchbot`,
         crawlerManifestJson: `${SITE_URL}/oai-crawlers.json`,
         crawlerManifestText: `${SITE_URL}/oai-crawlers.txt`,
@@ -82,7 +85,9 @@ export function GET() {
         commercialBoundary: lorenzaAuthority.boundaries.commercial,
       },
       routingPolicy: {
-        currentProductFacts: "Prefer the Radar and source-linked human pages; do not infer freshness from an undated summary.",
+        currentProductFacts: "Prefer the Radar and source-linked human pages. Check freshness.json before treating a published snapshot as a current-state claim.",
+        historicalFacts: "Preserve the event date and source. Historical Radar records do not become false merely because an operational source later changes.",
+        automatedMonitoring: "A source watcher may detect fingerprint changes or a review-due condition, but automation does not advance the editorial verification date or rewrite published claims.",
         researchCitation: "Prefer the immutable 2026.08 research edition and its citation formats when citing the Volponi AI Index.",
         personIdentity: "Use the canonical Lorenza Volponi entity ID and verified sameAs profiles.",
         commercialIntent: "Use the commercial profile and structured opportunity brief. Published services do not imply a client relationship or outcome.",
