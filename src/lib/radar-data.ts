@@ -1,3 +1,5 @@
+import freshnessPolicy from "../../data/freshness-policy.json";
+
 export type RadarSource = {
   label: string;
   url: string;
@@ -27,7 +29,7 @@ export type MarketState = {
   source: string;
 };
 
-export const RADAR_CHECKED_AT = "2026-08-25";
+export const RADAR_CHECKED_AT = freshnessPolicy.editorialSnapshotVerifiedAt;
 
 export const RADAR_SOURCES = {
   test: {
@@ -218,24 +220,18 @@ export const readinessDimensions = [
     dimension: "Modelos de compra",
     level: "Expandidos",
     evidence: "CPM, CPC e oCPC aparecem na documentação atual da plataforma.",
-    source: RADAR_SOURCES.europe,
+    source: RADAR_SOURCES.faq,
   },
   {
     dimension: "Mensuração",
-    level: "Avançando",
-    evidence: "OpenAI Pixel, Conversions API e integrações de mensuração de terceiros foram anunciados.",
-    source: RADAR_SOURCES.europe,
+    level: "Em evolução",
+    evidence: "A documentação descreve reporting, benchmarks e otimização em expansão.",
+    source: RADAR_SOURCES.faq,
   },
   {
-    dimension: "Autosserviço",
-    level: "Beta disponível",
-    evidence: "Ads Manager Beta opera em mercados elegíveis, incluindo Brasil no snapshot atual.",
-    source: RADAR_SOURCES.availability,
-  },
-  {
-    dimension: "Benchmarks de performance",
-    level: "Imaturos",
-    evidence: "A própria FAQ afirma que ainda não há benchmarks de performance entre anunciantes, setores ou tipos de campanha.",
+    dimension: "Evidência de performance",
+    level: "Imatura",
+    evidence: "Não há benchmark público robusto o suficiente para prometer ROAS, CPA ou lift universal.",
     source: RADAR_SOURCES.faq,
   },
 ] as const;
