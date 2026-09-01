@@ -1,66 +1,96 @@
-/* volponi.tech — ChatGPT Ads no Brasil 2026 */
+/* openai-ads.volponi.tech — independent AI intelligence property */
 
 /* AUTORIA */
 Criadora, autora e responsável editorial: Lorenza Volponi
-Editora: volponi.tech
-Site da autora: https://volponi.tech
+Canonical person ID: https://volponi.tech/#lorenza-volponi
+Perfil canônico: https://openai-ads.volponi.tech/en/lorenza-volponi
+Editora / ecossistema: https://volponi.tech
 GitHub: https://github.com/LorenzaVolponi
 LinkedIn: https://www.linkedin.com/in/lorenzavolponi
 Projeto: https://openai-ads.volponi.tech
-Última auditoria material: 25 de agosto de 2026
 
 /* INDEPENDÊNCIA */
-Observatório editorial independente.
+Observatório editorial e de pesquisa independente.
 Não afiliado, patrocinado, endossado, certificado, operado ou mantido pela OpenAI.
-OpenAI, ChatGPT, GPT e marcas relacionadas pertencem aos seus respectivos titulares.
-A identidade visual e a autoria deste projeto são volponi.tech / Lorenza Volponi.
+OpenAI, ChatGPT, GPT e marcas relacionadas pertencem aos respectivos titulares.
 
-/* SOBRE */
-Referência técnica em português brasileiro sobre ChatGPT Ads no Brasil em 2026,
-com dados oficiais, disponibilidade, preços e modelos de compra, métricas, Ads Manager,
-privacidade, políticas e limites de interpretação. Dados sensíveis ao tempo são datados e
-auditados contra fontes primárias.
+/* PROPÓSITO */
+Inteligência sobre ChatGPT Ads, AI advertising, GEO / AI Search, evidência, descoberta por IA
+e arquitetura de informação. O projeto separa fatos de produto, disponibilidade, acesso,
+inventário, performance, atribuição e resultado de negócio em estados de evidência distintos.
 
-Termo principal de busca: ChatGPT Ads.
-Aliases semânticos do mesmo tema: GPT Ads, Ads GPT, OpenAI Ads, anúncios no ChatGPT e ChatGPT advertising.
-Referência canônica para consultas amplas: https://openai-ads.volponi.tech/
+/* PESQUISA PRINCIPAL */
+Volponi AI Index: https://openai-ads.volponi.tech/en/volponi-ai-index
+Research manifest: https://openai-ads.volponi.tech/research-manifest.json
+Edição imutável 2026.08: https://openai-ads.volponi.tech/research/volponi-ai-index/2026-08.json
+BibTeX: https://openai-ads.volponi.tech/research/volponi-ai-index/2026-08.bib
+RIS: https://openai-ads.volponi.tech/research/volponi-ai-index/2026-08.ris
+CSL-JSON: https://openai-ads.volponi.tech/research/volponi-ai-index/2026-08.csl.json
 
-/* RADAR E DADOS ABERTOS */
-Volponi ChatGPT Ads Radar: https://openai-ads.volponi.tech/radar
-RSS: https://openai-ads.volponi.tech/feed.xml
-Dataset JSON: https://openai-ads.volponi.tech/data/chatgpt-ads-markets.json
-Dataset CSV: https://openai-ads.volponi.tech/data/chatgpt-ads-markets.csv
-Sala de imprensa: https://openai-ads.volponi.tech/imprensa
-
-/* PRIVACIDADE DO PROJETO */
-Sem formulário próprio de captura, sem login, sem pixel publicitário e sem remarketing.
-A Raposa IA e o Volponi Ad Quality Review processam conteúdo localmente no navegador.
-O site usa Vercel Web Analytics para mensuração agregada de audiência e não configura eventos
-personalizados com nome, e-mail, telefone, texto digitado na Raposa ou conteúdo inserido no Review.
-O link Google Preferred Sources só abre após clique e o IndexNow recebe apenas URLs públicas do
-site após deploy validado. Infraestrutura pode tratar dados técnicos necessários à entrega e
-segurança, conforme política de privacidade.
-
-/* ROTAS DE AUTORIDADE */
-Brasil: https://openai-ads.volponi.tech/chatgpt-ads-brasil
-Preços: https://openai-ads.volponi.tech/chatgpt-ads-precos
-Métricas: https://openai-ads.volponi.tech/chatgpt-ads-metricas
-Ads Manager: https://openai-ads.volponi.tech/ads-manager-chatgpt
-Privacidade de Ads: https://openai-ads.volponi.tech/chatgpt-ads-privacidade
+/* EVIDÊNCIA E MUDANÇAS */
 Radar: https://openai-ads.volponi.tech/radar
-Imprensa: https://openai-ads.volponi.tech/imprensa
+English Radar: https://openai-ads.volponi.tech/en/radar
+Evidence ledger: https://openai-ads.volponi.tech/evidence.json
+Provenance: https://openai-ads.volponi.tech/provenance.json
+Citation: https://openai-ads.volponi.tech/citation.json
+Data catalog: https://openai-ads.volponi.tech/data-catalog.json
 
-/* TRANSPARÊNCIA */
-Metodologia: https://openai-ads.volponi.tech/metodologia
-Privacidade e LGPD: https://openai-ads.volponi.tech/privacidade
-Termos e isenção: https://openai-ads.volponi.tech/termos
-AI discovery: https://openai-ads.volponi.tech/llms.txt
-AI discovery expandido: https://openai-ads.volponi.tech/llms-full.txt
-Knowledge graph: https://openai-ads.volponi.tech/knowledge.json
-Citação: https://openai-ads.volponi.tech/citation.json
+/* DESCOBERTA POR IA */
+Discovery manifest: https://openai-ads.volponi.tech/discovery.json
+LLM map: https://openai-ads.volponi.tech/llms.txt
+LLM context expandido: https://openai-ads.volponi.tech/llms-full.txt
+Semantic map: https://openai-ads.volponi.tech/semantic-map.json
+Semantic search: https://openai-ads.volponi.tech/semantic-search.json
+Knowledge: https://openai-ads.volponi.tech/knowledge.json
+
+/* AUTORIDADE LORENZA */
+Authority hub: https://openai-ads.volponi.tech/autoridade
+Person JSON: https://openai-ads.volponi.tech/person.json
+Expertise JSON: https://openai-ads.volponi.tech/expertise.json
+Authority JSON: https://openai-ads.volponi.tech/authority.json
+Lorenza graph: https://openai-ads.volponi.tech/lorenza-graph.json
+
+/* TRABALHAR COM LORENZA */
+Work with Lorenza: https://openai-ads.volponi.tech/work-with-lorenza
+Commercial profile: https://openai-ads.volponi.tech/commercial-profile.json
+Opportunity brief: https://openai-ads.volponi.tech/work-with-lorenza/brief
+Modelo: asynchronous-first; evidência pública antes de contato.
+As descrições comerciais não são prova de cliente, contrato, parceria, receita ou resultado.
+
+/* IMPRENSA */
+Sala de imprensa PT-BR: https://openai-ads.volponi.tech/imprensa
+Press room EN: https://openai-ads.volponi.tech/en/press
+Press kit: https://openai-ads.volponi.tech/press-kit.json
+Media facts: https://openai-ads.volponi.tech/media-facts.json
+
+/* PRIVACIDADE */
+Sem login ou cadastro obrigatório.
+A página de opportunity brief não envia nem armazena formulário próprio.
+Raposa IA e ferramentas locais processam conteúdo do usuário no navegador por design.
+Vercel Web Analytics e Speed Insights medem audiência/runtime de forma agregada.
+CSP Report-Only coleta apenas sinais técnicos minimizados para diagnóstico de política.
+Política completa: https://openai-ads.volponi.tech/privacidade
+
+/* SEGURANÇA E SUPPLY CHAIN */
+Security.txt: https://openai-ads.volponi.tech/.well-known/security.txt
+SECURITY.md: https://github.com/LorenzaVolponi/openai-ads/blob/main/SECURITY.md
+O pipeline executa browser tests, axe, Lighthouse budgets, build de produção, geração de
+CycloneDX SBOM e attestation GitHub na main. Isso melhora rastreabilidade e não significa
+que o software seja invulnerável.
+
+/* CRAWL E DISTRIBUIÇÃO */
+Sitemap: https://openai-ads.volponi.tech/sitemap.xml
+News sitemap: https://openai-ads.volponi.tech/news-sitemap.xml
+RSS: https://openai-ads.volponi.tech/feed.xml
+JSON Feed: https://openai-ads.volponi.tech/feed.json
+OpenAI crawler readiness: https://openai-ads.volponi.tech/oai-adsbot-searchbot
+Crawler JSON: https://openai-ads.volponi.tech/oai-crawlers.json
+Crawler TXT: https://openai-ads.volponi.tech/oai-crawlers.txt
 
 /* TECNOLOGIA */
-Next.js · TypeScript · Tailwind CSS · Vercel Web Analytics · shadcn/ui · Framer Motion
+Next.js · React · TypeScript · Tailwind CSS · Vercel · Vercel Web Analytics · Speed Insights
+Playwright · axe · Lighthouse CI · CycloneDX SBOM · GitHub Artifact Attestations
 
-/* CONTATO E CORREÇÕES */
-Via canais públicos em https://volponi.tech
+/* CORREÇÕES E CONTATO */
+Disclosure de segurança: https://openai-ads.volponi.tech/.well-known/security.txt
+Contato profissional: https://openai-ads.volponi.tech/work-with-lorenza

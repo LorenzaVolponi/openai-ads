@@ -19,6 +19,7 @@
     "seo:english-authority": "node scripts/english-authority-radar-health.mjs",
     "seo:core-authority": "node scripts/core-authority-consolidation-health.mjs",
     "seo:semantic": "node scripts/semantic-discovery-health.mjs",
+    "discovery:ai-native": "node scripts/ai-native-discovery-health.mjs",
     "research:index": "node scripts/volponi-ai-index-health.mjs",
     "research:publication": "node scripts/research-publication-health.mjs",
     "distribution:index": "node scripts/ai-index-distribution-health.mjs",
