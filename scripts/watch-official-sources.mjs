@@ -4,51 +4,16 @@ import path from "node:path";
 
 const stateFile = process.env.RADAR_WATCH_STATE || ".radar-watch/state.json";
 const reportFile = process.env.RADAR_WATCH_REPORT || ".radar-watch/report.md";
+const freshnessPolicy = JSON.parse(
+  await readFile(new URL("../data/freshness-policy.json", import.meta.url), "utf8"),
+);
 
-const sources = [
-  {
-    id: "availability",
-    label: "Ads Manager Availability",
-    url: "https://help.openai.com/en/articles/20001245-ads-manager-availability",
-    markers: ["Available", "Coming Soon", "Brazil", "Mexico", "United Kingdom", "United States"],
-  },
-  {
-    id: "ads-manager-faq",
-    label: "Ads Manager Beta FAQ",
-    url: "https://help.openai.com/en/articles/20001220",
-    markers: ["Ads Manager", "benchmark", "campaign", "measurement", "reporting"],
-  },
-  {
-    id: "campaign-setup",
-    label: "Create Campaigns for ChatGPT Ads",
-    url: "https://help.openai.com/en/articles/20001210-create-campaigns-for-chatgpt",
-    markers: ["Brazil", "40 BRL", "CPM", "CPC", "oCPC", "iOS", "Android", "Web"],
-  },
-  {
-    id: "crawler-guidance",
-    label: "Advertiser Guidance for OpenAI Web Crawlers",
-    url: "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers",
-    markers: ["OAI-AdsBot", "OAI-SearchBot", "adsbot.json", "robots.txt", "landing page"],
-  },
-  {
-    id: "testing-ads",
-    label: "Testing ads in ChatGPT",
-    url: "https://openai.com/index/testing-ads-in-chatgpt/",
-    markers: ["Brazil", "Free", "Go", "ads", "responses"],
-  },
-  {
-    id: "new-ways",
-    label: "New ways to buy ChatGPT ads",
-    url: "https://openai.com/index/new-ways-to-buy-chatgpt-ads/",
-    markers: ["CPC", "Ads Manager", "measurement", "self-service", "advertisers"],
-  },
-  {
-    id: "europe",
-    label: "ChatGPT Ads expands across Europe",
-    url: "https://openai.com/index/chatgpt-ads-expands-across-europe/",
-    markers: ["Europe", "31", "Ads Manager", "agencies", "partners"],
-  },
-];
+const sources = freshnessPolicy.sources.map((source) => ({
+  id: source.id,
+  label: source.label,
+  url: source.url,
+  markers: source.markers,
+}));
 
 function decodeEntities(value) {
   return value
@@ -105,6 +70,12 @@ function fingerprint(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function reviewDueAt(verifiedAt, days) {
+  const date = new Date(`${verifiedAt}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date;
+}
+
 async function fetchSource(source) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 25000);
@@ -114,7 +85,7 @@ async function fetchSource(source) {
       redirect: "follow",
       signal: controller.signal,
       headers: {
-        "user-agent": "VolponiRadarSourceWatcher/1.0 (+https://openai-ads.volponi.tech/metodologia)",
+        "user-agent": "VolponiRadarSourceWatcher/2.0 (+https://openai-ads.volponi.tech/metodologia)",
         accept: "text/html,application/xhtml+xml",
       },
     });
@@ -174,9 +145,22 @@ async function setOutput(name, value) {
 await mkdir(path.dirname(stateFile), { recursive: true });
 const previous = await readPreviousState();
 const currentSources = await Promise.all(sources.map(fetchSource));
+const now = new Date();
+const reviewDueSources = freshnessPolicy.sources
+  .filter((source) => source.reviewAfterDays !== null)
+  .map((source) => ({
+    ...source,
+    reviewDueAt: reviewDueAt(freshnessPolicy.editorialSnapshotVerifiedAt, source.reviewAfterDays),
+  }))
+  .filter((source) => now.getTime() >= source.reviewDueAt.getTime());
+const reviewDue = reviewDueSources.length > 0;
+
 const current = {
-  version: 1,
-  checkedAt: new Date().toISOString(),
+  version: 2,
+  checkedAt: now.toISOString(),
+  editorialSnapshotVerifiedAt: freshnessPolicy.editorialSnapshotVerifiedAt,
+  reviewDue,
+  reviewDueSourceIds: reviewDueSources.map((source) => source.id),
   sources: Object.fromEntries(currentSources.map((source) => [source.id, source])),
 };
 
@@ -199,16 +183,17 @@ const seeded = !previous?.sources;
 const changed = !seeded && changes.length > 0;
 
 const lines = [
-  "## Volponi Radar — mudança detectada em fonte oficial",
+  "## Volponi Radar — revisão de fonte oficial",
   "",
-  `Checagem: ${current.checkedAt}`,
+  `Checagem automatizada: ${current.checkedAt}`,
+  `Snapshot editorial publicado: ${freshnessPolicy.editorialSnapshotVerifiedAt}`,
   "",
-  "Este alerta **não publica conteúdo automaticamente**. Ele sinaliza que uma fonte primária precisa de revisão editorial antes de qualquer alteração no Radar.",
+  "Este monitor **não publica nem renova fatos automaticamente**. Mudança de fingerprint e vencimento de janela editorial são sinais para revisão humana/editorial antes de alterar o Radar.",
   "",
 ];
 
 if (changes.length) {
-  lines.push("| Fonte | HTTP | fingerprint anterior | fingerprint atual |", "|---|---:|---|---|");
+  lines.push("### Mudanças de assinatura detectadas", "", "| Fonte | HTTP | fingerprint anterior | fingerprint atual |", "|---|---:|---|---|");
   for (const { source, old } of changes) {
     lines.push(`| [${source.label}](${source.url}) | ${source.status} | ${short(old?.fingerprint)} | ${short(source.fingerprint)} |`);
   }
@@ -217,26 +202,45 @@ if (changes.length) {
     lines.push(`#### ${source.label}`, "", "```text", source.excerpt, "```", "");
   }
 } else {
-  lines.push(seeded ? "Baseline inicial criado; nenhum alerta editorial foi aberto." : "Nenhuma mudança material detectada nas assinaturas monitoradas.");
+  lines.push(seeded ? "Baseline inicial criado; nenhuma mudança comparável foi avaliada." : "Nenhuma mudança material detectada nas assinaturas monitoradas.", "");
+}
+
+if (reviewDueSources.length) {
+  lines.push("### Janela editorial atingida", "", "As fontes mutáveis abaixo já atingiram a janela configurada de rechecagem editorial. Isso **não significa que o conteúdo esteja errado**; significa que o snapshot histórico não deve ser apresentado como estado atual sem nova validação editorial.", "", "| Fonte | classe | revisão a cada | revisão devida desde |", "|---|---|---:|---|");
+  for (const source of reviewDueSources) {
+    lines.push(`| [${source.label}](${source.url}) | ${source.lifecycle} | ${source.reviewAfterDays} dias | ${source.reviewDueAt.toISOString().slice(0, 10)} |`);
+  }
+  lines.push("");
 }
 
 if (newlyTracked.length) {
-  lines.push("", "### Novas fontes adicionadas ao monitoramento", "");
+  lines.push("### Novas fontes adicionadas ao monitoramento", "");
   for (const source of newlyTracked) {
     lines.push(`- ${source.label}: baseline criado sem gerar alerta de mudança.`);
   }
+  lines.push("");
 }
+
+lines.push(
+  "### Fronteira de evidência",
+  "",
+  freshnessPolicy.policy.principle,
+  "",
+  "Status público de freshness: https://openai-ads.volponi.tech/freshness.json",
+);
 
 await writeFile(stateFile, `${JSON.stringify(current, null, 2)}\n`);
 await writeFile(reportFile, `${lines.join("\n")}\n`);
 await setOutput("changed", String(changed));
 await setOutput("seeded", String(seeded));
+await setOutput("review_due", String(reviewDue));
 await setOutput("changed_count", String(changes.length));
+await setOutput("review_due_count", String(reviewDueSources.length));
 await setOutput("new_source_count", String(newlyTracked.length));
 await setOutput("report_path", reportFile);
 
 console.log(
   seeded
-    ? "Radar source watcher baseline seeded."
-    : `Radar source watcher: ${changes.length} source change(s), ${newlyTracked.length} new baseline source(s).`,
+    ? `Radar source watcher baseline seeded; ${reviewDueSources.length} source(s) reached editorial review window.`
+    : `Radar source watcher: ${changes.length} source change(s), ${reviewDueSources.length} review-due source(s), ${newlyTracked.length} new baseline source(s).`,
 );
