@@ -72,13 +72,16 @@ const authorityLinks = [
   `<${SITE_URL}/data-catalog.json>; rel=\"describedby\"; type=\"application/json\"`,
   `<${SITE_URL}/intelligence.json>; rel=\"describedby\"; type=\"application/json\"`,
   `<${SITE_URL}/media-facts.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/discovery.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/semantic-map.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/commercial-profile.json>; rel=\"describedby\"; type=\"application/json\"`,
+  `<${SITE_URL}/llms.txt>; rel=\"alternate\"; type=\"text/plain\"`,
+  `<${SITE_URL}/llms-full.txt>; rel=\"alternate\"; type=\"text/plain\"`,
   `<${SITE_URL}/feed.xml>; rel=\"alternate\"; type=\"application/rss+xml\"`,
   `<${SITE_URL}/feed.json>; rel=\"alternate\"; type=\"application/feed+json\"`,
 ];
 
-const authorityDiscoveryHeaders = [
-  { key: "Link", value: authorityLinks.join(", ") },
-];
+const authorityDiscoveryHeaders = [{ key: "Link", value: authorityLinks.join(", ") }];
 
 const englishSectionHeaders = [
   { key: "Content-Language", value: "en" },
@@ -172,6 +175,7 @@ const nextConfig: NextConfig = {
       { source: "/expertise.json", headers: machineOnlyHeaders },
       { source: "/proof.json", headers: machineOnlyHeaders },
       { source: "/commercial-profile.json", headers: machineOnlyHeaders },
+      { source: "/discovery.json", headers: machineOnlyHeaders },
       { source: "/lorenza-graph.json", headers: machineOnlyHeaders },
       { source: "/data-catalog.json", headers: machineOnlyHeaders },
       { source: "/intelligence.json", headers: machineOnlyHeaders },
