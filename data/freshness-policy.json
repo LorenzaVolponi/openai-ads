@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "editorialSnapshotVerifiedAt": "2026-08-25",
+  "policy": {
+    "operationalReviewAfterDays": 7,
+    "documentationReviewAfterDays": 14,
+    "historicalReviewAfterDays": null,
+    "principle": "A fact date, an editorial verification date and an automated source check are different evidence states. Automated monitoring never advances the editorial verification date by itself."
+  },
+  "sources": [
+    {
+      "id": "availability",
+      "label": "Ads Manager Availability",
+      "url": "https://help.openai.com/en/articles/20001245-ads-manager-availability",
+      "publisher": "OpenAI Help Center",
+      "lifecycle": "operational",
+      "reviewAfterDays": 7,
+      "markers": ["Available", "Coming Soon", "Brazil", "Mexico", "United Kingdom", "United States"],
+      "usedFor": ["Ads Manager market availability", "market-state snapshot"]
+    },
+    {
+      "id": "ads-manager-faq",
+      "label": "Ads Manager Beta FAQ",
+      "url": "https://help.openai.com/en/articles/20001220",
+      "publisher": "OpenAI Help Center",
+      "lifecycle": "documentation",
+      "reviewAfterDays": 14,
+      "markers": ["Ads Manager", "benchmark", "campaign", "measurement", "reporting"],
+      "usedFor": ["platform documentation", "measurement context"]
+    },
+    {
+      "id": "campaign-setup",
+      "label": "Create Campaigns for ChatGPT Ads",
+      "url": "https://help.openai.com/en/articles/20001210-create-campaigns-for-chatgpt",
+      "publisher": "OpenAI Help Center",
+      "lifecycle": "operational",
+      "reviewAfterDays": 7,
+      "markers": ["Brazil", "40 BRL", "CPM", "CPC", "oCPC", "iOS", "Android", "Web"],
+      "usedFor": ["campaign setup", "buying mechanics", "platform fields"]
+    },
+    {
+      "id": "crawler-guidance",
+      "label": "Advertiser Guidance for OpenAI Web Crawlers",
+      "url": "https://help.openai.com/en/articles/20001243-advertiser-guidance-for-allowing-openai-web-crawlers",
+      "publisher": "OpenAI Help Center",
+      "lifecycle": "documentation",
+      "reviewAfterDays": 14,
+      "markers": ["OAI-AdsBot", "OAI-SearchBot", "adsbot.json", "robots.txt", "landing page"],
+      "usedFor": ["crawler readiness", "advertiser crawl guidance"]
+    },
+    {
+      "id": "testing-ads",
+      "label": "Testing ads in ChatGPT",
+      "url": "https://openai.com/index/testing-ads-in-chatgpt/",
+      "publisher": "OpenAI",
+      "lifecycle": "historical",
+      "reviewAfterDays": null,
+      "markers": ["Brazil", "Free", "Go", "ads", "responses"],
+      "usedFor": ["historical launch chronology", "market expansion chronology"]
+    },
+    {
+      "id": "new-ways",
+      "label": "New ways to buy ChatGPT ads",
+      "url": "https://openai.com/index/new-ways-to-buy-chatgpt-ads/",
+      "publisher": "OpenAI",
+      "lifecycle": "historical",
+      "reviewAfterDays": null,
+      "markers": ["CPC", "Ads Manager", "measurement", "self-service", "advertisers"],
+      "usedFor": ["historical platform chronology", "buying-model chronology"]
+    },
+    {
+      "id": "europe",
+      "label": "ChatGPT Ads expands across Europe",
+      "url": "https://openai.com/index/chatgpt-ads-expands-across-europe/",
+      "publisher": "OpenAI",
+      "lifecycle": "historical",
+      "reviewAfterDays": null,
+      "markers": ["Europe", "31", "Ads Manager", "agencies", "partners"],
+      "usedFor": ["historical European expansion chronology"]
+    }
+  ]
+}
