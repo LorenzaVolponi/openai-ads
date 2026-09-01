@@ -11,6 +11,7 @@ export default defineConfig({
   reporter: process.env.CI ? [["line"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL,
+    locale: "pt-BR",
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -18,11 +19,11 @@ export default defineConfig({
   projects: [
     {
       name: "chromium-desktop",
-      use: { ...devices["Desktop Chrome"] },
+      use: { ...devices["Desktop Chrome"], locale: "pt-BR" },
     },
     {
       name: "chromium-mobile",
-      use: { ...devices["Pixel 7"] },
+      use: { ...devices["Pixel 7"], locale: "pt-BR" },
     },
   ],
   webServer: {
