@@ -1,0 +1,65 @@
+name: SBOM and Build Attestation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "package.json"
+      - "src/**"
+      - "next.config.ts"
+      - ".github/workflows/sbom-attestation.yml"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  sbom:
+    name: Build, generate and attest CycloneDX SBOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build application
+        run: npm run build
+
+      - name: Generate reproducible CycloneDX SBOM
+        run: npm run supply-chain:sbom
+
+      - name: Validate SBOM structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s sbom.cdx.json
+          jq -e '.bomFormat == "CycloneDX" and (.components | type == "array") and (.components | length > 0)' sbom.cdx.json >/dev/null
+          jq -e '.metadata.component.name == "openai-ads-volponitech"' sbom.cdx.json >/dev/null
+          echo "CycloneDX SBOM validated: $(jq '.components | length' sbom.cdx.json) components."
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyclonedx-sbom-${{ github.sha }}
+          path: sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Attest SBOM on main
+        if: github.event_name != 'pull_request'
+        uses: actions/attest@v4
+        with:
+          subject-path: sbom.cdx.json
