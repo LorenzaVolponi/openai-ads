@@ -1,6 +1,24 @@
 import type { NextConfig } from "next";
 
 const SITE_URL = "https://openai-ads.volponi.tech";
+const CSP_REPORT_URL = `${SITE_URL}/api/csp-report`;
+
+const cspReportOnlyPolicy = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "form-action 'self'",
+  "img-src 'self' data: https://images.ctfassets.net",
+  "font-src 'self' data:",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "connect-src 'self'",
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  "report-uri /api/csp-report",
+  "report-to csp-endpoint",
+].join("; ");
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -15,6 +33,8 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: "base-uri 'self'; frame-ancestors 'none'; object-src 'none'; form-action 'self'; upgrade-insecure-requests",
   },
+  { key: "Content-Security-Policy-Report-Only", value: cspReportOnlyPolicy },
+  { key: "Reporting-Endpoints", value: `csp-endpoint=\"${CSP_REPORT_URL}\"` },
   {
     key: "X-Robots-Tag",
     value: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
@@ -134,6 +154,8 @@ const nextConfig: NextConfig = {
       { source: "/radar/:path*", headers: authorityDiscoveryHeaders },
       { source: "/oai-adsbot-searchbot", headers: crawlerManifestHeaders },
       { source: "/api/oai-readiness", headers: diagnosticHeaders },
+      { source: "/api/csp-report", headers: diagnosticHeaders },
+      { source: "/.well-known/security.txt", headers: machineOnlyHeaders },
       { source: "/research/volponi-ai-index/2026-08.json", headers: immutableResearchHeaders },
       { source: "/research/volponi-ai-index/2026-08.bib", headers: immutableResearchHeaders },
       { source: "/research/volponi-ai-index/2026-08.ris", headers: immutableResearchHeaders },
