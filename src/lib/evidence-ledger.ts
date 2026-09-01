@@ -60,6 +60,9 @@ export const evidenceLedger = {
   publisher: "volponi.tech",
   author: "Lorenza Volponi",
   checkedAt: RADAR_CHECKED_AT,
+  freshness: `${SITE_URL}/freshness.json`,
+  freshnessBoundary:
+    "checkedAt is the preserved editorial snapshot verification date. Automated source monitoring does not advance it; freshness.json computes review-window status separately.",
   methodology: `${SITE_URL}/metodologia`,
   sourceRevision,
   hashChain: {
