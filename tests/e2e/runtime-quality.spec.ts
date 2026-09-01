@@ -12,6 +12,13 @@ for (const surface of authoritySurfaces) {
     await page.goto(surface.path, { waitUntil: "domcontentloaded" });
     await expect(page.locator("body")).toBeVisible();
 
+    // The production UI intentionally uses content-visibility:auto for deferred sections.
+    // Force those sections visible only inside the accessibility scan so axe evaluates
+    // the actual foreground/background pairs instead of neighboring placeholder paint.
+    await page.addStyleTag({
+      content: ".content-auto{content-visibility:visible!important;contain-intrinsic-size:auto!important}",
+    });
+
     const result = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
       .analyze();
