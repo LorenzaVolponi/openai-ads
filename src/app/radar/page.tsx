@@ -9,9 +9,11 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+import { FreshnessStatus } from "@/components/freshness-status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LORENZA_ENTITY_ID } from "@/lib/lorenza-authority";
 import {
   marketStates,
   RADAR_CHECKED_AT,
@@ -56,8 +58,13 @@ const structuredData = {
       name: "Volponi ChatGPT Ads Radar",
       inLanguage: "pt-BR",
       dateModified: RADAR_CHECKED_AT,
-      author: { "@id": "https://openai-ads.volponi.tech/#author" },
+      author: { "@id": LORENZA_ENTITY_ID },
       isPartOf: { "@id": "https://openai-ads.volponi.tech/#website" },
+      relatedLink: [
+        "https://openai-ads.volponi.tech/freshness.json",
+        "https://openai-ads.volponi.tech/evidence.json",
+        "https://openai-ads.volponi.tech/provenance.json",
+      ],
     },
     {
       "@type": "Dataset",
@@ -65,7 +72,7 @@ const structuredData = {
       name: "ChatGPT Ads Manager market availability — snapshot 2026-08-25",
       description:
         "Snapshot editorial independente de mercados Available e Coming Soon no Ads Manager, com fonte oficial e data de checagem.",
-      creator: { "@id": "https://openai-ads.volponi.tech/#author" },
+      creator: { "@id": LORENZA_ENTITY_ID },
       dateModified: RADAR_CHECKED_AT,
       distribution: [
         {
@@ -117,6 +124,7 @@ export default function RadarPage() {
             Um registro público de mudanças em ChatGPT Ads, com estado anterior, estado atual, impacto,
             fonte primária e data. Não é previsão. Não é benchmark vendido como fato.
           </p>
+          <FreshnessStatus dark />
 
           <div className="mt-9 flex flex-wrap gap-3">
             <Button asChild className="bg-white text-zinc-950 hover:bg-zinc-200">
@@ -139,8 +147,8 @@ export default function RadarPage() {
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
         <div className="grid gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-3">
           {[
-            [String(availableCount), "mercados Available", "Ads Manager no snapshot atual"],
-            [String(comingSoonCount), "mercados Coming Soon", "na fotografia oficial atual"],
+            [String(availableCount), "mercados Available", `snapshot editorial de ${RADAR_CHECKED_AT}`],
+            [String(comingSoonCount), "mercados Coming Soon", `snapshot editorial de ${RADAR_CHECKED_AT}`],
             [String(radarEntries.length), "mudanças registradas", "com fonte primária e contexto"],
           ].map(([value, label, note]) => (
             <div key={label} className="bg-background p-7">
@@ -249,7 +257,7 @@ export default function RadarPage() {
             Pode baixar, comparar e citar. Só preserve a fonte e a data.
           </h2>
           <p className="mt-5 max-w-3xl leading-7 text-muted-foreground">
-            O dataset é uma curadoria editorial de fontes públicas. Ele não substitui a documentação oficial e não afirma que status observados em 25/08/2026 permanecerão iguais no futuro.
+            O dataset é uma curadoria editorial de fontes públicas. Ele não substitui a documentação oficial e não afirma que status observados em 25/08/2026 permanecerão iguais no futuro. O monitor diário automatizado sinaliza mudanças e vencimento de janela; somente revisão editorial pode renovar o snapshot publicado.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Button asChild>
@@ -257,6 +265,9 @@ export default function RadarPage() {
             </Button>
             <Button asChild variant="outline">
               <Link href="/imprensa">Sala de imprensa</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <a href="/freshness.json">Freshness JSON</a>
             </Button>
           </div>
         </div>
