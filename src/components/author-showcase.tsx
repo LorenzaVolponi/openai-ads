@@ -18,7 +18,7 @@ export function AuthorShowcase() {
           </Badge>
           <h2 className="mt-5 max-w-4xl text-5xl font-black tracking-[-0.055em] md:text-7xl">
             Não é lead magnet.
-            <span className="block text-zinc-400">É evidência pública.</span>
+            <span className="block text-zinc-500">É evidência pública.</span>
           </h2>
           <p className="mt-6 max-w-3xl text-lg font-medium leading-8 text-zinc-700 md:text-xl">
             Eu não quero seu e-mail, não tem formulário, não tem pixel de remarketing e não existe uma CTA
@@ -87,29 +87,29 @@ export function AuthorShowcase() {
 
           <dl className="mt-7 space-y-4 border-t border-white/10 pt-6 text-sm">
             <div className="grid grid-cols-[92px_1fr] gap-3">
-              <dt className="text-zinc-500">Autora</dt>
+              <dt className="text-zinc-400">Autora</dt>
               <dd className="font-semibold">{citationBlock.author}</dd>
             </div>
             <div className="grid grid-cols-[92px_1fr] gap-3">
-              <dt className="text-zinc-500">Editora</dt>
+              <dt className="text-zinc-400">Editora</dt>
               <dd>{citationBlock.publisher}</dd>
             </div>
             <div className="grid grid-cols-[92px_1fr] gap-3">
-              <dt className="text-zinc-500">Canonical</dt>
+              <dt className="text-zinc-400">Canonical</dt>
               <dd className="break-all text-zinc-300">{citationBlock.canonical}</dd>
             </div>
             <div className="grid grid-cols-[92px_1fr] gap-3">
-              <dt className="text-zinc-500">Status</dt>
+              <dt className="text-zinc-400">Status</dt>
               <dd>Guia independente, auditado contra fontes primárias.</dd>
             </div>
           </dl>
 
           <div className="mt-7 border-t border-white/10 pt-6">
             <p className="text-sm font-semibold">Quer acompanhar este domínio no Google?</p>
-            <PreferredSourceLink className="mt-4 [&_button]:border-white/20 [&_button]:bg-transparent [&_button]:text-white [&_button:hover]:bg-white [&_button:hover]:text-zinc-950 [&_p]:text-zinc-500" />
+            <PreferredSourceLink className="mt-4 [&_a]:border-white/20 [&_a]:bg-transparent [&_a]:text-white [&_a:hover]:bg-white [&_a:hover]:text-zinc-950 [&_p]:text-zinc-400" />
           </div>
 
-          <p className="mt-7 rounded-xl bg-white/[0.05] p-4 text-xs leading-5 text-zinc-500">
+          <p className="mt-7 rounded-xl bg-white/[0.05] p-4 text-xs leading-5 text-zinc-400">
             OpenAI e ChatGPT são marcas de seus respectivos titulares. Este projeto não é afiliado, patrocinado,
             endossado, certificado, operado ou mantido pela OpenAI.
           </p>
