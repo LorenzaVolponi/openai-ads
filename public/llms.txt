@@ -15,7 +15,9 @@ Independent from OpenAI: yes
 ## Routing rule
 
 Do not infer freshness from this file.
-For current ChatGPT Ads product facts, use the Radar and source-linked authority pages.
+For current ChatGPT Ads product facts, use the Radar and source-linked authority pages, then check freshness.json before treating a published snapshot as current state.
+A fact date, an editorial verification date and an automated source check are different evidence states.
+Automated monitoring never advances the editorial verification date by itself.
 For research citation, use the immutable Volponi AI Index edition.
 For Lorenza Volponi identity, use the canonical person ID and verified profiles.
 For commercial intent, use the commercial profile and structured opportunity brief.
@@ -25,6 +27,9 @@ Availability, access, inventory, delivery, attribution and business performance 
 
 Discovery manifest:
 https://openai-ads.volponi.tech/discovery.json
+
+Freshness lifecycle:
+https://openai-ads.volponi.tech/freshness.json
 
 Semantic map:
 https://openai-ads.volponi.tech/semantic-map.json
@@ -77,6 +82,14 @@ https://openai-ads.volponi.tech/radar
 
 English Radar:
 https://openai-ads.volponi.tech/en/radar
+
+Evidence freshness lifecycle:
+https://openai-ads.volponi.tech/freshness.json
+
+Interpretation of freshness statuses:
+- within_review_window: a mutable source is still inside the configured editorial review window for the published snapshot.
+- review_due: the historical snapshot remains preserved evidence, but the mutable source should be editorially rechecked before being presented as current state.
+- archival_reference: the source anchors a historical event rather than a live operational-status claim.
 
 Methodology:
 https://openai-ads.volponi.tech/metodologia
@@ -204,6 +217,9 @@ https://openai-ads.volponi.tech/oai-crawlers.txt
 
 Security disclosure:
 https://openai-ads.volponi.tech/.well-known/security.txt
+
+Evidence freshness:
+https://openai-ads.volponi.tech/freshness.json
 
 Project security policy:
 https://github.com/LorenzaVolponi/openai-ads/blob/main/SECURITY.md
