@@ -24,7 +24,7 @@ function SourceLink({ label, url, inverse = false }: { label: string; url: strin
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center gap-1 text-xs font-medium underline-offset-4 hover:underline ${inverse ? "text-zinc-300 hover:text-white" : "text-zinc-800 hover:text-zinc-950"}`}
+      className={`inline-flex items-center gap-1 text-xs font-medium underline-offset-4 hover:underline ${inverse ? "text-zinc-200 hover:text-white" : "text-zinc-800 hover:text-zinc-950"}`}
     >
       Fonte primária: {label} <ArrowUpRight className="h-3 w-3" />
     </a>
@@ -42,7 +42,7 @@ export function AuthorityMetrics() {
             </Badge>
             <h2 className="mt-5 text-4xl font-black tracking-[-0.04em] md:text-6xl">
               Números grandes.
-              <span className="block text-zinc-500">Interpretação maior ainda.</span>
+              <span className="block text-zinc-400">Interpretação maior ainda.</span>
             </h2>
             <p className="mt-5 max-w-xl text-base leading-7 text-zinc-400 md:text-lg">
               O objetivo não é impressionar com volume. É impedir que escala de produto, alcance de mídia,
@@ -60,7 +60,7 @@ export function AuthorityMetrics() {
                   {metric.label}
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-zinc-400">{metric.context}</p>
-                <p className="mt-4 border-l border-white/25 pl-3 text-xs leading-5 text-zinc-500">
+                <p className="mt-4 border-l border-white/25 pl-3 text-xs leading-5 text-zinc-400">
                   {metric.caveat}
                 </p>
                 <div className="mt-5">
@@ -209,17 +209,17 @@ export function TrustPrinciples() {
       <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
         <ShieldCheck className="h-4 w-4 text-white" />
         <p className="mt-3 text-sm font-semibold text-white">Fonte primária primeiro</p>
-        <p className="mt-1 text-xs leading-5 text-zinc-500">OpenAI/Help Center antes de rumor, print ou benchmark reciclado.</p>
+        <p className="mt-1 text-xs leading-5 text-zinc-400">OpenAI/Help Center antes de rumor, print ou benchmark reciclado.</p>
       </div>
       <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
         <Database className="h-4 w-4 text-white" />
         <p className="mt-3 text-sm font-semibold text-white">Dado com ressalva</p>
-        <p className="mt-1 text-xs leading-5 text-zinc-500">Todo número relevante explica também o limite da interpretação.</p>
+        <p className="mt-1 text-xs leading-5 text-zinc-400">Todo número relevante explica também o limite da interpretação.</p>
       </div>
       <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
         <Radio className="h-4 w-4 text-white" />
         <p className="mt-3 text-sm font-semibold text-white">Documento vivo</p>
-        <p className="mt-1 text-xs leading-5 text-zinc-500">Produto beta exige data de auditoria e revalidação contínua.</p>
+        <p className="mt-1 text-xs leading-5 text-zinc-400">Produto beta exige data de auditoria e revalidação contínua.</p>
       </div>
     </div>
   );

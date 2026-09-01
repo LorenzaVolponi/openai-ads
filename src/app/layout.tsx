@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SiteComplianceStrip, SiteWatermark } from "@/components/site-compliance";
@@ -218,6 +219,7 @@ export default function RootLayout({
         {children}
         <LanguageSwitcher />
         <Analytics />
+        <SpeedInsights />
         <SiteComplianceStrip />
       </body>
     </html>

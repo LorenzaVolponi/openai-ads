@@ -119,8 +119,8 @@ function scoreDraft(draft: Draft) {
 
 function Meter({ value }: { value: number }) {
   return (
-    <div className="flex gap-1" aria-label={`${value} de 5`}>
-      {[1, 2, 3, 4, 5].map((n) => <span key={n} className={`h-2.5 w-2.5 rounded-full ${n <= value ? "bg-zinc-950" : "bg-zinc-200"}`} />)}
+    <div className="flex gap-1" role="img" aria-label={`${value} de 5`}>
+      {[1, 2, 3, 4, 5].map((n) => <span key={n} aria-hidden="true" className={`h-2.5 w-2.5 rounded-full ${n <= value ? "bg-zinc-950" : "bg-zinc-200"}`} />)}
     </div>
   );
 }
@@ -226,8 +226,8 @@ export function AdQualityLab() {
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-zinc-200 bg-white p-5 text-sm leading-6 text-zinc-600">
-          <strong className="text-zinc-950">Regra de ouro:</strong> mensagem clara, benefício concreto, contexto coerente e landing que cumpre a mesma promessa. O Review transforma esses princípios em uma checagem didática — sem alegar que conhece o ranking, o quality score ou a entrega interna da OpenAI.
+        <div className="mt-6 rounded-2xl border border-zinc-200 bg-white p-5 text-xs leading-5 text-zinc-500">
+          Esta revisão usa uma heurística local e transparente. Ela não acessa sua conta, não prevê CTR, CPA, ROAS, aprovação ou entrega e não substitui teste de campanha nem documentação oficial.
         </div>
       </div>
     </section>

@@ -30,3 +30,9 @@ next-env.d.ts
 
 # Coverage
 coverage/
+
+# Browser, performance and supply-chain artifacts
+playwright-report/
+test-results/
+.lighthouseci/
+sbom.cdx.json
