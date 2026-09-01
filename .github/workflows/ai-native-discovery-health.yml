@@ -1,0 +1,83 @@
+name: AI-native Discovery Health
+
+on:
+  pull_request:
+    paths:
+      - "src/app/discovery.json/**"
+      - "src/app/commercial-profile.json/**"
+      - "src/app/work-with-lorenza/**"
+      - "src/lib/lorenza-authority.ts"
+      - "public/llms.txt"
+      - "public/llms-full.txt"
+      - "public/humans.txt"
+      - "next.config.ts"
+      - "scripts/ai-native-discovery-health.mjs"
+      - "package.json"
+      - ".github/workflows/ai-native-discovery-health.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "src/app/discovery.json/**"
+      - "src/app/commercial-profile.json/**"
+      - "src/app/work-with-lorenza/**"
+      - "src/lib/lorenza-authority.ts"
+      - "public/llms.txt"
+      - "public/llms-full.txt"
+      - "public/humans.txt"
+      - "next.config.ts"
+      - "scripts/ai-native-discovery-health.mjs"
+      - "package.json"
+      - ".github/workflows/ai-native-discovery-health.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discovery:
+    name: Validate AI-native discovery and commercial graph
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Identity integrity
+        run: npm run identity:health
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Start application
+        run: |
+          npm run start > /tmp/openai-ads-ai-discovery.log 2>&1 &
+          echo $! > /tmp/openai-ads-ai-discovery.pid
+
+      - name: Wait for application
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/discovery.json >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/openai-ads-ai-discovery.log || true
+          exit 1
+
+      - name: AI-native discovery health
+        run: npm run discovery:ai-native
