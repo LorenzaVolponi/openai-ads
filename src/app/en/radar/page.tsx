@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Database, Download, RadioTower, ShieldCheck, UserRound } from "lucide-react";
 
+import { FreshnessStatus } from "@/components/freshness-status";
 import { SemanticRelatedLinks } from "@/components/semantic-related-links";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -58,13 +59,13 @@ const structuredData = {
       publisher: { "@id": PUBLISHER_ID },
       about: ["ChatGPT Ads", "AI advertising", "conversational advertising", "AI discovery", "GEO", "AI Search"],
       mainEntity: { "@id": `${URL}#dataset` },
-      relatedLink: [`${SITE_URL}/en/volponi-ai-index`, `${SITE_URL}/semantic-map.json`, `${SITE_URL}/en/lorenza-volponi`],
+      relatedLink: [`${SITE_URL}/en/volponi-ai-index`, `${SITE_URL}/semantic-map.json`, `${SITE_URL}/freshness.json`, `${SITE_URL}/en/lorenza-volponi`],
     },
     {
       "@type": "Dataset",
       "@id": `${URL}#dataset`,
-      name: "ChatGPT Ads market availability and change ledger",
-      description: "Editorial snapshot of ChatGPT Ads market availability and verified changes, maintained by Lorenza Volponi with primary-source references.",
+      name: "ChatGPT Ads market availability and change ledger — snapshot 2026-08-25",
+      description: "Editorial snapshot of ChatGPT Ads market availability and verified changes, maintained by Lorenza Volponi with primary-source references and an explicit freshness lifecycle.",
       creator: { "@id": AUTHOR_ID },
       publisher: { "@id": PUBLISHER_ID },
       dateModified: RADAR_CHECKED_AT,
@@ -98,6 +99,7 @@ export default function EnglishRadarPage() {
           <div className="mt-6 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.18em] text-zinc-400"><RadioTower className="h-4 w-4" /> Volponi ChatGPT Ads Radar</div>
           <h1 className="mt-5 max-w-6xl text-5xl font-black leading-[0.94] tracking-[-0.055em] md:text-7xl">ChatGPT Ads changes fast. <span className="block text-zinc-400">The Radar keeps the evidence.</span></h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-400 md:text-xl">An independent intelligence layer maintained by Lorenza Volponi for brands, agencies, journalists and AI operators tracking ChatGPT Ads, AI advertising, market availability, measurement and product change.</p>
+          <FreshnessStatus language="en" dark />
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild className="bg-white text-zinc-950 hover:bg-zinc-200"><a href="/data/chatgpt-ads-markets.json"><Database className="mr-2 h-4 w-4" /> Open dataset</a></Button>
             <Button asChild variant="outline" className="border-white/20 bg-transparent text-white hover:bg-white hover:text-zinc-950"><a href="/data/chatgpt-ads-markets.csv"><Download className="mr-2 h-4 w-4" /> CSV</a></Button>
@@ -108,7 +110,7 @@ export default function EnglishRadarPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
         <div className="grid gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-3">
-          {[[String(availableCount), "Available markets", "current Ads Manager snapshot"], [String(comingSoonCount), "Coming Soon markets", "current official snapshot"], [String(radarEntries.length), "Verified change records", "each connected to source and date"]].map(([value, label, note]) => <div key={label} className="bg-background p-7"><p className="text-5xl font-black tracking-[-0.05em]">{value}</p><p className="mt-2 font-bold">{label}</p><p className="mt-1 text-sm text-muted-foreground">{note}</p></div>)}
+          {[[String(availableCount), "Available markets", `editorial snapshot · ${RADAR_CHECKED_AT}`], [String(comingSoonCount), "Coming Soon markets", `editorial snapshot · ${RADAR_CHECKED_AT}`], [String(radarEntries.length), "Verified change records", "each connected to source and date"]].map(([value, label, note]) => <div key={label} className="bg-background p-7"><p className="text-5xl font-black tracking-[-0.05em]">{value}</p><p className="mt-2 font-bold">{label}</p><p className="mt-1 text-sm text-muted-foreground">{note}</p></div>)}
         </div>
       </section>
 
@@ -123,8 +125,8 @@ export default function EnglishRadarPage() {
           <aside className="rounded-3xl border border-zinc-200 bg-zinc-50 p-8">
             <ShieldCheck className="h-5 w-5" />
             <h2 className="mt-4 text-2xl font-black">Evidence backbone</h2>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">Use the public ledger to verify dates, primary sources and observed changes before citing a claim.</p>
-            <div className="mt-5 grid gap-2 text-sm font-bold"><Link href="/proof.json" className="hover:underline">Proof manifest</Link><Link href="/citation.json" className="hover:underline">Citation guide</Link><Link href="/semantic-map.json" className="hover:underline">Semantic map</Link><Link href="/en/press" className="hover:underline">English press room</Link></div>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">Use the public ledger to verify dates, primary sources, source freshness and observed changes before citing a claim.</p>
+            <div className="mt-5 grid gap-2 text-sm font-bold"><Link href="/proof.json" className="hover:underline">Proof manifest</Link><Link href="/citation.json" className="hover:underline">Citation guide</Link><Link href="/freshness.json" className="hover:underline">Freshness lifecycle</Link><Link href="/semantic-map.json" className="hover:underline">Semantic map</Link><Link href="/en/press" className="hover:underline">English press room</Link></div>
           </aside>
         </div>
       </section>
