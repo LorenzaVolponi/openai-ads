@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Database, Download, RadioTower, ShieldCheck, UserRound } from "lucide-react";
+import { ArrowLeft, Database, Download, RadioTower, ShieldCheck, UserRound } from "lucide-react";
 
 import { SemanticRelatedLinks } from "@/components/semantic-related-links";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AUTHOR, AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
-import { marketStates, RADAR_CHECKED_AT, radarEntries } from "@/lib/radar-data";
+import { marketStates, RADAR_CHECKED_AT } from "@/lib/radar-data";
+import { radarEntriesEn } from "@/lib/radar-data-en";
 
 const URL = `${SITE_URL}/en/radar`;
 const PT_URL = `${SITE_URL}/radar`;
@@ -16,7 +17,7 @@ const comingSoonCount = marketStates.filter((market) => market.adsManager === "C
 export const metadata: Metadata = {
   title: "ChatGPT Ads Radar: verified market changes, availability and evidence | Lorenza Volponi",
   description: "Independent English intelligence hub by Lorenza Volponi tracking verified ChatGPT Ads changes, market availability, Ads Manager readiness, measurement and primary-source evidence.",
-  authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
+  authors: [{ name: AUTHOR.name, url: `${SITE_URL}/en/lorenza-volponi` }],
   alternates: {
     canonical: URL,
     languages: { en: URL, "pt-BR": PT_URL, "x-default": URL },
@@ -108,7 +109,7 @@ export default function EnglishRadarPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
         <div className="grid gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-3">
-          {[[String(availableCount), "Available markets", "current Ads Manager snapshot"], [String(comingSoonCount), "Coming Soon markets", "current official snapshot"], [String(radarEntries.length), "Verified change records", "each connected to source and date"]].map(([value, label, note]) => <div key={label} className="bg-background p-7"><p className="text-5xl font-black tracking-[-0.05em]">{value}</p><p className="mt-2 font-bold">{label}</p><p className="mt-1 text-sm text-muted-foreground">{note}</p></div>)}
+          {[[String(availableCount), "Available markets", "current Ads Manager snapshot"], [String(comingSoonCount), "Coming Soon markets", "current official snapshot"], [String(radarEntriesEn.length), "Verified change records", "each connected to source and date"]].map(([value, label, note]) => <div key={label} className="bg-background p-7"><p className="text-5xl font-black tracking-[-0.05em]">{value}</p><p className="mt-2 font-bold">{label}</p><p className="mt-1 text-sm text-muted-foreground">{note}</p></div>)}
         </div>
       </section>
 
@@ -134,7 +135,20 @@ export default function EnglishRadarPage() {
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em]">Latest evidence records</p>
           <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">A public memory of product change.</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {radarEntries.slice(0, 6).map((entry) => <article key={entry.slug} className="rounded-3xl border border-border bg-background p-6"><div className="flex flex-wrap gap-2"><Badge variant="outline">{entry.kind}</Badge><Badge variant="secondary">{entry.market}</Badge></div><p className="mt-5 font-mono text-xs font-bold">{entry.date}</p><h3 className="mt-3 text-xl font-black tracking-[-0.025em]">{entry.title}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">Verified change record with previous state, observed state, impact and primary source.</p><Link href={`/radar/${entry.slug}`} className="mt-5 inline-flex items-center gap-1 text-sm font-bold hover:underline">Open evidence record <ArrowUpRight className="h-3.5 w-3.5" /></Link></article>)}
+            {radarEntriesEn.map((entry) => (
+              <article id={`record-${entry.slug}`} key={entry.slug} className="scroll-mt-24 rounded-3xl border border-border bg-background p-6">
+                <div className="flex flex-wrap gap-2"><Badge variant="outline">{entry.kind}</Badge><Badge variant="secondary">{entry.market}</Badge></div>
+                <p className="mt-5 font-mono text-xs font-bold">{entry.date}</p>
+                <h3 className="mt-3 text-xl font-black tracking-[-0.025em]">{entry.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{entry.summary}</p>
+                <div className="mt-5 grid gap-3 border-t border-border pt-5 text-sm leading-6">
+                  <p><strong>Previous state:</strong> {entry.previousState}</p>
+                  <p><strong>Observed state:</strong> {entry.currentState}</p>
+                  <p><strong>Impact:</strong> {entry.impact}</p>
+                </div>
+                <a href={entry.source.url} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex text-sm font-bold hover:underline">Primary source · {entry.source.publisher}</a>
+              </article>
+            ))}
           </div>
         </div>
       </section>
