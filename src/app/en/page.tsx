@@ -5,7 +5,8 @@ import { ArrowRight, ArrowUpRight, Database, Newspaper, ShieldCheck } from "luci
 
 import { SemanticRelatedLinks } from "@/components/semantic-related-links";
 import { AUTHOR_ID, PUBLISHER_ID, SITE_URL, mediaAuthorStructuredData, publisherStructuredData } from "@/lib/media-authority";
-import { marketStates, RADAR_CHECKED_AT, radarEntries } from "@/lib/radar-data";
+import { marketStates, RADAR_CHECKED_AT } from "@/lib/radar-data";
+import { radarEntriesEn } from "@/lib/radar-data-en";
 import { socialImageForPath } from "@/lib/seo";
 
 const URL = `${SITE_URL}/en`;
@@ -14,12 +15,12 @@ const available = marketStates.filter((market) => market.adsManager === "Availab
 const comingSoon = marketStates.filter((market) => market.adsManager === "Coming Soon").length;
 
 export const metadata: Metadata = {
-  title: "AI, ChatGPT Ads, GEO & AI Search Intelligence | Lorenza Volponi",
+  title: "AI Systems Strategist, GEO & ChatGPT Ads Intelligence | Lorenza Volponi",
   description: "Independent English intelligence by Lorenza Volponi on AI systems, ChatGPT Ads, GEO, AI Search, AI product/UX/UI, market readiness and source-linked evidence.",
   authors: [{ name: "Lorenza Volponi", url: `${SITE_URL}/en/lorenza-volponi` }],
   alternates: { canonical: URL, languages: { en: URL, "pt-BR": SITE_URL, "x-default": URL } },
-  openGraph: { title: "AI & ChatGPT Ads Intelligence by Lorenza Volponi", description: "Original research, verified changes, AI discovery and evidence-backed strategy.", url: URL, type: "website", locale: "en_US", images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "AI and ChatGPT Ads Intelligence by Lorenza Volponi" }] },
-  twitter: { card: "summary_large_image", title: "AI & ChatGPT Ads Intelligence — Lorenza Volponi", description: "Original research and source-linked AI intelligence.", images: [SOCIAL_IMAGE] },
+  openGraph: { title: "AI Systems, GEO & ChatGPT Ads Intelligence by Lorenza Volponi", description: "Original research, verified changes, AI discovery and evidence-backed strategy.", url: URL, type: "website", locale: "en_US", images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "AI systems, GEO and ChatGPT Ads intelligence by Lorenza Volponi" }] },
+  twitter: { card: "summary_large_image", title: "AI Systems, GEO & ChatGPT Ads — Lorenza Volponi", description: "Original research and source-linked AI intelligence.", images: [SOCIAL_IMAGE] },
 };
 
 const structuredData = {
@@ -29,7 +30,7 @@ const structuredData = {
       "@type": "WebPage",
       "@id": `${URL}#page`,
       url: URL,
-      name: "AI & ChatGPT Ads Intelligence",
+      name: "AI Systems, GEO & ChatGPT Ads Intelligence",
       description: "Independent English intelligence on AI systems, ChatGPT Ads, GEO, AI Search and evidence-backed product strategy.",
       inLanguage: "en",
       isPartOf: { "@id": `${SITE_URL}/#website` },
@@ -50,7 +51,7 @@ const structuredData = {
 };
 
 export default function EnglishPage() {
-  const latest = radarEntries.slice(0, 3);
+  const latest = radarEntriesEn.slice(0, 3);
 
   return (
     <main lang="en" className="min-h-screen bg-[#fafaf8] text-zinc-950">
@@ -109,7 +110,7 @@ export default function EnglishPage() {
           </div>
           <div className="mt-8 grid gap-3 md:grid-cols-3">
             {latest.map((entry) => (
-              <Link key={entry.slug} href={`/radar/${entry.slug}`} className="rounded-3xl border border-white/10 bg-white/[0.05] p-6 transition hover:bg-white/[0.08]">
+              <Link key={entry.slug} href={`/en/radar#record-${entry.slug}`} className="rounded-3xl border border-white/10 bg-white/[0.05] p-6 transition hover:bg-white/[0.08]">
                 <Newspaper className="h-4 w-4 text-zinc-400" />
                 <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400">{entry.date} · {entry.market}</p>
                 <h3 className="mt-3 text-lg font-black leading-6">{entry.title}</h3>
@@ -140,7 +141,7 @@ export default function EnglishPage() {
       <footer className="bg-white">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-12 md:px-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div><p className="font-serif text-3xl tracking-[-0.03em]">Independent editorial research by Lorenza Volponi.</p><p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-500">Not affiliated with, sponsored by, endorsed by, certified by, operated by or maintained by OpenAI.</p></div>
-          <div className="flex flex-wrap gap-2 text-xs font-black"><Link href="/en/press" className="rounded-full border border-zinc-300 px-4 py-2">Press room</Link><Link href="/en/lorenza-volponi" className="rounded-full border border-zinc-300 px-4 py-2">Lorenza</Link><Link href="/metodologia" className="rounded-full border border-zinc-300 px-4 py-2">Methodology</Link></div>
+          <div className="flex flex-wrap gap-2 text-xs font-black"><Link href="/en/press" className="rounded-full border border-zinc-300 px-4 py-2">Press room</Link><Link href="/en/lorenza-volponi" className="rounded-full border border-zinc-300 px-4 py-2">Lorenza</Link><Link href="/en/geo-ai-strategy" className="rounded-full border border-zinc-300 px-4 py-2">GEO methodology</Link></div>
         </div>
       </footer>
     </main>
